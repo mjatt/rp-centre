@@ -1,10 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Navbar from './components/Nav';
+import { HashRouter as Router, Route } from 'react-router-dom';
 
 class App extends React.Component {
   render() {
     return (
-      <h1>Hello World!</h1>
+      <Router>
+        <Route exact path="/" component={Navbar} />
+      </Router>
     );
   }
 }
