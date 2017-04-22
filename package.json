@@ -4,7 +4,8 @@
   "description": "A express/react app for the Norrland RP centre",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "keywords": [
     "react"
@@ -22,6 +23,8 @@
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "webpack": "^2.4.1",
-    "webpack-dev-server": "^2.4.3"
+    "webpack-dev-middleware": "^1.10.2",
+    "webpack-dev-server": "^2.4.3",
+    "webpack-hot-middleware": "^2.18.0"
   }
 }
