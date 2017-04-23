@@ -6,19 +6,24 @@ module.exports = {
   context: srcPath,
   entry: path.join(srcPath, 'js', 'App.js'),
   output: {
-      path: buildPath,
-      filename: "bundle.js"
+    path: buildPath,
+    filename: "bundle.js"
   },
   module: {
-      loaders: [
-          {
-            test: /\.jsx?$/,
-            exclude: /(node_modules|bower_components)/,
-            loader: 'babel-loader',
-            query: {
-              presets: ['react', 'es2015']
-            }
-          }
-      ]
+    loaders: [
+      {
+        test: /\.jsx?$/,
+        exclude: /(node_modules|bower_components)/,
+        loader: 'babel-loader',
+        query: {
+          presets: ['react', 'es2015']
+        }
+      },
+      {
+        test: /\.css$/,
+        loader: 'style-loader!css-loader',
+        include: /flexboxgrid/
+      }
+    ]
   }
 };
