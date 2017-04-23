@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 class MyNavbar extends React.Component {
   render() {
     return (
-      <Toolbar>
+      <Toolbar style={{ paddingLeft: '350px', paddingRight: '350px' }}>
         <ToolbarGroup>
           <ToolbarTitle style={{ fontSize: '25px', fontWeight: 700 }} text="Norrland RP" />
           <ToolbarSeparator />
