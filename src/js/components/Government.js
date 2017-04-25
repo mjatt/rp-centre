@@ -65,7 +65,7 @@ class GovernmentDisplay extends React.Component {
         </Row>
         <Row center="xs" className="defaultRow">
           <Col>
-            <p>Breif overview of what each government does.</p>
+            <p>A brief overview of what each Government member does.</p>
           </Col>
         </Row>
         <Row style={{ padding: '15 0 15 0' }}>
