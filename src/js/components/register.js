@@ -4,9 +4,9 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 // import { connect } from 'react-firebase';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 
-firebase.initializeApp({
+/* firebase.initializeApp({
     databaseIRL: 'https://norrland-rp-centre.firebaseio.com/'
-});
+}); */
 
 class RegisterDisplay extends React.Component {
     constructor(props) {
