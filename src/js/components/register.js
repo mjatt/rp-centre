@@ -1,21 +1,84 @@
 import React from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid';
-// import firebase from 'react-firebase';
-// import { connect } from 'react-firebase';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
+import axios from 'axios';
+import TextField from './ValidatedTextField';
+import Paper from 'material-ui/Paper';
+import RaisedButton from 'material-ui/RaisedButton';
 
-/* firebase.initializeApp({
-    databaseIRL: 'https://norrland-rp-centre.firebaseio.com/'
-}); */
-
-class RegisterDisplay extends React.Component {
+class Register extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      data: [],
-      loading: true
+      nation: '',
+      code: '',
+      population: '',
+      loading: true,
+      invalid: true
     };
+
+    this.handleUpdateNation = this.handleUpdateNation.bind(this);
+    this.handleUpdatePop = this.handleUpdatePop.bind(this);
+    this.isFormValid = this.isFormValid.bind(this);
+  }
+
+  componentWillMount() {
+    const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
+    const apiEndpoint = baseUrl + '/api/generate_code';
+
+    let _this = this;
+    axios.get(apiEndpoint).then(function (response) {
+      console.log(response);
+      _this.setState({
+        loading: false,
+        code: response.data
+      });
+    }).catch(function (error) {
+      console.log(error);
+    });
+  }
+
+  handleUpdateNation(errStatus, values) {
+    if (errStatus) {
+      this.setState({
+        nation: values
+      });
+      this.isFormValid();
+    } else {
+      this.setState({
+        invalid: true
+      });
+    }
+  }
+
+  handleUpdatePop(errStatus, values) {
+    if (errStatus) {
+      this.setState({
+        population: values
+      });
+      this.isFormValid();
+    } else {
+      this.setState({
+        invalid: true
+      });
+    }
+  }
+
+  isFormValid() {
+    console.log(this.state.nation);
+    console.log(this.state.population);
+    console.log(this.state.nation && this.state.population);
+    if (this.state.nation && this.state.population) {
+      console.log('bant');
+      this.setState({
+        invalid: false
+      });
+    }
+  }
+
+  submit() {
+    console.log('Submit');
   }
 
   render() {
@@ -23,7 +86,7 @@ class RegisterDisplay extends React.Component {
       return (
         <Grid fluid>
           <Row center="xs">
-            <Col md>
+            <Col md >
               <RefreshIndicator
                 size={60}
                 left={10}
@@ -34,15 +97,55 @@ class RegisterDisplay extends React.Component {
             </Col>
           </Row>
           <Row center="xs">
-            <p>Loading data...</p>
+            <p>Loading...</p>
           </Row>
         </Grid>
       );
     }
     return (
-      <p>hello world</p>
+      <Paper style={{ height: '70%', width: '50%', margin: '0 auto', marginTop: '25px', textAlign: 'center', padding: '20px' }}>
+        <Grid fluid>
+          <Row style={{ padding: '10 0 10 0' }}>
+            <Col sm>
+              <h4>Nation:</h4>
+            </Col>
+            <Col md>
+              <TextField hintText="Nation"
+                onChange={this.handleUpdateNation}
+                validate={['required']}
+                errorText="Please enter your nations name here"
+                style={{ width: '100%' }} />
+            </Col>
+          </Row>
+          <Row style={{ padding: '10 0 10 0' }}>
+            <Col sm>
+              <h4>Verification Code:</h4>
+            </Col>
+            <Col md>
+              <h4>{this.state.code}</h4>
+            </Col>
+          </Row>
+          <Row style={{ padding: '10 0 10 0' }}>
+            <Col sm>
+              <h4>Current Population:</h4>
+            </Col>
+            <Col md>
+              <TextField hintText="Current Population"
+                onChange={this.handleUpdatePop}
+                validate={['required']}
+                errorText="Please enter your current population"
+                style={{ width: '100%' }} />
+            </Col>
+          </Row>
+          <Row>
+            <Col md>
+              <RaisedButton label="Register" primary style={{ width: '100%' }} onTouchTap={this.submit} disabled={this.state.invalid} />
+            </Col>
+          </Row>
+        </Grid>
+      </Paper>
     );
   }
 }
 
-export default RegisterDisplay;
+export default Register;

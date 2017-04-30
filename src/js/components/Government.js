@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import GovMember from './GovernmentMember';
 import firebase from 'firebase';
@@ -46,7 +46,7 @@ class GovernmentDisplay extends React.Component {
                 left={10}
                 top={0}
                 status="loading"
-                style={{display: 'inline-block', position: 'relative'}}
+                style={{ display: 'inline-block', position: 'relative' }}
               />
             </Col>
           </Row>
@@ -69,7 +69,7 @@ class GovernmentDisplay extends React.Component {
           </Col>
         </Row>
         <Row style={{ padding: '15 0 15 0' }}>
-          { this.state.data.map((d) => {
+          {this.state.data.map((d) => {
             return (
               <Col md>
                 <GovMember name={d.name} position={d.position} description={d.description} imgSrc={d.imgSrc} />
@@ -83,7 +83,7 @@ class GovernmentDisplay extends React.Component {
 }
 
 GovernmentDisplay.propTypes = {
-  data: React.PropTypes.object
+  data: PropTypes.object
 };
 
 const mapFirebaseToProps = {
