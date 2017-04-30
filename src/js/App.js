@@ -4,6 +4,7 @@ import Navbar from './components/Nav';
 import { HashRouter as Router, Route } from 'react-router-dom';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import GovernmentDisplay from './components/Government';
+import Register from './components/Register';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
 // Needed for onTouchTap
@@ -18,6 +19,7 @@ class App extends React.Component {
           <div>
             <Navbar />
             <Route exact path="/" component={GovernmentDisplay} />
+            <Route path="/register" component={Register} />
           </div>
         </Router>
       </MuiThemeProvider>

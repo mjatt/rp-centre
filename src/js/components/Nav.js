@@ -15,7 +15,9 @@ class MyNavbar extends React.Component {
           <Link to="/events"><RaisedButton label="Events" labelStyle={{ fontWeight: 700 }} /></Link>
         </ToolbarGroup>
         <ToolbarGroup>
-          <RaisedButton label="Sign Up" primary={true} />
+          <Link to="/register">
+            <RaisedButton label="Sign Up" primary={true} />
+          </Link>
         </ToolbarGroup>
       </Toolbar>
     );
