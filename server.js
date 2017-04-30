@@ -3,6 +3,7 @@ const path = require('path');
 const uuidV1 = require('uuid/v1');
 const bodyParser = require('body-parser');
 
+// eslint-disable-next-line
 const SITE_CODE = process.env.CODE || 'norrland-rp';
 
 const app = express();
