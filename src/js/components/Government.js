@@ -22,7 +22,7 @@ class GovernmentDisplay extends React.Component {
   componentWillReceiveProps(nextProps) {
     let newData = [];
     for (var key in nextProps.data) {
-      if(nextProps.data.hasOwnProperty(key)) {
+      if (nextProps.data.hasOwnProperty(key)) {
         let member = {
           name: nextProps.data[key].name,
           position: key,

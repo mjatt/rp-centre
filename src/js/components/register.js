@@ -9,40 +9,40 @@ import RefreshIndicator from 'material-ui/RefreshIndicator';
 }); */
 
 class RegisterDisplay extends React.Component {
-    constructor(props) {
-        super(props);
-        
-        this.state = {
-            data: [],
-            loading: true
-        };
+  constructor(props) {
+    super(props);
 
-        render() {
-            if(this.state.loading) {
-                return (
-                    <Grid fluid>
-                        <Row center="xs">
-                            <Col md>
-                            <RefreshIndicator
-                               size={60}
-                               left={10}
-                               top={0}
-                               status="loading"
-                               style={{display: 'inline-block', position: 'relative'}}
-                               />
-                            </Col>
-                        </Row>
-                        <Row center='xs'>
-                            <p>Loading data...</p>
-                        </Row>
-                    </Grid>
-                );
-            }
-            return (
-                <p>hello world</p>
-            );
-        }
+    this.state = {
+      data: [],
+      loading: true
+    };
+  }
+
+  render() {
+    if (this.state.loading) {
+      return (
+        <Grid fluid>
+          <Row center="xs">
+            <Col md>
+              <RefreshIndicator
+                size={60}
+                left={10}
+                top={0}
+                status="loading"
+                style={{ display: 'inline-block', position: 'relative' }}
+              />
+            </Col>
+          </Row>
+          <Row center="xs">
+            <p>Loading data...</p>
+          </Row>
+        </Grid>
+      );
     }
-};
+    return (
+      <p>hello world</p>
+    );
+  }
+}
 
 export default RegisterDisplay;

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui/Toolbar';
-import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Link } from 'react-router-dom';
 
@@ -16,7 +15,7 @@ class MyNavbar extends React.Component {
         </ToolbarGroup>
         <ToolbarGroup>
           <Link to="/register">
-            <RaisedButton label="Sign Up" primary={true} />
+            <RaisedButton label="Sign Up" primary />
           </Link>
         </ToolbarGroup>
       </Toolbar>
