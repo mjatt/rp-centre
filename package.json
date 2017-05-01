@@ -7,7 +7,7 @@
     "lint": "eslint .",
     "lint-autofix": "eslint --fix .",
     "start": "node server.js",
-    "build": "webpack --production"
+    "build": "webpack --config webpackProd.config.js"
   },
   "keywords": [
     "react"
