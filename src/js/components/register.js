@@ -39,12 +39,11 @@ class Register extends React.Component {
     });
   }
 
-  handleUpdateNation(errStatus, values) {
-    if (errStatus) {
+  handleUpdateNation(errors, values) {
+    if (!errors) {
       this.setState({
         nation: values
-      });
-      this.isFormValid();
+      }, this.isFormValid);
     } else {
       this.setState({
         invalid: true
@@ -52,12 +51,11 @@ class Register extends React.Component {
     }
   }
 
-  handleUpdatePop(errStatus, values) {
-    if (errStatus) {
+  handleUpdatePop(errors, values) {
+    if (!errors) {
       this.setState({
         population: values
-      });
-      this.isFormValid();
+      }, this.isFormValid);
     } else {
       this.setState({
         invalid: true
@@ -66,11 +64,7 @@ class Register extends React.Component {
   }
 
   isFormValid() {
-    console.log(this.state.nation);
-    console.log(this.state.population);
-    console.log(this.state.nation && this.state.population);
-    if (this.state.nation && this.state.population) {
-      console.log('bant');
+    if (this.state.nation && this.state.population && this.state.population > 0) {
       this.setState({
         invalid: false
       });
@@ -132,7 +126,7 @@ class Register extends React.Component {
             <Col md>
               <TextField hintText="Current Population"
                 onChange={this.handleUpdatePop}
-                validate={['required']}
+                validate={['required', 'isNumber']}
                 errorText="Please enter your current population"
                 style={{ width: '100%' }} />
             </Col>

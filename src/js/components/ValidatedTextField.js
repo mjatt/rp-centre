@@ -15,16 +15,30 @@ class ValidatedTextField extends React.Component {
   }
 
   onBlur(event) {
-    if (this.props.validate[0] === 'required') {
-      let values = event.target.value;
-      let showErrors = (this.props.validate[1]) ? validator.isEmail(values) : !validator.isEmpty(values);
-      if (!showErrors) {
-        this.setState({ errors: true });
-        this.props.onChange(false, values);
-      } else {
-        this.setState({ errors: false });
-        this.props.onChange(true, values);
+    let value = event.target.value;
+    let showErrors = false;
+    this.props.validate.forEach(function (element) {
+      switch (element) {
+      case 'required':
+        showErrors = validator.isEmpty(value);
+        break;
+      case 'isNumber':
+        showErrors = !validator.isNumeric(value);
+        break;
+      case 'isEmail':
+        showErrors = !validator.isEmail(value);
+        break;
+      default:
+        break;
       }
+      console.log(showErrors);
+    }, this);
+    if (showErrors) {
+      this.setState({ errors: true });
+      this.props.onChange(true, value);
+    } else {
+      this.setState({ errors: false });
+      this.props.onChange(false, value);
     }
   }
 
