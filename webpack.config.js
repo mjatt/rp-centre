@@ -1,6 +1,7 @@
 var path = require('path');
 var srcPath = path.join(__dirname, 'src');
 var buildPath = path.join(__dirname, 'dist');
+const webpack = require('webpack');
 
 module.exports = {
   context: srcPath,
@@ -25,5 +26,9 @@ module.exports = {
         include: /flexboxgrid/
       }
     ]
-  }
+  },
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoEmitOnErrorsPlugin()
+  ]
 };
