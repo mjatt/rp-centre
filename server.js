@@ -65,6 +65,6 @@ app.use('/api', router);
 
 app.use(express.static(path.join(__dirname, '/dist')));
 
-const server = app.listen(process.env.VCAP_APP_PORT || 3000, function () {
+const server = app.listen(process.env.APP_PORT || 3000, function () {
   console.log(server);
 });
