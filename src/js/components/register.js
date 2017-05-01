@@ -6,6 +6,8 @@ import TextField from './ValidatedTextField';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 
+const SITE_CODE = process.env.CODE || 'norrland-rp';
+
 class Register extends React.Component {
   constructor(props) {
     super(props);
@@ -20,29 +22,37 @@ class Register extends React.Component {
 
     this.handleUpdateNation = this.handleUpdateNation.bind(this);
     this.handleUpdatePop = this.handleUpdatePop.bind(this);
+    this.handleUpdateCode = this.handleUpdateCode.bind(this);
     this.isFormValid = this.isFormValid.bind(this);
+    this.submit = this.submit.bind(this);
   }
 
   componentWillMount() {
-    const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
-    const apiEndpoint = baseUrl + '/api/generate_code';
-
+    window.open('https://www.nationstates.net/page=verify_login?token=' + SITE_CODE, '_window');
     let _this = this;
-    axios.get(apiEndpoint).then(function (response) {
-      console.log(response);
+    setTimeout(() => {
       _this.setState({
-        loading: false,
-        code: response.data
+        loading: false
       });
-    }).catch(function (error) {
-      console.log(error);
-    });
+    }, 200);
   }
 
   handleUpdateNation(errors, values) {
     if (!errors) {
       this.setState({
         nation: values
+      }, this.isFormValid);
+    } else {
+      this.setState({
+        invalid: true
+      });
+    }
+  }
+
+  handleUpdateCode(errors, values) {
+    if (!errors) {
+      this.setState({
+        code: values
       }, this.isFormValid);
     } else {
       this.setState({
@@ -72,7 +82,20 @@ class Register extends React.Component {
   }
 
   submit() {
-    console.log('Submit');
+    let data = {
+      nation: this.state.nation,
+      code: this.state.code,
+      population: this.state.population
+    };
+
+    const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
+    const apiEndpoint = baseUrl + '/api/verify';
+
+    axios.post(apiEndpoint, data).then(function (response) {
+      console.log(response);
+    }).catch(function (error) {
+      console.log(error);
+    });
   }
 
   render() {
@@ -107,7 +130,7 @@ class Register extends React.Component {
               <TextField hintText="Nation"
                 onChange={this.handleUpdateNation}
                 validate={['required']}
-                errorText="Please enter your nations name here"
+                errorText="Please enter your nations name"
                 style={{ width: '100%' }} />
             </Col>
           </Row>
@@ -116,7 +139,11 @@ class Register extends React.Component {
               <h4>Verification Code:</h4>
             </Col>
             <Col md>
-              <h4>{this.state.code}</h4>
+              <TextField hintText="Verification Code"
+                onChange={this.handleUpdateCode}
+                validate={['required']}
+                errorText="Please enter your verification code"
+                style={{ width: '100%' }} />
             </Col>
           </Row>
           <Row style={{ padding: '10 0 10 0' }}>
