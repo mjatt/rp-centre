@@ -1,3 +1,4 @@
+[![wercker status](https://app.wercker.com/status/19facae1dd72a7502349e3c35b04dcb4/s/master "wercker status")](https://app.wercker.com/project/byKey/19facae1dd72a7502349e3c35b04dcb4)
 # Norrland Role Play Centre
 ---
 

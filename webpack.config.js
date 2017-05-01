@@ -7,7 +7,7 @@ module.exports = {
   entry: path.join(srcPath, 'js', 'App.js'),
   output: {
     path: buildPath,
-    filename: "bundle.js"
+    filename: 'bundle.js'
   },
   module: {
     loaders: [

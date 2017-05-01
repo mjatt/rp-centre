@@ -1,5 +1,5 @@
-import React from 'react';
-import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card';
+import React, { PropTypes } from 'react';
+import { Card, CardHeader, CardMedia, CardText } from 'material-ui/Card';
 
 class GovMember extends React.Component {
   constructor(props) {
@@ -22,10 +22,10 @@ class GovMember extends React.Component {
 }
 
 GovMember.propTypes = {
-  name: React.PropTypes.string.isRequired,
-  position: React.PropTypes.string.isRequired,
-  imgSrc: React.PropTypes.string.isRequired,
-  description: React.PropTypes.string.isRequired
-}
+  name: PropTypes.string.isRequired,
+  position: PropTypes.string.isRequired,
+  imgSrc: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired
+};
 
 export default GovMember;
