@@ -31,7 +31,6 @@ class ValidatedTextField extends React.Component {
       default:
         break;
       }
-      console.log(showErrors);
     }, this);
     if (showErrors) {
       this.setState({ errors: true });

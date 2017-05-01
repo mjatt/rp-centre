@@ -5,6 +5,7 @@ import axios from 'axios';
 import TextField from './ValidatedTextField';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
+import Snackbar from 'material-ui/Snackbar';
 
 const SITE_CODE = process.env.CODE || 'norrland-rp';
 
@@ -17,13 +18,16 @@ class Register extends React.Component {
       code: '',
       population: '',
       loading: true,
-      invalid: true
+      invalid: true,
+      open: false,
+      responseMsg: ''
     };
 
     this.handleUpdateNation = this.handleUpdateNation.bind(this);
     this.handleUpdatePop = this.handleUpdatePop.bind(this);
     this.handleUpdateCode = this.handleUpdateCode.bind(this);
     this.isFormValid = this.isFormValid.bind(this);
+    this.handleRequestClose = this.handleRequestClose.bind(this);
     this.submit = this.submit.bind(this);
   }
 
@@ -34,7 +38,7 @@ class Register extends React.Component {
       _this.setState({
         loading: false
       });
-    }, 200);
+    }, 500);
   }
 
   handleUpdateNation(errors, values) {
@@ -81,6 +85,12 @@ class Register extends React.Component {
     }
   }
 
+  handleRequestClose() {
+    this.setState({
+      open: false
+    });
+  }
+
   submit() {
     let data = {
       nation: this.state.nation,
@@ -91,10 +101,19 @@ class Register extends React.Component {
     const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
     const apiEndpoint = baseUrl + '/api/verify';
 
+    let _this = this;
     axios.post(apiEndpoint, data).then(function (response) {
-      console.log(response);
+      console.log(response.data);
+      _this.setState({
+        responseMsg: 'Registered Successfully...',
+        open: true
+      });
     }).catch(function (error) {
-      console.log(error);
+      console.log(error.response.data);
+      _this.setState({
+        responseMsg: 'There was an error, please try again...',
+        open: true
+      });
     });
   }
 
@@ -121,6 +140,12 @@ class Register extends React.Component {
     }
     return (
       <Paper style={{ height: '70%', width: '50%', margin: '0 auto', marginTop: '25px', textAlign: 'center', padding: '20px' }}>
+        <Snackbar
+          open={this.state.open}
+          message={this.state.responseMsg}
+          autoHideDuration={10000}
+          onRequestClose={this.handleRequestClose}
+        />
         <Grid fluid>
           <Row style={{ padding: '10 0 10 0' }}>
             <Col sm>
