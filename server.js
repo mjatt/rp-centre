@@ -66,5 +66,5 @@ app.use('/api', router);
 app.use(express.static(path.join(__dirname, '/dist')));
 
 const server = app.listen(process.env.APP_PORT || 3000, function () {
-  console.log(server);
+  console.log('RP centre running on port ' + server.address().port);
 });
