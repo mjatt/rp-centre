@@ -1,4 +1,4 @@
 export WEBSITE_URL=http://rpcentre.bancey.xyz
-NODE_ENV=production
-APP_PORT=8080
+export NODE_ENV=production
+export APP_PORT=3000
 node server.js
