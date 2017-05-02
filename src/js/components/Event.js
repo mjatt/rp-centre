@@ -101,7 +101,7 @@ class Events extends React.Component {
       content: this.state.content
     };
 
-    const baseUrl = process.env.WEBSITE_URL || 'http://localhost:300';
+    const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
     const apiEndpoint = baseUrl + '/api/verify';
 
     let _this = this;
