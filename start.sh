@@ -1,4 +1,4 @@
-WEBSITE_URL=http://87.98.185.104
+export WEBSITE_URL=http://rpcentre.bancey.xyz
 NODE_ENV=production
-VCAP_APP_PORT=8080
+APP_PORT=8080
 node server.js
