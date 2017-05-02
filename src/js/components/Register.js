@@ -156,7 +156,7 @@ class Register extends React.Component {
               <TextField hintText="Nation"
                 onChange={this.handleUpdateNation}
                 validate={['required']}
-                errorText="Please enter your nations name"
+                errorText="Please enter your nation's name"
                 style={{ width: '100%' }} />
             </Col>
           </Row>
