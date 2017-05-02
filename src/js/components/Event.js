@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import axios from 'axios';
@@ -8,120 +8,121 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
 
 class Events extends React.Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.state = {
-            nation: '',
-            code: '',
-            eventTitle: '',
-            eventContent: '',
-            loading: true,
-            invalid: true,
-            open: false,
-            responseMsg: ''
-        };
+    this.state = {
+      nation: '',
+      code: '',
+      eventTitle: '',
+      eventContent: '',
+      loading: true,
+      invalid: true,
+      open: false,
+      responseMsg: ''
+    };
 
-        this.handleUpdateNation = this.handleUpdateNation.bind(this);
-        this.handleUpdateCode = this.handleUpdateCode.bind(this);
-        this.handleUpdateTitle = this.handleUpdateTitle.bind(this);
-        this.handleUpdateContent = this.handleUpdateContent.bind(this);
-        this.isFormValid = this.isFormValid.bind(this);
-        this.handleRequestClose = this.handleRequestClose.bind(this);
-        this.submit = this.submit.bind(this);
-        }
+    this.handleUpdateNation = this.handleUpdateNation.bind(this);
+    this.handleUpdateCode = this.handleUpdateCode.bind(this);
+    this.handleUpdateTitle = this.handleUpdateTitle.bind(this);
+    this.handleUpdateContent = this.handleUpdateContent.bind(this);
+    this.isFormValid = this.isFormValid.bind(this);
+    this.handleRequestClose = this.handleRequestClose.bind(this);
+    this.submit = this.submit.bind(this);
+  }
 
-        handleUpdateNation(errors, values) {
-            if (!errors) {
-                this.setState({
-                    nation: values
-                }, this.isFormValid);
-            } else {
-                this.setState({
-                    invalid: true
-                });
-            }
-        }
+  handleUpdateNation(errors, values) {
+    if (!errors) {
+      this.setState({
+        nation: values
+      }, this.isFormValid);
+    } else {
+      this.setState({
+        invalid: true
+      });
+    }
+  }
 
-        handleUpdateCode(errors, values) {
-            if (!errors) {
-                this.setState({
-                    code: values
-                }, this.isFormValid);
-            } else {
-                this.setState({
-                    invalid: true
-                });
-            }
-        }
+  handleUpdateCode(errors, values) {
+    if (!errors) {
+      this.setState({
+        code: values
+      }, this.isFormValid);
+    } else {
+      this.setState({
+        invalid: true
+      });
+    }
+  }
 
-        handleUpdateTitle(errors, values) {
-            if (!errors) {
-                this.setState({
-                    code: values
-                }, this.isFormValid);
-            } else {
-                this.setState({
-                    invalid: true
-                });
-            }
-        }
+  handleUpdateTitle(errors, values) {
+    if (!errors) {
+      this.setState({
+        code: values
+      }, this.isFormValid);
+    } else {
+      this.setState({
+        invalid: true
+      });
+    }
+  }
 
-        handleUpdateContent(errors, values) {
-            if (!errors) {
-                this.setState({
-                    code: values
-                }, this.isFormValid);
-            } else {
-                this.setState({
-                    invalid: true
-                });
-            }
-        }
+  handleUpdateContent(errors, values) {
+    if (!errors) {
+      this.setState({
+        code: values
+      }, this.isFormValid);
+    } else {
+      this.setState({
+        invalid: true
+      });
+    }
+  }
 
-        isFormValid() {
-            if (this.state.nation && this.state.title && this.state.event) {
-                this.setState({
-                    invalid: false
-                });
-            }
-        }
+  isFormValid() {
+    if (this.state.nation && this.state.title && this.state.event) {
+      this.setState({
+        invalid: false
+      });
+    }
+  }
 
-        handleRequestClose() {
-            this.setState({
-                open: false
-            });
-        }
+  handleRequestClose() {
+    this.setState({
+      open: false
+    });
+  }
 
-        submit() {
-            let data = {
-                nation: this.state.nation,
-                code: this.state.code,
-                title: this.state.title,
-                content: this.state.content
-            };
+  submit() {
+    let data = {
+      nation: this.state.nation,
+      code: this.state.code,
+      title: this.state.title,
+      content: this.state.content
+    };
 
-            const apiEndpoint = baseUrl + '/api/verify';
+    const baseUrl = process.env.WEBSITE_URL || 'http://localhost:300';
+    const apiEndpoint = baseUrl + '/api/verify';
 
-            let _this = this;
-            anxios.post(apiEndpoint, data).then(function (response) {
-                console.log(response.data);
-                _this.setState({
-                    responseMsg: 'Posted Successfully...',
-                    open: true
-                });
-            }).catch(function (error) {
-                console.log(error.response.data);
-                _this.setState({
-                    responseMsg: 'There was an error, please try again...',
-                    open: true
-                });
-            });
-        }
+    let _this = this;
+    axios.post(apiEndpoint, data).then(function (response) {
+      console.log(response.data);
+      _this.setState({
+        responseMsg: 'Posted Successfully...',
+        open: true
+      });
+    }).catch(function (error) {
+      console.log(error.response.data);
+      _this.setState({
+        responseMsg: 'There was an error, please try again...',
+        open: true
+      });
+    });
+  }
 
-        render() {
-            if (this.state.loading) {
-                return (
+  render() {
+    if (this.state.loading) {
+      return (
                     <Grid fluid>
                        <Row center="xs">
                            <Col md >
@@ -135,9 +136,9 @@ class Events extends React.Component {
                              </Col>
                             </Row>
                           </Grid>
-                );
-            }
-            return (
+      );
+    }
+    return (
                 <Paper style={{ height: '70%', width: '50%', margin: '0 auto', marginTop: '25px', textAlign: 'center', padding: '20px' }}>
                     <Snackbar
                        open={this.state.open}
@@ -201,8 +202,8 @@ class Events extends React.Component {
                            </Row>
                          </Grid>
                        </Paper>
-            );
-        }
+    );
+  }
 }
 
-export default Event;   
+export default Events;
