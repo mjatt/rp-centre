@@ -78,7 +78,7 @@ class Register extends React.Component {
   }
 
   isFormValid() {
-    if (this.state.nation && this.state.population && this.state.population > 0) {
+    if (this.state.nation && this.state.population) {
       this.setState({
         invalid: false
       });
@@ -92,10 +92,11 @@ class Register extends React.Component {
   }
 
   submit() {
+    let pop = parseInt(this.state.population, 10);
     let data = {
       nation: this.state.nation,
       code: this.state.code,
-      population: this.state.population
+      population: pop
     };
 
     const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
