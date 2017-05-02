@@ -14,8 +14,8 @@ class Events extends React.Component {
         this.state = {
             nation: '',
             code: '',
-            event-title: '',
-            event-content: '',
+            eventTitle: '',
+            eventContent: '',
             loading: true,
             invalid: true,
             open: false,
