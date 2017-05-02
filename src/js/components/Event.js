@@ -110,7 +110,7 @@ class Events extends React.Component {
                     responseMsg: 'Posted Successfully...',
                     open: true
                 });
-            }).catch(function {error} {
+            }).catch(function (error) {
                 console.log(error.response.data);
                 _this.setState({
                     responseMsg: 'There was an error, please try again...',
@@ -138,7 +138,7 @@ class Events extends React.Component {
                 );
             }
             return (
-                <Paper style={{ height: 70%, width '50%', margin: '0 auto', marginTop: '25px', textAlign: 'center', padding: '20px' }}>
+                <Paper style={{ height: '70%', width: '50%', margin: '0 auto', marginTop: '25px', textAlign: 'center', padding: '20px' }}>
                     <Snackbar
                        open={this.state.open}
                        message={this.state.responseMsg}
