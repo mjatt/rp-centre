@@ -1,4 +1,1 @@
-export WEBSITE_URL=http://rpcentre.bancey.xyz
-export NODE_ENV=production
-export APP_PORT=3000
-node server.js
+WEBSITE_URL=http://rpcentre.bancey.xyz NODE_ENV=production APP_PORT=3000 pm2 start server.js
