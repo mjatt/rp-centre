@@ -30,7 +30,11 @@ if (process.env.NODE_ENV !== 'production') {
     stats: {
       colors: true
     },
-    historyApiFallback: true
+    historyApiFallback: true,
+    watchOptions: {
+      aggregateTimeout: 300,
+      poll: true
+    }
   }));
 
   app.use(webpackHotMiddleware(compiler));
