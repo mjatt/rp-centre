@@ -19,6 +19,10 @@ We recommend using using vagrant to run this rp-centre locally, you can find mor
 # Bring the vagrant vm online
 vagrant up
 
+# The machine will run the scripts/provisioner.sh script at startup, which will run the development server and then detach from the vm.
+# You can browse to http://localhost:3000 on the host machine and you can access the running node application
+# The app utilised nodemon which will reload the server if any files change.
+
 # Connect to the vagrant machine
 vagrant ssh
 ```

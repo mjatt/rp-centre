@@ -31,5 +31,5 @@ Vagrant.configure("2") do |config|
 
   # This runs the scripts/provisioner.sh script when vagrant starts up
   # Essentially runs the development server which will reload when code changes
-  config.vm.provision "shell", path: "scripts/provisioner.sh"
+  config.vm.provision "shell", path: "scripts/provisioner.sh", run: 'always'
 end
