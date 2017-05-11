@@ -47,3 +47,8 @@ npm install
 # The server will spin up on port 3000
 npm run start
 ```
+
+## Contributing
+
+---
+We are happy to accept both pull requests and issues requests. Before submitting your pull request please read the [contributin guidlines](./docs/contributing.md).
