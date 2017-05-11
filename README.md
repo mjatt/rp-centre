@@ -51,4 +51,4 @@ npm run start
 ## Contributing
 
 ---
-We are happy to accept both pull requests and issues requests. Before submitting your pull request please read the [contributin guidlines](./docs/contrib.md).
+We are happy to accept both pull requests and issues requests. Before submitting your pull request please read the [contributing guidlines](./docs/contrib.md).
