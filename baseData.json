@@ -1,19 +1,41 @@
 {
-    "gov": {
-        "Chancellor": {
-            "name": "New Woking",
-            "imgSrc": "",
-            "description": "Has executive control in the Government. Is essentially the face of the region and governs all events that occur within the region."
-        },
-        "Local Minister": {
-            "name": "New-Indochina",
-            "imgSrc": "",
-            "description": "The Local Minister is in charge of ensuring that all internal events go smoothly and present Norrland in a positive manner. This can be through RP events or moderation."
-        },
-        "Foreign Minister": {
-            "name": "Austrian Habsburgs",
-            "imgSrc": "",
-            "description": "The Foreign Minister is in control of creating and maintaining diplomatic relations with other regions. This is mainly done through embassies."
-        }
+  "gov": {
+    "Chancellor": {
+      "description": "Has executive control in the Government. Is essentially the face of the region and governs all events that occur within the region.",
+      "imgSrc": "https://firebasestorage.googleapis.com/v0/b/norrland-rp-centre.appspot.com/o/new_woking__884081.png?alt=media&token=94da1a45-04bc-4777-8aba-91402292fd50",
+      "name": "New Woking"
+    },
+    "Foreign Minister": {
+      "description": "The Foreign Minister is in control of maintaining and creating diplomatic relations with other regions. This is mainly done through embassies.",
+      "imgSrc": "https://firebasestorage.googleapis.com/v0/b/norrland-rp-centre.appspot.com/o/austrian_habsburgs__812090.png?alt=media&token=1a386366-d272-4596-bdba-460d5f4814d0",
+      "name": "Austrian Hasburgs"
+    },
+    "Local Minister": {
+      "description": "The Local Minister is in charge of ensuring that all internal events go smoothly and present Norrland in a positive manner. This can be through RP events or moderation.",
+      "imgSrc": "https://firebasestorage.googleapis.com/v0/b/norrland-rp-centre.appspot.com/o/new-indochina__267555.png?alt=media&token=43bfc2ea-bf8d-45fc-8e2b-84166e370931",
+      "name": "New-Indochina"
     }
+  },
+  "currentEvents": {
+    "1": "event123",
+    "2": "event456",
+    "3": "event789"
+  },
+  "events": {
+    "event123": {
+      "createdOn": "11/05/2017",
+      "description": "This is event123",
+      "channel": "General"
+    },
+    "event456": {
+      "createdOn": "11/05/2017",
+      "description": "This is event456",
+      "channel": "Internal Affairs"
+    },
+    "event789": {
+      "createdOn": "11/05/2017",
+      "description": "This is event789",
+      "channel": "International Affairs"
+    }
+  }
 }

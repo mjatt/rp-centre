@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui/Toolbar';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Link } from 'react-router-dom';
@@ -6,35 +6,10 @@ import { Link } from 'react-router-dom';
 class MyNavbar extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      name: ''
-    };
-
-    this.handleLogout = this.handleLogout.bind(this);
-  }
-  componentWillMount() {
-    let _this = this;
-    let cookies = document.cookie.split(';');
-    cookies.forEach(function (cookie) {
-      if (cookie.includes('nation')) {
-        let value = cookie.split('=')[1];
-        _this.setState({
-          name: value
-        });
-      }
-    }, this);
-  }
-
-  handleLogout() {
-    document.cookie = '';
-    this.setState({
-      name: ''
-    });
   }
 
   render() {
-    let welcomeText = 'Welcome ' + this.state.name;
+    let welcomeText = 'Welcome ' + this.props.nation;
     return (
       <Toolbar style={{ paddingLeft: '300px', paddingRight: '300px' }}>
         <ToolbarGroup>
@@ -44,11 +19,11 @@ class MyNavbar extends React.Component {
           <Link to="/events"><RaisedButton label="Events" labelStyle={{ fontWeight: 700 }} /></Link>
         </ToolbarGroup>
         {
-          (this.state.name) ? (
+          (this.props.nation) ? (
             <ToolbarGroup>
               <ToolbarTitle text={welcomeText} />
               <ToolbarSeparator />
-              <RaisedButton label="Log Out" primary onTouchTap={this.handleLogout} />
+              <RaisedButton label="Log Out" primary onTouchTap={this.props.handleLogout} />
             </ToolbarGroup>
           ) : (
             <ToolbarGroup>
@@ -62,5 +37,10 @@ class MyNavbar extends React.Component {
     );
   }
 }
+
+MyNavbar.propTypes = {
+  nation: PropTypes.string,
+  handleLogout: PropTypes.func.isRequired
+};
 
 export default MyNavbar;
