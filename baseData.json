@@ -24,18 +24,29 @@
   "events": {
     "event123": {
       "createdOn": "11/05/2017",
+      "createdBy": "Bisley",
+      "title": "Event 123",
       "description": "This is event123",
       "channel": "General"
     },
     "event456": {
       "createdOn": "11/05/2017",
+      "createdBy": "Bisley",
+      "title": "Event 456",
       "description": "This is event456",
       "channel": "Internal Affairs"
     },
     "event789": {
       "createdOn": "11/05/2017",
+      "createdBy": "Bisley",
+      "title": "Event 789",
       "description": "This is event789",
       "channel": "International Affairs"
+    }
+  },
+  "nations" : {
+    "Bisley" : {
+      "flag" : "https://www.nationstates.net/images/flags/Chuuk.png"
     }
   }
 }
