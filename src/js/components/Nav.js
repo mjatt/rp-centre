@@ -8,7 +8,7 @@ class MyNavbar extends React.Component {
     return (
       <Toolbar style={{ paddingLeft: '350px', paddingRight: '350px' }}>
         <ToolbarGroup>
-          <ToolbarTitle style={{ fontSize: '25px', fontWeight: 700 }} text="Norrland RP" />
+          <Link to="/"><ToolbarTitle style={{ fontSize: '25px', fontWeight: 700 }} text="Norrland RP" /></Link>
           <ToolbarSeparator />
           <Link style={{ paddingLeft: '15px', paddingRight: '15px' }} to="/nations"><RaisedButton label="Nations" labelStyle={{ fontWeight: 700 }} /></Link>
           <Link to="/events"><RaisedButton label="Events" labelStyle={{ fontWeight: 700 }} /></Link>
