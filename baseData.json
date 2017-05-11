@@ -16,11 +16,6 @@
       "name": "New-Indochina"
     }
   },
-  "currentEvents": {
-    "1": "event123",
-    "2": "event456",
-    "3": "event789"
-  },
   "events": {
     "event123": {
       "createdOn": "11/05/2017",
