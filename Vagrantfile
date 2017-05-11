@@ -28,4 +28,8 @@ Vagrant.configure("2") do |config|
   # accessing "localhost:8080" will access port 80 on the guest machine.
   # NOTE: This will enable public access to the opened port
   config.vm.network "forwarded_port", guest: 8080, host: 8080
+
+  # This runs the scripts/provisioner.sh script when vagrant starts up
+  # Essentially runs the development server which will reload when code changes
+  config.vm.provision "shell", path: "scripts/provisioner.sh"
 end
