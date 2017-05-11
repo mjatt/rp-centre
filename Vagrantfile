@@ -1,0 +1,1 @@
+config.vm.box = "xenial64nodejs"
