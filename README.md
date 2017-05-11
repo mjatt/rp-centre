@@ -22,6 +22,7 @@ vagrant up
 
 # Connect to the vagrant machine
 vagrant ssh
+# If the machine asks for a password, try vagrant
 ```
 
 Unless you modify the `Vagrantfile` then this project folder is shared with the vm simply navigate to `/vagrant_data`.
