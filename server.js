@@ -1,8 +1,8 @@
 const express = require('express');
 const path = require('path');
-const uuidV1 = require('uuid/v1');
 const bodyParser = require('body-parser');
 const request = require('request');
+const cookieParser = require('cookie-parser');
 
 const SITE_CODE = process.env.CODE || 'norrland-rp';
 
@@ -32,12 +32,10 @@ if (process.env.NODE_ENV !== 'production') {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+app.use(cookieParser());
+
 // eslint-disable-next-line new-cap
 var router = express.Router();
-
-router.route('/generate_code').get(function (req, res) {
-  res.send(uuidV1());
-});
 
 router.route('/verify').post(function (req, res) {
   let url = 'https://www.nationstates.net/cgi-bin/api.cgi?a=verify&nation=' + req.body.nation + '&checksum=' + req.body.code + '&token=' + SITE_CODE;
@@ -51,6 +49,7 @@ router.route('/verify').post(function (req, res) {
   request(options, function (error, response, body) {
     if (!error) {
       if (parseInt(body, 10) === 1) {
+        res.cookie('nation', req.body.nation);
         res.send('Success');
       } else {
         res.status(400).send('Failure');

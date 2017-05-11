@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.17.1",
+    "cookie-parser": "^1.4.3",
     "express": "^4.15.2",
     "firebase": "^3.8.0",
     "request": "^2.81.0"
@@ -35,6 +36,7 @@
     "material-ui": "^0.17.4",
     "nodemon": "^1.11.0",
     "react": "^15.5.4",
+    "react-cookie": "^2.0.6",
     "react-dom": "^15.5.4",
     "react-firebase": "^2.2.5",
     "react-flexbox-grid": "^1.0.2",
