@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import GovMember from './GovernmentMember';
-import firebase from 'firebase';
 import { connect } from 'react-firebase';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 

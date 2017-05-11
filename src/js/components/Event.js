@@ -4,7 +4,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-firebase';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
-import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card';
+import { Card, CardHeader, CardText } from 'material-ui/Card';
 
 class Events extends React.Component {
   constructor(props) {

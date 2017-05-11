@@ -57,7 +57,7 @@ router.route('/verify').post(function (req, res) {
     if (!error) {
       if (parseInt(body, 10) === 1) {
         getFlagUrl(req.body.nation, function (flagUrl) {
-          firebase.database().ref('nations/' + req.body.nation).set({
+          database().ref('nations/' + req.body.nation).set({
             flag: flagUrl
           });
         });
