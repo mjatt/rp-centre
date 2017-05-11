@@ -44,6 +44,16 @@ npm install
 
 #### Running
 
+### Dev mode
+
+```bash
+# The server will spin up on port 3000, and reload if files are changed
+# great for developing
+npm run dev
+```
+
+### Normal usage
+
 ```bash
 # The server will spin up on port 3000
 npm run start
