@@ -69,7 +69,7 @@ class GovernmentDisplay extends React.Component {
         <Row style={{ padding: '15 0 15 0' }}>
           {this.state.data.map((d) => {
             return (
-              <Col md>
+              <Col md key={d.key}>
                 <GovMember name={d.name} position={d.position} description={d.description} imgSrc={d.imgSrc} />
               </Col>
             );
