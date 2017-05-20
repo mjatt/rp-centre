@@ -18,6 +18,10 @@ class Events extends React.Component {
       events: [],
       createEvent: false
     };
+
+    this.handleClose = this.handleClose.bind(this);
+    this.handleOpen = this.handleOpen.bind(this);
+    this.createEvent = this.createEvent.bind(this);
   }
 
   handleOpen() {
@@ -79,15 +83,21 @@ class Events extends React.Component {
     if (this.state.loading) {
       return (
         <div>
-          <Dialog open={this.createEvent} title="Create an event..." actions={actions} modal>
-
+          <Dialog open={this.state.createEvent} title="Create an event..." actions={actions} modal>
+            <Grid fluid>
+              <Row center="md">
+                <Col md>
+                  <p>Please fill out the following fields</p>
+                </Col>
+              </Row>
+            </Grid>
           </Dialog>
           <Grid fluid>
             <Row center="md" style={{ paddingTop: '15px' }}>
               {
                 (this.props.nation) ? (
                   <Col md>
-                    <RaisedButton style={{ width: '75%' }} onTouchTap={this.createEvent()} backgroundColor="rgb(232, 232, 232)" label="Create new event" />
+                    <RaisedButton style={{ width: '75%' }} onTouchTap={this.handleOpen} backgroundColor="rgb(232, 232, 232)" label="Create new event" />
                   </Col>
                 ) : (
                     <Col md>
@@ -120,11 +130,11 @@ class Events extends React.Component {
     }
     return (
       <div>
-        <Dialog open={this.createEvent} title="Create an event..." actions={actions} modal>
+        <Dialog open={this.state.createEvent} title="Create an event..." actions={actions} modal>
           <Grid fluid>
             <Row center="md">
               <Col md>
-                <p>
+                <p>Please fill out the following fields</p>
               </Col>
             </Row>
           </Grid>
@@ -134,7 +144,7 @@ class Events extends React.Component {
             {
               (this.props.nation) ? (
                 <Col md>
-                  <RaisedButton style={{ width: '75%' }} onTouchTap={this.createEvent()} backgroundColor="rgb(232, 232, 232)" label="Create new event" />
+                  <RaisedButton style={{ width: '75%' }} onTouchTap={this.handleOpen} backgroundColor="rgb(232, 232, 232)" label="Create new event" />
                 </Col>
               ) : (
                   <Col md>
