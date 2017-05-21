@@ -12,7 +12,7 @@ firebase.initializeApp({
 
 import GovernmentDisplay from './components/Government';
 import Register from './components/Register';
-import Events from './components/Event';
+import Events from './components/EventDisplay';
 
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
