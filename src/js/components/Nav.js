@@ -29,7 +29,7 @@ class MyNavbar extends React.Component {
           ) : (
               <ToolbarGroup>
                 <Link to="/register">
-                  <RaisedButton label="Sign Up" primary />
+                  <RaisedButton label="Sign In" primary />
                 </Link>
               </ToolbarGroup>
             )
