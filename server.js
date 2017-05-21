@@ -46,6 +46,17 @@ app.use(cookieParser());
 // eslint-disable-next-line new-cap
 var router = express.Router();
 
+router.route('/event/create').post(function (req, res) {
+  firebase.database().ref('/events/' + req.body.title).set({
+    channel: req.body.channel,
+    createdBy: req.body.createdBy,
+    createdOn: req.body.createdOn,
+    description: req.body.description,
+    title: req.body.title
+  });
+  res.send('Success!');
+});
+
 router.route('/verify').post(function (req, res) {
   let url = 'https://www.nationstates.net/cgi-bin/api.cgi?a=verify&nation=' + req.body.nation + '&checksum=' + req.body.code + '&token=' + SITE_CODE;
 

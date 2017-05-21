@@ -2,6 +2,8 @@ import React, { PropTypes } from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-firebase';
+import axios from 'axios';
+import moment from 'moment';
 
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import Dialog from 'material-ui/Dialog';
@@ -74,7 +76,29 @@ class Events extends React.Component {
   }
 
   createEvent() {
-    console.log('Not Yet Implemented!');
+    let rightNow = moment().format('DD/MM/YYYY');
+    let data = {
+      title: this.state.eventTitle,
+      description: this.state.eventDescription,
+      channel: this.state.eventChannel,
+      createdBy: this.props.nation,
+      createdOn: rightNow
+    };
+
+    console.log(data);
+
+    const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
+    const apiEndpoint = baseUrl + '/api/event/create';
+
+    let _this = this;
+    axios.post(apiEndpoint, data).then(function (response) {
+      console.log(response);
+      _this.setState({
+        createEvent: false
+      });
+    }).catch(function (error) {
+      console.log(error);
+    });
   }
 
   handleUpdateTitle(errors, values) {
@@ -103,7 +127,7 @@ class Events extends React.Component {
 
   handleEventChannelChange(event, value) {
     let myVal = value.replace('_', ' ');
-    myVal = myVal.replace(/\w\S*/g, function (txt) {return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    myVal = myVal.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
     this.setState({
       eventChannel: myVal
     }, this.isFormValid);
@@ -141,7 +165,7 @@ class Events extends React.Component {
               </Col>
             </Row>
             <Row center="md">
-              <Col md style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+              <Col md style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 Event Title:
               </Col>
               <Col md>
@@ -153,7 +177,7 @@ class Events extends React.Component {
               </Col>
             </Row>
             <Row center="md" style={{ paddingTop: '15px' }}>
-              <Col md style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+              <Col md style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 Event Description:
               </Col>
               <Col md>
@@ -169,7 +193,7 @@ class Events extends React.Component {
             </Row>
             <Row center="md" style={{ paddingTop: '15px' }}>
               <Col md mdOffset={4}>
-                <RadioButtonGroup onChange={this.handleEventChannelChange} style={{ width: '50%'}} name="channel" defaultSelected="general">
+                <RadioButtonGroup onChange={this.handleEventChannelChange} style={{ width: '50%' }} name="channel" defaultSelected="general">
                   <RadioButton
                     value="general"
                     label="General"
