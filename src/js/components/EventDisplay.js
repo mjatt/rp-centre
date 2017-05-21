@@ -274,7 +274,7 @@ class Events extends Component {
               return (
                 <Row style={{ paddingTop: '15px' }} key={event.key} center="md">
                   <Col md>
-                    <Event event={event} />
+                    <Event event={event} nation={this.props.nation} />
                   </Col>
                 </Row>
               );

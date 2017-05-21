@@ -57,6 +57,16 @@ router.route('/event/create').post(function (req, res) {
   res.send('Success!');
 });
 
+router.route('/event/comment').post(function (req, res) {
+  let rightNow = new Date().toTimeString();
+  firebase.database().ref('/events/' + req.body.event + '/comments/' + rightNow).set({
+    createdOn: req.body.createdOn,
+    message: req.body.message,
+    nation: req.body.nation
+  });
+  res.send('Success');
+});
+
 router.route('/verify').post(function (req, res) {
   let url = 'https://www.nationstates.net/cgi-bin/api.cgi?a=verify&nation=' + req.body.nation + '&checksum=' + req.body.code + '&token=' + SITE_CODE;
 
