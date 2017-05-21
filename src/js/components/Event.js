@@ -8,6 +8,8 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
+import TextField from './ValidatedTextField';
+import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
 
 class Events extends React.Component {
   constructor(props) {
@@ -16,12 +18,20 @@ class Events extends React.Component {
     this.state = {
       loading: true,
       events: [],
-      createEvent: false
+      createEvent: false,
+      eventTitle: '',
+      eventDescription: '',
+      eventChannel: '',
+      invalid: true
     };
 
     this.handleClose = this.handleClose.bind(this);
     this.handleOpen = this.handleOpen.bind(this);
     this.createEvent = this.createEvent.bind(this);
+    this.handleEventChannelChange = this.handleEventChannelChange.bind(this);
+    this.handleUpdateTitle = this.handleUpdateTitle.bind(this);
+    this.handleUpdateDescription = this.handleUpdateDescription.bind(this);
+    this.isFormValid = this.isFormValid.bind(this);
   }
 
   handleOpen() {
@@ -67,6 +77,46 @@ class Events extends React.Component {
     console.log('Not Yet Implemented!');
   }
 
+  handleUpdateTitle(errors, values) {
+    if (!errors) {
+      this.setState({
+        eventTitle: values
+      }, this.isFormValid);
+    } else {
+      this.setState({
+        invalid: true
+      });
+    }
+  }
+
+  handleUpdateDescription(errors, values) {
+    if (!errors) {
+      this.setState({
+        eventDescription: values
+      }, this.isFormValid);
+    } else {
+      this.setState({
+        invalid: true
+      });
+    }
+  }
+
+  handleEventChannelChange(event, value) {
+    let myVal = value.replace('_', ' ');
+    myVal = myVal.replace(/\w\S*/g, function (txt) {return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    this.setState({
+      eventChannel: myVal
+    }, this.isFormValid);
+  }
+
+  isFormValid() {
+    if (this.state.eventTitle && this.state.eventDescription && this.state.eventChannel) {
+      this.setState({
+        invalid: false
+      });
+    }
+  }
+
   render() {
     const actions = [
       <FlatButton
@@ -77,16 +127,62 @@ class Events extends React.Component {
       <FlatButton
         label="Submit"
         primary
-        onTouchTap={this.handleClose}
+        onTouchTap={this.createEvent}
+        disabled={this.state.invalid}
       />
     ];
     return (
       <div>
         <Dialog open={this.state.createEvent} title="Create an event..." actions={actions} modal>
           <Grid fluid>
-            <Row center="md">
+            <Row center="md" style={{ paddingTop: '15px' }}>
               <Col md>
                 <p>Please fill out the following fields</p>
+              </Col>
+            </Row>
+            <Row center="md">
+              <Col md style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                Event Title:
+              </Col>
+              <Col md>
+                <TextField hintText="Event Title"
+                  onChange={this.handleUpdateTitle}
+                  validate={['required']}
+                  errorText="Please enter an event title"
+                  style={{ width: '100%' }} />
+              </Col>
+            </Row>
+            <Row center="md" style={{ paddingTop: '15px' }}>
+              <Col md style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                Event Description:
+              </Col>
+              <Col md>
+                <TextField hintText="Description"
+                  onChange={this.handleUpdateDescription}
+                  validate={['required']}
+                  errorText="Please enter an event description"
+                  style={{ width: '100%' }}
+                  multiline
+                  rows={4}
+                  rowsMax={10} />
+              </Col>
+            </Row>
+            <Row center="md" style={{ paddingTop: '15px' }}>
+              <Col md mdOffset={4}>
+                <RadioButtonGroup onChange={this.handleEventChannelChange} style={{ width: '50%'}} name="channel" defaultSelected="general">
+                  <RadioButton
+                    value="general"
+                    label="General"
+                  />
+                  <RadioButton
+                    value="international_affairs"
+                    label="International Affairs"
+                  />
+                  <RadioButton
+                    value="internal_affairs"
+                    label="Internal Affairs"
+                  />
+                </RadioButtonGroup>
               </Col>
             </Row>
           </Grid>
