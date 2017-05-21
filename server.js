@@ -84,7 +84,9 @@ router.route('/verify').post(function (req, res) {
             flag: flagUrl
           });
         });
-        res.cookie('nation', req.body.nation);
+        let nation = req.body.nation.replace('%20', ' ');
+        nation = nation.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+        res.cookie('nation', nation);
         res.send('Success');
       } else {
         res.status(400).send('Failure');
