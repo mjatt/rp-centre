@@ -8,7 +8,7 @@
     "lint-autofix": "eslint --fix .",
     "start": "node server.js",
     "dev": "nodemon -V -w server.js",
-    "build": "webpack --config webpackProd.config.js"
+    "build": "webpack --config webpack.prod.js"
   },
   "keywords": [
     "react"
