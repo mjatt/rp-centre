@@ -80,54 +80,6 @@ class Events extends React.Component {
         onTouchTap={this.handleClose}
       />
     ];
-    if (this.state.loading) {
-      return (
-        <div>
-          <Dialog open={this.state.createEvent} title="Create an event..." actions={actions} modal>
-            <Grid fluid>
-              <Row center="md">
-                <Col md>
-                  <p>Please fill out the following fields</p>
-                </Col>
-              </Row>
-            </Grid>
-          </Dialog>
-          <Grid fluid>
-            <Row center="md" style={{ paddingTop: '15px' }}>
-              {
-                (this.props.nation) ? (
-                  <Col md>
-                    <RaisedButton style={{ width: '75%' }} onTouchTap={this.handleOpen} backgroundColor="rgb(232, 232, 232)" label="Create new event" />
-                  </Col>
-                ) : (
-                    <Col md>
-                      <Link to="/register">
-                        <RaisedButton style={{ width: '75%' }} backgroundColor="rgb(232, 232, 232)" label="Log in" />
-                      </Link>
-                    </Col>
-                  )
-              }
-            </Row>
-            <Row center="xs" style={{ paddingTop: '15px' }}>
-              <Col md >
-                <RefreshIndicator
-                  size={60}
-                  left={10}
-                  top={0}
-                  status="loading"
-                  style={{ display: 'inline-block', position: 'relative' }}
-                />
-              </Col>
-            </Row>
-            <Row center="xs">
-              <Col md>
-                <p>Loading data...</p>
-              </Col>
-            </Row>
-          </Grid>
-        </div>
-      );
-    }
     return (
       <div>
         <Dialog open={this.state.createEvent} title="Create an event..." actions={actions} modal>
@@ -155,6 +107,30 @@ class Events extends React.Component {
                 )
             }
           </Row>
+          {
+            (this.state.loading) ? (
+              <div>
+                <Row center="xs" style={{ paddingTop: '15px' }}>
+                  <Col md >
+                    <RefreshIndicator
+                      size={60}
+                      left={10}
+                      top={0}
+                      status="loading"
+                      style={{ display: 'inline-block', position: 'relative' }}
+                    />
+                  </Col>
+                </Row>
+                <Row center="xs">
+                  <Col md>
+                    <p>Loading data...</p>
+                  </Col>
+                </Row>
+              </div>
+            ) : (
+                null
+              )
+          }
           {
             this.state.events.map((event) => {
               let subtitle = event.createdBy + ' - Created On: ' + event.createdOn + ' - Channel: ' + event.channel;
