@@ -1,13 +1,8 @@
 import React, { PropTypes } from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import GovMember from './GovernmentMember';
-import firebase from 'firebase';
 import { connect } from 'react-firebase';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
-
-firebase.initializeApp({
-  databaseURL: 'https://norrland-rp-centre.firebaseio.com/'
-});
 
 class GovernmentDisplay extends React.Component {
   constructor(props) {
@@ -27,7 +22,8 @@ class GovernmentDisplay extends React.Component {
           name: nextProps.data[key].name,
           position: key,
           imgSrc: nextProps.data[key].imgSrc,
-          description: nextProps.data[key].description
+          description: nextProps.data[key].description,
+          key: key
         };
         newData.push(member);
       }
@@ -39,7 +35,7 @@ class GovernmentDisplay extends React.Component {
     if (this.state.loading) {
       return (
         <Grid fluid>
-          <Row center="xs">
+          <Row center="xs" style={{ paddingTop: '15px' }}>
             <Col md >
               <RefreshIndicator
                 size={60}
@@ -51,7 +47,9 @@ class GovernmentDisplay extends React.Component {
             </Col>
           </Row>
           <Row center="xs">
-            <p>Loading data...</p>
+            <Col md>
+              <p>Loading data...</p>
+            </Col>
           </Row>
         </Grid>
       );
@@ -71,7 +69,7 @@ class GovernmentDisplay extends React.Component {
         <Row style={{ padding: '15 0 15 0' }}>
           {this.state.data.map((d) => {
             return (
-              <Col md>
+              <Col md key={d.key}>
                 <GovMember name={d.name} position={d.position} description={d.description} imgSrc={d.imgSrc} />
               </Col>
             );

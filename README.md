@@ -1,14 +1,10 @@
-# Norrland Role Play Centre
-
----
-
-## Build Status [![wercker status](https://app.wercker.com/status/19facae1dd72a7502349e3c35b04dcb4/s/master "wercker status")](https://app.wercker.com/project/byKey/19facae1dd72a7502349e3c35b04dcb4)
-
----
+# Norrland Role Play Centre [![wercker status](https://app.wercker.com/status/19facae1dd72a7502349e3c35b04dcb4/s/master "wercker status")](https://app.wercker.com/project/byKey/19facae1dd72a7502349e3c35b04dcb4)
 
 ## Usage
 
 ---
+
+You can find the live version [here](http://rpcentre.bancey.xyz)
 
 ### Vagrant
 
@@ -26,6 +22,7 @@ vagrant up
 
 # Connect to the vagrant machine
 vagrant ssh
+# If the machine asks for a password, try vagrant
 ```
 
 Unless you modify the `Vagrantfile` then this project folder is shared with the vm simply navigate to `/vagrant_data`.
@@ -47,6 +44,16 @@ npm install
 ```
 
 #### Running
+
+### Dev mode
+
+```bash
+# The server will spin up on port 3000, and reload if files are changed
+# great for developing
+npm run dev
+```
+
+### Normal usage
 
 ```bash
 # The server will spin up on port 3000
