@@ -10,12 +10,8 @@ import RefreshIndicator from 'material-ui/RefreshIndicator';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-import { Card, CardHeader, CardText } from 'material-ui/Card';
 import TextField from './ValidatedTextField';
 import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
-import Badge from 'material-ui/Badge';
-import IconButton from 'material-ui/IconButton';
-import CommentIcon from 'material-ui/svg-icons/communication/comment';
 
 class Events extends Component {
   constructor(props) {
@@ -80,12 +76,31 @@ class Events extends Component {
               comments.push(nextProps.data[key].comments[commentKey]);
             }
           }
+          comments.sort(function (comment1, comment2) {
+            let date1 = moment(comment1.createdOn, 'DD/MM/YYYY');
+            let date2 = moment(comment2.createdOn, 'DD/MM/YYYY');
+            if (date2 > date1) {
+              return 1;
+            } else if (date1 > date2) {
+              return -1;
+            }
+            return 0;
+          });
           event.comments = comments;
         }
         newData.push(event);
       }
     }
-
+    newData.sort(function (event1, event2) {
+      let date1 = moment(event1.createdOn, 'DD/MM/YYYY');
+      let date2 = moment(event2.createdOn, 'DD/MM/YYYY');
+      if (date2 > date1) {
+        return 1;
+      } else if (date1 > date2) {
+        return -1;
+      }
+      return 0;
+    });
     this.setState({ loading: false, events: newData });
   }
 
