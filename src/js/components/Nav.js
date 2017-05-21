@@ -9,7 +9,9 @@ class MyNavbar extends React.Component {
   }
 
   render() {
-    let welcomeText = 'Welcome ' + this.props.nation;
+    let nation = this.props.nation.replace('%20', ' ');
+    nation = nation.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+    let welcomeText = 'Welcome ' + nation;
     return (
       <Toolbar style={{ paddingLeft: '300px', paddingRight: '300px' }}>
         <ToolbarGroup>
@@ -25,12 +27,12 @@ class MyNavbar extends React.Component {
               <RaisedButton label="Log Out" primary onTouchTap={this.props.handleLogout} />
             </ToolbarGroup>
           ) : (
-            <ToolbarGroup>
-              <Link to="/register">
-                <RaisedButton label="Sign Up" primary />
-              </Link>
-            </ToolbarGroup>
-          )
+              <ToolbarGroup>
+                <Link to="/register">
+                  <RaisedButton label="Sign Up" primary />
+                </Link>
+              </ToolbarGroup>
+            )
         }
       </Toolbar>
     );

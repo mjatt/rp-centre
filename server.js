@@ -47,9 +47,11 @@ app.use(cookieParser());
 var router = express.Router();
 
 router.route('/event/create').post(function (req, res) {
+  let nation = req.body.nation.replace('%20', ' ');
+  nation = nation.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
   firebase.database().ref('/events/' + req.body.title).set({
     channel: req.body.channel,
-    createdBy: req.body.createdBy,
+    createdBy: nation,
     createdOn: req.body.createdOn,
     description: req.body.description,
     title: req.body.title
@@ -59,10 +61,12 @@ router.route('/event/create').post(function (req, res) {
 
 router.route('/event/comment').post(function (req, res) {
   let rightNow = new Date().toTimeString();
+  let nation = req.body.nation.replace('%20', ' ');
+  nation = nation.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
   firebase.database().ref('/events/' + req.body.event + '/comments/' + rightNow).set({
     createdOn: req.body.createdOn,
     message: req.body.message,
-    nation: req.body.nation
+    nation: nation
   });
   res.send('Success');
 });
