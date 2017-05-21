@@ -12,6 +12,9 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
 import TextField from './ValidatedTextField';
 import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
+import Badge from 'material-ui/Badge';
+import IconButton from 'material-ui/IconButton';
+import CommentIcon from 'material-ui/svg-icons/communication/comment';
 
 class Events extends React.Component {
   constructor(props) {
@@ -66,8 +69,18 @@ class Events extends React.Component {
           title: nextProps.data[key].title,
           description: nextProps.data[key].description,
           channel: nextProps.data[key].channel,
+          comments: [],
           key: key
         };
+        if (nextProps.data[key].comments !== 'undefined') {
+          let comments = [];
+          for (let commentKey in nextProps.data[key].comments) {
+            if (nextProps.data[key].comments.hasOwnProperty(commentKey)) {
+              comments.push(nextProps.data[key].comments[commentKey]);
+            }
+          }
+          event.comments = comments;
+        }
         newData.push(event);
       }
     }
@@ -264,7 +277,15 @@ class Events extends React.Component {
                         avatar={event.flag}
                       />
                       <CardText>{event.description}</CardText>
-                      <CardText>{event.createdOn}</CardText>
+                      <Badge
+                        badgeContent={event.comments.length}
+                        secondary
+                        badgeStyle={{ top: 12, right: 12 }}
+                      >
+                        <IconButton tooltip="Notifications">
+                          <CommentIcon />
+                        </IconButton>
+                      </Badge>
                     </Card>
                   </Col>
                 </Row>

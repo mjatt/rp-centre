@@ -22,7 +22,13 @@
       "createdBy": "Bisley",
       "title": "Event 123",
       "description": "This is event123",
-      "channel": "General"
+      "channel": "General",
+      "comments": {
+        "90121212": {
+          "nation": "Bisley",
+          "message": "Hello cunt"
+        }
+      }
     },
     "event456": {
       "createdOn": "11/05/2017",
