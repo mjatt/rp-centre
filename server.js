@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 const request = require('request');
 const cookieParser = require('cookie-parser');
 const firebase = require('firebase');
-const moment = require('moment');
 
 firebase.initializeApp({
   databaseURL: 'https://norrland-rp-centre.firebaseio.com/'
