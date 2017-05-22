@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const request = require('request');
 const cookieParser = require('cookie-parser');
 const firebase = require('firebase');
+const moment = require('moment');
 
 firebase.initializeApp({
   databaseURL: 'https://norrland-rp-centre.firebaseio.com/'
@@ -47,26 +48,27 @@ app.use(cookieParser());
 var router = express.Router();
 
 router.route('/event/create').post(function (req, res) {
-  let nation = req.body.nation.replace('%20', ' ');
-  nation = nation.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
-  firebase.database().ref('/events/' + req.body.title).set({
-    channel: req.body.channel,
-    createdBy: nation,
-    createdOn: req.body.createdOn,
-    description: req.body.description,
-    title: req.body.title
+  let flag;
+  firebase.database().ref('/nations/' + req.body.createdBy).once('value').then(function (snapshot) {
+    flag = snapshot.val().flag;
+    firebase.database().ref('/events/' + req.body.title).set({
+      channel: req.body.channel,
+      createdBy: req.body.createdBy,
+      createdOn: req.body.createdOn,
+      description: req.body.description,
+      title: req.body.title,
+      flag: flag
+    });
+    res.send('Success!');
   });
-  res.send('Success!');
 });
 
 router.route('/event/comment').post(function (req, res) {
-  let rightNow = new Date().toTimeString();
-  let nation = req.body.nation.replace('%20', ' ');
-  nation = nation.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+  let rightNow = new Date().getTime();
   firebase.database().ref('/events/' + req.body.event + '/comments/' + rightNow).set({
     createdOn: req.body.createdOn,
     message: req.body.message,
-    nation: nation
+    nation: req.body.nation
   });
   res.send('Success');
 });
@@ -83,13 +85,14 @@ router.route('/verify').post(function (req, res) {
   request(options, function (error, response, body) {
     if (!error) {
       if (parseInt(body, 10) === 1) {
+        let nation = req.body.nation.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+        nation = nation.replace('%20', '_');
+        nation = nation.replace(' ', '_');
         getFlagUrl(req.body.nation, function (flagUrl) {
-          firebase.database().ref('nations/' + req.body.nation).set({
+          firebase.database().ref('nations/' + nation).set({
             flag: flagUrl
           });
         });
-        let nation = req.body.nation.replace('%20', ' ');
-        nation = nation.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
         res.cookie('nation', nation);
         res.send('Success');
       } else {

@@ -52,7 +52,8 @@ class Event extends Component {
   }
 
   newComment() {
-    let rightNow = moment().format('DD/MM/YYYY');
+    let rightNow = moment().format('DD/MM/YYYY HH:mm:ss');
+    console.log(rightNow);
     let data = {
       nation: this.props.nation,
       message: this.state.comment,
@@ -117,9 +118,11 @@ class Event extends Component {
         </Card>
         {
           this.props.event.comments.map((comment) => {
+            let nation = comment.nation.replace('_', ' ');
+            nation = nation.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
             return (
               <Card key={comment.message} expandable expanded={this.state.expanded} initiallyExpanded={false}>
-                <CardText expandable><b>{comment.nation} - {comment.createdOn}</b><br />{comment.message}</CardText>
+                <CardText expandable><b>{nation} - {comment.createdOn}</b><br />{comment.message}</CardText>
               </Card>
             );
           })

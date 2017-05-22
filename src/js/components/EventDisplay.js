@@ -59,10 +59,12 @@ class Events extends Component {
     for (let key in nextProps.data) {
       if (nextProps.data.hasOwnProperty(key)) {
         let nation = nextProps.data[key].createdBy;
+        nation = nation.replace('_', ' ');
+        nation = nation.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
         let event = {
           createdOn: nextProps.data[key].createdOn,
           createdBy: nation,
-          flag: nations[nation],
+          flag: nations[nextProps.data[key].createdBy],
           title: nextProps.data[key].title,
           description: nextProps.data[key].description,
           channel: nextProps.data[key].channel,
@@ -77,8 +79,8 @@ class Events extends Component {
             }
           }
           comments.sort(function (comment1, comment2) {
-            let date1 = moment(comment1.createdOn, 'DD/MM/YYYY');
-            let date2 = moment(comment2.createdOn, 'DD/MM/YYYY');
+            let date1 = moment(comment1.createdOn, 'DD/MM/YYYY HH:mm:ss');
+            let date2 = moment(comment2.createdOn, 'DD/MM/YYYY HH:mm:ss');
             if (date2 > date1) {
               return 1;
             } else if (date1 > date2) {
@@ -92,8 +94,8 @@ class Events extends Component {
       }
     }
     newData.sort(function (event1, event2) {
-      let date1 = moment(event1.createdOn, 'DD/MM/YYYY');
-      let date2 = moment(event2.createdOn, 'DD/MM/YYYY');
+      let date1 = moment(event1.createdOn, 'DD/MM/YYYY HH:mm:ss');
+      let date2 = moment(event2.createdOn, 'DD/MM/YYYY HH:mm:ss');
       if (date2 > date1) {
         return 1;
       } else if (date1 > date2) {
@@ -105,7 +107,7 @@ class Events extends Component {
   }
 
   createEvent() {
-    let rightNow = moment().format('DD/MM/YYYY');
+    let rightNow = moment().format('DD/MM/YYYY HH:mm:ss');
     let data = {
       title: this.state.eventTitle,
       description: this.state.eventDescription,
