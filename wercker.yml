@@ -10,6 +10,14 @@ build:
     - script:
         name: build
         code: npm run build
+package:
+  steps:
+    - npm-install
+    - script:
+        name: cleanup
+        code: |
+              ls -la
+              rm -r .git/
     - script:
         name: copy output
         code: |
@@ -32,22 +40,9 @@ deploy:
     - script:
         name: update files
         code: |
-              ls -la
-              rm -r .git/
-              rm -r node_modules/
-              ls -la
               cd ..
               mv source rp-centre
               scp -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -r rp-centre bancey@rpcentre.bancey.xyz:/home/bancey
-    - script:		
-        name: npm install and build		
-        code: |
-              ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz 
-              cd /home/bancey/rp-centre
-              export NODE_ENV=production
-              npm install
-              rm dist/bundle.js
-              npm run build		
     - script:		
         name: start server		
         code: ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz sudo /home/bancey/scripts/startServer.sh
