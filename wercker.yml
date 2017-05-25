@@ -32,6 +32,5 @@ deploy:
     - script:
         name: update files
         code: |
-              cd /pipeline/
               ls -la
               scp -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no $WERCKER_OUTPUT_DIR bancey@rpcentre.bancey.xyz:/home/bancey/
