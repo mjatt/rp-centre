@@ -16,13 +16,4 @@ deploy:
         hostname: rpcentre.bancey.xyz
     - script:
         name: stop server
-        code: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz echo $SSH_PASSWORD | sudo -S pm2 stop server
-    - script:
-        name: update files
-        code: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz cd /home/bancey/rpcentre && git pull
-    - script:
-        name: npm instal and build
-        code: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz cd /home/bancey/rpcentre && npm install && rm dist/bundle.js && npm run build
-    - script:
-        name: start server
-        code: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz echo $SSH_PASSWORD | sudo -S pm2 start server
+        code: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey -p $SSH_PASSWORD rpcentre.bancey.xyz echo ayyyy
