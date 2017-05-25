@@ -73,20 +73,11 @@ class Event extends Component {
       _this.setState({
         createEvent: false
       });
-      setTimeout(function () {
-        _this.setState({
-          invalid: false,
-          comment: ''
-        });
-      }, 5000);
+      _this.setState({
+        comment: ''
+      });
     }).catch(function (error) {
       console.log(error);
-      setTimeout(function () {
-        _this.setState({
-          invalid: false,
-          comment: ''
-        });
-      }, 5000);
     });
   }
 
