@@ -9,4 +9,53 @@ build:
         code: npm run lint
     - script:
         name: build
-code: npm run build
+        code: npm run build
+package:
+  steps:
+    - script:
+        name: cleanup
+        code: |
+              ls -la
+              rm -r node_modules/
+              rm -r .git/
+              ls -la
+    - npm-install
+    - script:
+        name: copy output
+        code: |
+          cd ..
+          mv source rp-centre
+          tar -zcvf rp-centre.tar.gz rp-centre
+          cp rp-centre.tar.gz "$WERCKER_OUTPUT_DIR"
+deploy:
+  steps:
+    - add-to-known_hosts:
+        hostname: rpcentre.bancey.xyz
+    - mktemp:
+      envvar: PRIVATEKEY_PATH
+    - create-file:
+      name: write key
+      filename: $PRIVATEKEY_PATH
+      content: $SSH_KEY
+      overwrite: true
+      hide-from-log: true
+    - script:
+        name: stop server
+        code: ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz sudo /home/bancey/scripts/stopServer.sh
+    - script:
+        name: transfer files
+        code: |
+              ls -la
+              scp -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no rp-centre.tar.gz bancey@rpcentre.bancey.xyz:/home/bancey
+    - script:
+        name: remove previous files
+        code: ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz rm -r /home/bancey/rp-centre
+    - script:
+        name: unpack files
+        code: ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz tar -zxvf rp-centre.tar.gz
+    - script:
+        name: clean up
+        code: ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz rm /home/bancey/rp-centre.tar.gz
+    - script:		
+        name: start server		
+        code: ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz sudo /home/bancey/scripts/startServer.sh
