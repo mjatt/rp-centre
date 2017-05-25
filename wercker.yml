@@ -28,6 +28,6 @@ deploy:
     - script:
         name: update files
         code: |
-              cd ..
+              cd $WERCKER_SOURCE_DIR
               ls -la
               scp -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no rp-centre bancey@rpcentre.bancey.xyz:/home/bancey/
