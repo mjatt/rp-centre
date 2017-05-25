@@ -24,4 +24,13 @@ deploy:
       hide-from-log: true
     - script:
         name: stop server
-        code: ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz echo ayyyy
+        code: ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz echo $SSH_PASSWORD | sudo -S pm2 stop server
+    - script:
+        name: update files
+        code: ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz cd /home/bancey/rpcentre && git pull
+    - script:
+        name: npm install and build
+        code: ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz cd /home/bancey/rpcentre && npm install && rm dist/bundle.js && npm run build
+    - script:
+        name: start server
+        code: ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz echo $SSH_PASSWORD | sudo -S pm2 start server
