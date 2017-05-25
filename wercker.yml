@@ -24,11 +24,7 @@ deploy:
       hide-from-log: true
     - script:
         name: stop server
-        code: |
-              # ssh into the machine
-              ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz
-              # run pm2 command to stop the server
-              sudo /home/bancey/scripts/stopServer.sh
+        code: ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz sudo /home/bancey/scripts/stopServer.sh
     - script:
         name: update files
         code: ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz cd /home/bancey/rpcentre && git pull
@@ -37,8 +33,4 @@ deploy:
         code: ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz cd /home/bancey/rpcentre && npm install && rm dist/bundle.js && npm run build
     - script:
         name: start server
-        code: |
-              # ssh into the machine
-              ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz echo $PASSWORD | sudo -S pm2 start server
-              # run pm2 command to start the server
-              sudo /home/bancey/scripts/startServer.sh
+        code: ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz sudo /home/bancey/scripts/startServer.sh
