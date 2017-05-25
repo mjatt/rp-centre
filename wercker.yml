@@ -40,10 +40,18 @@ deploy:
         name: stop server
         code: ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz sudo /home/bancey/scripts/stopServer.sh
     - script:
-        name: update files
+        name: transfer files
         code: |
               ls -la
               scp -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no rp-centre.tar.gz bancey@rpcentre.bancey.xyz:/home/bancey
+    - script:
+        name: unpack files
+        code: |
+              ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz
+              ls -la
+              cd /home/bancey/
+              tar -zxvf rp-centre.tar.gz
+              ls -la
     - script:		
         name: start server		
         code: ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz sudo /home/bancey/scripts/startServer.sh
