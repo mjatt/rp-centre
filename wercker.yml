@@ -44,6 +44,7 @@ deploy:
         code: |
               ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz 
               cd /home/bancey/rp-centre
+              export NODE_ENV=production
               npm install
               rm dist/bundle.js
               npm run build		
