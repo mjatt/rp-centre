@@ -30,4 +30,4 @@ deploy:
         code: |
               pwd
               ls -la
-              scp -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no rp-centre bancey@rpcentre.bancey.xyz:/home/bancey/
+              scp -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no . bancey@rpcentre.bancey.xyz:/home/bancey/
