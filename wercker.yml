@@ -22,7 +22,8 @@ package:
         name: copy output
         code: |
           cd ..
-          tar -zcvf rp-centre.tar.gz $WERCKER_SOURCE_DIR
+          mv source rp-centre
+          tar -zcvf rp-centre.tar.gz rp-centre
           cp rp-centre.tar.gz "$WERCKER_OUTPUT_DIR"
 deploy:
   steps:
