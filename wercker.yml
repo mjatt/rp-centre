@@ -23,7 +23,7 @@ package:
         code: |
           cd ..
           tar -zcvf rp-centre.tar.gz $WERCKER_SOURCE_DIR
-          cp -r "$WERCKER_SOURCE_DIR/" "$WERCKER_OUTPUT_DIR"
+          cp rp-centre.tar.gz "$WERCKER_OUTPUT_DIR"
 deploy:
   steps:
     - add-to-known_hosts:
@@ -43,8 +43,7 @@ deploy:
         name: update files
         code: |
               cd ..
-              mv source rp-centre
-              scp -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -r rp-centre bancey@rpcentre.bancey.xyz:/home/bancey
+              scp -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no $WERCKER_OUTPUT_DIR/rp-centre.tar.gz bancey@rpcentre.bancey.xyz:/home/bancey
     - script:		
         name: start server		
         code: ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz sudo /home/bancey/scripts/startServer.sh
