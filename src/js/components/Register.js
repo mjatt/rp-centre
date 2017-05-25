@@ -106,7 +106,7 @@ class Register extends React.Component {
     axios.post(apiEndpoint, data).then(function (response) {
       console.log(response.data);
       _this.setState({
-        responseMsg: 'Registered Successfully... You will be redirected in 3 seconds...',
+        responseMsg: response.data,
         open: true
       }, function () {
         setTimeout(function () {
@@ -116,7 +116,7 @@ class Register extends React.Component {
     }).catch(function (error) {
       console.log(error.response.data);
       _this.setState({
-        responseMsg: 'There was an error, please try again...',
+        responseMsg: error.response.data,
         open: true
       });
     });
