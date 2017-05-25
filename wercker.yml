@@ -28,8 +28,7 @@ deploy:
               # ssh into the machine
               ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz
               # run pm2 command to stop the server
-              echo $PASSWORD \n
-              sudo -S pm2 stop server
+              echo -e "$PASSWORD\n" \| "sudo -S pm2 stop server"
     - script:
         name: update files
         code: ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz cd /home/bancey/rpcentre && git pull
