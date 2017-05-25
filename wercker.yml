@@ -33,5 +33,6 @@ deploy:
         name: update files
         code: |
               cd ..
+              mv source rp-centre
               ls -la
-              scp -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no source/ bancey@rpcentre.bancey.xyz:/home/bancey/
+              scp -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -r rp-centre bancey@rpcentre.bancey.xyz:/home/bancey/
