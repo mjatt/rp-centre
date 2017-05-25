@@ -14,6 +14,14 @@ deploy:
   steps:
     - add-to-known_hosts:
         hostname: rpcentre.bancey.xyz
+    - mktemp:
+      envvar: PRIVATEKEY_PATH
+    - create-file:
+      name: write key
+      filename: $PRIVATEKEY_PATH
+      content: $SSH_KEY
+      overwrite: true
+      hide-from-log: true
     - script:
         name: stop server
-        code: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey -p $SSH_PASSWORD rpcentre.bancey.xyz echo ayyyy
+        code: ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz echo ayyyy
