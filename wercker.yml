@@ -27,4 +27,7 @@ deploy:
         code: ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz sudo /home/bancey/scripts/stopServer.sh
     - script:
         name: update files
-        code: scp -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no digitalocean-test bancey@rpcentre.bancey.xyz:/home/bancey/
+        code: |
+              pwd
+              ls -la
+              scp -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no rp-centre bancey@rpcentre.bancey.xyz:/home/bancey/
