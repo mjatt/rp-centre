@@ -83,10 +83,10 @@ router.route('/verify').post(function (req, res) {
   };
   request(options, function (error, response, body) {
     if (!error) {
+      let nation = req.body.nation.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+      nation = nation.replace('%20', '_');
+      nation = nation.replace(' ', '_');
       if (parseInt(body, 10) === 1) {
-        let nation = req.body.nation.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
-        nation = nation.replace('%20', '_');
-        nation = nation.replace(' ', '_');
         getFlagUrl(req.body.nation, function (flagUrl) {
           firebase.database().ref('nations/' + nation).set({
             flag: flagUrl
@@ -94,11 +94,15 @@ router.route('/verify').post(function (req, res) {
         });
         res.cookie('nation', nation);
         res.send('Success');
+        console.log('User: ' + nation + ' signed in successfully.');
       } else {
         res.status(400).send('Failure');
+        console.error('user: ' + nation + ' failed to login.');
       }
     } else {
       res.status(400).send(error);
+      console.error('Ran into an error: ' + error);
+      console.error(error);
     }
   });
 });
