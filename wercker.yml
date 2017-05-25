@@ -12,12 +12,14 @@ build:
         code: npm run build
 package:
   steps:
-    - npm-install
     - script:
         name: cleanup
         code: |
               ls -la
+              rm -r node_modules/
               rm -r .git/
+              ls -la
+    - npm-install
     - script:
         name: copy output
         code: |
