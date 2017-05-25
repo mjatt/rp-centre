@@ -43,7 +43,7 @@ deploy:
         name: update files
         code: |
               ls -la
-              scp -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no $WERCKER_OUTPUT_DIR/rp-centre.tar.gz bancey@rpcentre.bancey.xyz:/home/bancey
+              scp -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no rp-centre.tar.gz bancey@rpcentre.bancey.xyz:/home/bancey
     - script:		
         name: start server		
         code: ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre.bancey.xyz sudo /home/bancey/scripts/startServer.sh
