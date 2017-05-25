@@ -42,9 +42,6 @@ deploy:
     - script:
         name: update files
         code: |
-              cd ..
-              ls -la
-              cd $WERCKER_OUTPUT_DIR
               ls -la
               scp -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no $WERCKER_OUTPUT_DIR/rp-centre.tar.gz bancey@rpcentre.bancey.xyz:/home/bancey
     - script:		
