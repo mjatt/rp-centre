@@ -73,6 +73,40 @@ router.route('/event/comment').post(function (req, res) {
   res.send('Success');
 });
 
+router.route('/calc/data').get(function (req, res) {
+  let censusUrl = 'https://www.nationstates.net/cgi-bin/api.cgi?nation=' + req.query.nation + ';q=census;scale=52+46+1;mode=score';
+
+  var censusOptions = {
+    url: censusUrl,
+    headers: {
+      'User-Agent': 'Norrland RP Centre'
+    }
+  };
+  request(censusOptions, function (error, response, body) {
+    if (!error) {
+      parseString(body, function (err, result) {
+        if (err) console.error(err);
+        let economy = result.NATION.CENSUS[0].SCALE[0].SCORE[0];
+        let defense = result.NATION.CENSUS[0].SCALE[1].SCORE[0];
+        let integrity = result.NATION.CENSUS[0].SCALE[2].SCORE[0];
+
+        let physicalStrength = Math.sqrt((defense * 2) * (economy / 100) * req.query.population);
+        let integrityModifier = (integrity + 20) / 120;
+        let budget = Math.round((30 * integrityModifier * physicalStrength));
+        firebase.database().ref('nations/' + req.query.nation).once('value').then(function (snapshot) {
+          firebase.database().ref('nations/' + req.query.nation).set({
+            flag: snapshot.val().flag,
+            budget: budget
+          });
+          res.send('Budget calculated successfully, your budget is ' + budget);
+        });
+      });
+    } else {
+      res.status(400).send('An error occured, please check the information provided and try again.');
+    }
+  });
+});
+
 router.route('/verify').post(function (req, res) {
   let verifyUrl = 'https://www.nationstates.net/cgi-bin/api.cgi?a=verify&nation=' + req.body.nation + '&checksum=' + req.body.code + '&token=' + SITE_CODE;
   let nationCheckUrl = 'https://www.nationstates.net/cgi-bin/api.cgi?nation=' + req.body.nation + '&q=region';
