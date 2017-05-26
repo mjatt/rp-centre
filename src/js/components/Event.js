@@ -52,6 +52,9 @@ class Event extends Component {
   }
 
   newComment() {
+    this.setState({
+      invalid: true
+    });
     let rightNow = moment().format('DD/MM/YYYY HH:mm:ss');
     console.log(rightNow);
     let data = {
@@ -69,6 +72,9 @@ class Event extends Component {
       console.log(response);
       _this.setState({
         createEvent: false
+      });
+      _this.setState({
+        comment: ''
       });
     }).catch(function (error) {
       console.log(error);
@@ -98,13 +104,13 @@ class Event extends Component {
           {
             (this.props.nation) ? (
               <Grid fluid style={{ paddingTop: '15px' }}>
-                <Row style={{borderStyle: 'solid', borderWidth: '1px', borderColor: 'rgb(232, 232, 232)'}}>
+                <Row style={{ borderStyle: 'solid', borderWidth: '1px', borderColor: 'rgb(232, 232, 232)' }}>
                   <Col md>
                     <TextField hintText="Comment"
                       onChange={this.handleUpdateComment}
                       validate={['required']}
                       errorText="Please enter a comment"
-                      style={{ width: '100%', height: '100%'}} />
+                      style={{ width: '100%', height: '100%' }} />
                   </Col>
                   <Col md>
                     <RaisedButton style={{ width: '100%' }} onTouchTap={this.newComment} disabled={this.state.invalid} primary label="Comment" />
