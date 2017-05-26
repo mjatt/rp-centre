@@ -93,13 +93,10 @@ router.route('/calc/data').get(function (req, res) {
         let physicalStrength = Math.sqrt((defense * 2) * (economy / 100) * req.query.population);
         let integrityModifier = (integrity + 20) / 120;
         let budget = Math.round((30 * integrityModifier * physicalStrength));
-        firebase.database().ref('nations/' + req.query.nation).once('value').then(function (snapshot) {
-          firebase.database().ref('nations/' + req.query.nation).set({
-            flag: snapshot.val().flag,
-            budget: budget
-          });
-          res.send('Budget calculated successfully, your budget is ' + budget);
+        firebase.database().ref('nations/' + req.query.nation).update({
+          budget: budget
         });
+        res.send('Budget calculated successfully, your budget is ' + budget);
       });
     } else {
       res.status(400).send('An error occured, please check the information provided and try again.');
@@ -138,7 +135,7 @@ router.route('/verify').post(function (req, res) {
               console.error('User: ' + nation + ' attempted to login but it not a member of Norrland!');
             } else {
               getFlagUrl(req.body.nation, function (flagUrl) {
-                firebase.database().ref('nations/' + nation).set({
+                firebase.database().ref('nations/' + nation).update({
                   flag: flagUrl
                 });
               });
