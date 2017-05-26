@@ -38,7 +38,7 @@ class Register extends React.Component {
       _this.setState({
         loading: false
       });
-    }, 500);
+    }, 1000);
   }
 
   handleUpdateNation(errors, values) {
