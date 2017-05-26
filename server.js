@@ -126,8 +126,8 @@ router.route('/verify').post(function (req, res) {
   request(verifyOptions, function (error, response, body) {
     if (!error) {
       let nation = req.body.nation.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
-      nation = nation.replace('%20', '_');
-      nation = nation.replace(' ', '_');
+      nation = nation.replaceAll('%20', '_');
+      nation = nation.replaceAll(' ', '_');
       if (parseInt(body, 10) === 1) {
         request(nationCheckOptions, function (nationCheckError, nationCheckResponse, nationCheckBody) {
           if (nationCheckError) console.error(error);
@@ -183,3 +183,10 @@ function getFlagUrl(nation, callback) {
     callback(parts[1].replace('</', '').replace('>', ''));
   });
 }
+
+// We are adding our method to the string definition, this isn't usually recommended.
+// eslint-disable-next-line no-extend-native
+String.prototype.replaceAll = function (search, replacement) {
+  var target = this;
+  return target.replace(new RegExp(search, 'g'), replacement);
+};
