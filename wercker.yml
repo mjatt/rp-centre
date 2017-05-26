@@ -13,6 +13,7 @@ build:
   after-steps:
     - slack-notifier:
         url: $DISCORD_URL
+        username: Build Bot
 package:
   steps:
     - script:
@@ -65,3 +66,4 @@ deploy:
   after-steps:
     - slack-notifier:
         url: $DISCORD_URL
+        username: Deploy Bot
