@@ -9,7 +9,7 @@ class MyNavbar extends React.Component {
   }
 
   render() {
-    let nation = this.props.nation.replace('_', ' ');
+    let nation = this.props.nation.replace(new RegExp('_', 'g'), ' ');
     nation = nation.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
     let welcomeText = 'Welcome ' + nation;
     return (

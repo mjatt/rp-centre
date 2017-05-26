@@ -59,7 +59,7 @@ class Events extends Component {
     for (let key in nextProps.data) {
       if (nextProps.data.hasOwnProperty(key)) {
         let nation = nextProps.data[key].createdBy;
-        nation = nation.replace('_', ' ');
+        nation = nation.replace(new RegExp('_', 'g'), ' ');
         nation = nation.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
         let event = {
           createdOn: nextProps.data[key].createdOn,
