@@ -221,9 +221,9 @@ class Events extends Component {
                   validate={['required']}
                   errorText="Please enter an event description"
                   style={{ width: '100%' }}
-                  multiline
                   rows={4}
-                  rowsMax={10} />
+                  rowsMax={10}
+                  multiLine />
               </Col>
             </Row>
             <Row center="md" style={{ paddingTop: '15px' }}>
