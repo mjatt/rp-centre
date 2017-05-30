@@ -42,10 +42,16 @@ class ValidatedTextField extends React.Component {
   }
 
   render() {
+    console.log(this.props.rows);
+    console.log(this.props.rowsMax);
+    console.log(this.props.multiLine);
     return (
       <TextField
         defaultValue={this.props.defaultValue}
         hintText={this.props.hintText}
+        multiLine={this.props.multiLine}
+        rows={this.props.rows}
+        rowsMax={this.props.rowsMax}
         errorText={this.state.errors ?
           (this.state.errorText) :
           (null)
@@ -64,7 +70,10 @@ ValidatedTextField.propTypes = {
   validate: PropTypes.arrayOf(PropTypes.string),
   onChange: PropTypes.func.isRequired,
   defaultValue: PropTypes.string,
-  name: PropTypes.string
+  name: PropTypes.string,
+  rows: PropTypes.number,
+  rowsMax: PropTypes.number,
+  multiLine: PropTypes.bool
 };
 
 export default ValidatedTextField;
