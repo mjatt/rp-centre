@@ -35,7 +35,7 @@ class MyNavbar extends React.Component {
               </ToolbarGroup>
             )
         }
-        <IconButton iconClassName="muidocs-icon-custom-github" href="https://github.com/alexbance/rp-centre" />
+        <IconButton href="https://github.com/alexbance/rp-centre" iconClassName="material-icons" tooltip="Github">custom_github</IconButton>
       </Toolbar>
     );
   }
