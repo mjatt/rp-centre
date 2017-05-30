@@ -4,14 +4,26 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { Link } from 'react-router-dom';
 import Paper from 'material-ui/Paper';
 import { connect } from 'react-firebase';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import TextField from './ValidatedTextField';
 
 class MilitaryCalculator extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      budget: null
+      budget: null,
+      openCalculate: false,
+      invalid: true,
+      population: null
     };
+
+    this.handleUpdatePopulation = this.handleUpdatePopulation.bind(this);
+    this.isFormValid = this.isFormValid.bind(this);
+    this.openCalculate = this.openCalculate.bind(this);
+    this.closeCalculate = this.closeCalculate.bind(this);
+    this.calculate = this.calculate.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -29,42 +41,114 @@ class MilitaryCalculator extends Component {
     }
   }
 
+  handleUpdatePopulation(errors, values) {
+    if (!errors) {
+      this.setState({
+        population: values
+      }, this.isFormValid);
+    } else {
+      this.setState({
+        invalid: true
+      });
+    }
+  }
+
+  isFormValid() {
+    if (this.state.population && this.props.nation) {
+      this.setState({
+        invalid: false
+      });
+    }
+  }
+
+  closeCalculate() {
+    this.setState({
+      openCalculate: false
+    });
+  }
+
+  openCalculate() {
+    this.setState({
+      openCalculate: true
+    });
+  }
+
+  calculate() {
+
+  }
+
   render() {
+    const actions = [
+      <FlatButton
+        label="Cancel"
+        primary
+        onTouchTap={this.closeCalculate}
+      />,
+      <FlatButton
+        label="Submit"
+        primary
+        onTouchTap={this.calculate}
+        disabled={this.state.invalid}
+      />
+    ];
     if (this.props.nation) {
       return (
-        <Grid fluid>
-          <Paper style={{ marginTop: '15px', paddingTop: '5px', paddingBottom: '5px' }}>
-            {
-              (this.state.budget) ? (
-                <div>
-                  <Row center="md">
-                    <Col md>
-                      Your current budget is {this.state.budget}
-                    </Col>
-                  </Row>
-                  <Row center="md" style={{ paddingTop: '10px' }}>
-                    <Col md>
-                      <RaisedButton primary label="Recalculate Budget" onTouchTap={this.calculate} style={{ width: '90%' }} />
-                    </Col>
-                  </Row>
-                </div>
-              ) : (
+        <div>
+          <Dialog open={this.state.openCalculate} title="Create an event..." actions={actions} modal>
+            <Grid fluid>
+              <Row center="md" style={{ paddingTop: '15px' }}>
+                <Col md>
+                  <p>Please fill out the following fields</p>
+                </Col>
+              </Row>
+              <Row center="md">
+                <Col md style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  RP Population (please be realistic):
+              </Col>
+                <Col md>
+                  <TextField hintText="RP Population (please be realistic)"
+                    onChange={this.handleUpdatePopulation}
+                    validate={['required', 'isNumber']}
+                    errorText="Please enter an event title"
+                    style={{ width: '100%' }} />
+                </Col>
+              </Row>
+            </Grid>
+          </Dialog>
+          <Grid fluid>
+            <Paper style={{ marginTop: '15px', paddingTop: '5px', paddingBottom: '5px' }}>
+              {
+                (this.state.budget) ? (
                   <div>
                     <Row center="md">
                       <Col md>
-                        You don't have a budget yet, calculate one!
-                    </Col>
+                        Your current budget is {this.state.budget}
+                      </Col>
                     </Row>
                     <Row center="md" style={{ paddingTop: '10px' }}>
                       <Col md>
-                        <RaisedButton primary label="Calculate Budget" onTouchTap={this.calculate} style={{ width: '90%' }} />
+                        <RaisedButton primary label="Recalculate Budget" onTouchTap={this.openCalculate} style={{ width: '90%' }} />
                       </Col>
                     </Row>
                   </div>
-                )
-            }
-          </Paper >
-        </Grid >
+                ) : (
+                    <div>
+                      <Row center="md">
+                        <Col md>
+                          You don't have a budget yet, calculate one!
+                    </Col>
+                      </Row>
+                      <Row center="md" style={{ paddingTop: '10px' }}>
+                        <Col md>
+                          <RaisedButton primary label="Calculate Budget" onTouchTap={this.openCalculate} style={{ width: '90%' }} />
+                        </Col>
+                      </Row>
+                    </div>
+                  )
+              }
+            </Paper >
+          </Grid >
+        </div>
       );
     }
     return (
