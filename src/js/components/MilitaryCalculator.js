@@ -7,6 +7,9 @@ import { connect } from 'react-firebase';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from './ValidatedTextField';
+import axios from 'axios';
+import Snackbar from 'material-ui/Snackbar';
+import RefreshIndicator from 'material-ui/RefreshIndicator';
 
 class MilitaryCalculator extends Component {
   constructor(props) {
@@ -16,9 +19,11 @@ class MilitaryCalculator extends Component {
       budget: null,
       openCalculate: false,
       invalid: true,
-      population: null
+      population: null,
+      loading: true
     };
 
+    this.handleRequestCloseSnackbar = this.handleRequestCloseSnackbar.bind(this);
     this.handleUpdatePopulation = this.handleUpdatePopulation.bind(this);
     this.isFormValid = this.isFormValid.bind(this);
     this.openCalculate = this.openCalculate.bind(this);
@@ -39,6 +44,15 @@ class MilitaryCalculator extends Component {
         }
       }
     }
+    this.setState({
+      loading: false
+    });
+  }
+
+  handleRequestCloseSnackbar() {
+    this.setState({
+      openSnackbar: false
+    });
   }
 
   handleUpdatePopulation(errors, values) {
@@ -74,10 +88,53 @@ class MilitaryCalculator extends Component {
   }
 
   calculate() {
+    let pop = parseInt(this.state.population, 10);
 
+    const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
+    const apiEndpoint = baseUrl + '/api/calc/data?nation=' + this.props.nation + '&population=' + pop;
+
+    let _this = this;
+    axios.get(apiEndpoint).then(function (response) {
+      console.log(response.data);
+      _this.setState({
+        openCalculate: false,
+        responseMsg: response.data,
+        openSnackbar: true
+      });
+    }).catch(function (error) {
+      console.log(error.response.data);
+      _this.setState({
+        responseMsg: error.response.data,
+        openSnackbar: true
+      });
+    });
   }
 
   render() {
+    if (this.state.loading) {
+      return (
+        <Grid fluid>
+          <Paper style={{ marginTop: '15px', paddingTop: '5px', paddingBottom: '5px' }}>
+            <Row center="md">
+              <Col md>
+                Loading data...
+              </Col>
+            </Row>
+            <Row center="md" style={{ paddingTop: '10px' }}>
+              <Col md>
+                <RefreshIndicator
+                  size={60}
+                  left={10}
+                  top={0}
+                  status="loading"
+                  style={{ display: 'inline-block', position: 'relative' }}
+                />
+              </Col>
+            </Row>
+          </Paper >
+        </Grid>
+      );
+    }
     const actions = [
       <FlatButton
         label="Cancel"
@@ -94,6 +151,12 @@ class MilitaryCalculator extends Component {
     if (this.props.nation) {
       return (
         <div>
+          <Snackbar
+            open={this.state.openSnackbar}
+            message={this.state.responseMsg}
+            autoHideDuration={10000}
+            onRequestClose={this.handleRequestCloseSnackbar}
+          />
           <Dialog open={this.state.openCalculate} title="Create an event..." actions={actions} modal>
             <Grid fluid>
               <Row center="md" style={{ paddingTop: '15px' }}>

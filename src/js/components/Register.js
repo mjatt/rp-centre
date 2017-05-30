@@ -92,7 +92,7 @@ class Register extends React.Component {
   }
 
   submit() {
-    let pop = parseInt(this.state.population, 10);
+    /* let pop = parseInt(this.state.population, 10);
     let data = {
       nation: this.state.nation,
       code: this.state.code,
@@ -119,7 +119,8 @@ class Register extends React.Component {
         responseMsg: error.response.data,
         open: true
       });
-    });
+    });*/
+    document.cookie = 'nation=Bisley;';
   }
 
   render() {
