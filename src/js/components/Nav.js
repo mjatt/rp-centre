@@ -9,10 +9,6 @@ class MyNavbar extends React.Component {
     super(props);
   }
 
-  openGithub() {
-    window.open('https://www.nationstates.net/page=verify_login?token=' + SITE_CODE, '_window');
-  }
-
   render() {
     let nation = this.props.nation.replace('_', ' ');
     nation = nation.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
@@ -30,17 +26,16 @@ class MyNavbar extends React.Component {
               <ToolbarTitle text={welcomeText} />
               <ToolbarSeparator />
               <RaisedButton label="Log Out" primary onTouchTap={this.props.handleLogout} />
-              <IconButton iconClassName="muidocs-icon-custom-github" onTouchTap={this.openGithub} />
             </ToolbarGroup>
           ) : (
               <ToolbarGroup>
                 <Link to="/register">
                   <RaisedButton label="Sign In" primary />
                 </Link>
-                <IconButton iconClassName="muidocs-icon-custom-github" onTouchTap={this.openGithub} />
               </ToolbarGroup>
             )
         }
+        <IconButton iconClassName="muidocs-icon-custom-github" href="https://github.com/alexbance/rp-centre" />
       </Toolbar>
     );
   }
