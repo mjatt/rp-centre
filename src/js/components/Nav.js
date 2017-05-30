@@ -20,22 +20,25 @@ class MyNavbar extends React.Component {
           <ToolbarSeparator />
           <Link style={{ paddingLeft: '15px', paddingRight: '15px' }} to="/events"><RaisedButton label="Events" labelStyle={{ fontWeight: 700 }} /></Link>
         </ToolbarGroup>
-        {
-          (this.props.nation) ? (
-            <ToolbarGroup>
-              <ToolbarTitle text={welcomeText} />
-              <ToolbarSeparator />
-              <RaisedButton label="Log Out" primary onTouchTap={this.props.handleLogout} />
-            </ToolbarGroup>
-          ) : (
-              <ToolbarGroup>
-                <Link to="/register">
-                  <RaisedButton label="Sign In" primary />
-                </Link>
-              </ToolbarGroup>
-            )
-        }
-        <IconButton href="https://github.com/alexbance/rp-centre" iconClassName="material-icons" tooltip="Github">settings_system_daydream</IconButton>
+        <ToolbarGroup>
+          {
+            (this.props.nation) ? (
+              <div>
+                <ToolbarTitle text={welcomeText} />
+                <ToolbarSeparator />
+                <RaisedButton label="Log Out" primary onTouchTap={this.props.handleLogout} />
+              </div>
+            ) : (
+                <div>
+                  <Link to="/register">
+                    <RaisedButton label="Sign In" primary />
+                  </Link>
+                </div>
+              )
+          }
+          <ToolbarSeparator />
+          <IconButton href="https://github.com/alexbance/rp-centre/issues" iconClassName="material-icons" tooltip="Bug reports">bug_report</IconButton>
+        </ToolbarGroup>
       </Toolbar>
     );
   }
