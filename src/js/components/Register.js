@@ -16,7 +16,6 @@ class Register extends React.Component {
     this.state = {
       nation: '',
       code: '',
-      population: '',
       loading: true,
       invalid: true,
       open: false,
@@ -24,7 +23,6 @@ class Register extends React.Component {
     };
 
     this.handleUpdateNation = this.handleUpdateNation.bind(this);
-    this.handleUpdatePop = this.handleUpdatePop.bind(this);
     this.handleUpdateCode = this.handleUpdateCode.bind(this);
     this.isFormValid = this.isFormValid.bind(this);
     this.handleRequestClose = this.handleRequestClose.bind(this);
@@ -65,20 +63,8 @@ class Register extends React.Component {
     }
   }
 
-  handleUpdatePop(errors, values) {
-    if (!errors) {
-      this.setState({
-        population: values
-      }, this.isFormValid);
-    } else {
-      this.setState({
-        invalid: true
-      });
-    }
-  }
-
   isFormValid() {
-    if (this.state.nation && this.state.population) {
+    if (this.state.nation && this.state.code) {
       this.setState({
         invalid: false
       });
@@ -92,11 +78,9 @@ class Register extends React.Component {
   }
 
   submit() {
-    let pop = parseInt(this.state.population, 10);
     let data = {
       nation: this.state.nation,
-      code: this.state.code,
-      population: pop
+      code: this.state.code
     };
 
     const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
@@ -173,18 +157,6 @@ class Register extends React.Component {
                 onChange={this.handleUpdateCode}
                 validate={['required']}
                 errorText="Please enter your verification code"
-                style={{ width: '100%' }} />
-            </Col>
-          </Row>
-          <Row style={{ padding: '10 0 10 0' }}>
-            <Col sm>
-              <h4>Current Population:</h4>
-            </Col>
-            <Col md>
-              <TextField hintText="Current Population"
-                onChange={this.handleUpdatePop}
-                validate={['required', 'isNumber']}
-                errorText="Please enter your current population"
                 style={{ width: '100%' }} />
             </Col>
           </Row>
