@@ -15,7 +15,7 @@ let targetChannel;
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.username}!`);
   client.guilds.forEach(function (value) {
-    targetChannel = value.channels.get('319188809432563722');
+    targetChannel = value.channels.get(process.env.DISCORD_CLIENT_ID);
   });
 });
 
@@ -46,4 +46,4 @@ eventsRef.once('value', function () {
   initalSetup = true;
 });
 
-client.login('MzE5MTg2MTE1MDM2ODM5OTM3.DA9QwA.3Y9tqCH1hlleIqVJQlOXUEtqQOc');
+client.login(process.env.DISCORD_TOKEN);
