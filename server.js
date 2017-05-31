@@ -1,4 +1,7 @@
 const express = require('express');
+const http = require('http');
+const https = require('https');
+const fs = require('fs');
 const path = require('path');
 const bodyParser = require('body-parser');
 const request = require('request');
@@ -130,9 +133,22 @@ app.use('/api', router);
 
 app.use(express.static(path.join(__dirname, '/dist')));
 
-const server = app.listen(process.env.APP_PORT || 3000, function () {
-  console.log('RP centre running on port ' + server.address().port);
-});
+if (process.env.NODE_ENV === 'production') {
+  let options = {
+    key: fs.readFileSync('/etc/letsencrypt/live/rpcentre.bancey.xyz/privkey.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/rpcentre.bancey.xyz/fullchain.pem'),
+    ca: fs.readFileSync('/etc/letsencrypt/live/rpcentre.bancey.xyz/chain.pem')
+  };
+  http.createServer(function (req, res) {
+    res.writeHead(301, { 'Location': 'https://' + req.headers.host + req.url });
+    res.end();
+  }).listen(process.env.APP_PORT || 3000);
+  https.createServer(options, app).listen(443);
+  console.log(`RP Centre is coming up in PRODUCTION mode on port ${process.env.APP_PORT || 3000} and 443`);
+} else {
+  http.createServer(app).listen(process.env.APP_PORT || 3000);
+  console.log(`RP Centre is coming up in DEVELOPMENT mode on port ${process.env.APP_PORT || 3000}`);
+}
 
 function getFlagUrl(nation, callback) {
   let url = 'https://www.nationstates.net/cgi-bin/api.cgi?nation=' + nation + '&q=flag';
