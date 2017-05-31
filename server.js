@@ -8,6 +8,7 @@ const request = require('request');
 const cookieParser = require('cookie-parser');
 const firebase = require('firebase');
 var parseString = require('xml2js').parseString;
+const hsts = require('hsts');
 
 firebase.initializeApp({
   databaseURL: 'https://norrland-rp-centre.firebaseio.com/'
@@ -46,6 +47,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use(cookieParser());
+
+app.use(hsts({
+  maxAge: 15552000 // 180 days
+}));
 
 // eslint-disable-next-line new-cap
 var router = express.Router();
@@ -171,10 +176,6 @@ if (process.env.NODE_ENV === 'production') {
     cert: fs.readFileSync('/etc/letsencrypt/live/rpcentre.bancey.xyz/fullchain.pem'),
     ca: fs.readFileSync('/etc/letsencrypt/live/rpcentre.bancey.xyz/chain.pem')
   };
-  http.createServer(function (req, res) {
-    res.writeHead(301, { 'Location': 'https://' + req.headers.host + req.url });
-    res.end();
-  }).listen(process.env.APP_PORT || 3000);
   https.createServer(options, app).listen(443);
   console.log(`RP Centre is coming up in PRODUCTION mode on port ${process.env.APP_PORT || 3000} and 443`);
 } else {
