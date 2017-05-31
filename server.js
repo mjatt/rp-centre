@@ -89,9 +89,9 @@ router.route('/calc/data').get(function (req, res) {
     if (!error) {
       parseString(body, function (err, result) {
         if (err) console.error(err);
-        let economy = result.NATION.CENSUS[0].SCALE[0].SCORE[0];
-        let defense = result.NATION.CENSUS[0].SCALE[1].SCORE[0];
-        let integrity = result.NATION.CENSUS[0].SCALE[2].SCORE[0];
+        let economy = Math.round(result.NATION.CENSUS[0].SCALE[0].SCORE[0]);
+        let defense = Math.round(result.NATION.CENSUS[0].SCALE[1].SCORE[0]);
+        let integrity = Math.round(result.NATION.CENSUS[0].SCALE[2].SCORE[0]);
 
         let physicalStrength = Math.sqrt((defense * 2) * (economy / 100) * req.query.population);
         let integrityModifier = (integrity + 20) / 120;
