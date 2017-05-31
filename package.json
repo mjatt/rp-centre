@@ -21,7 +21,7 @@
     "express": "^4.15.2",
     "firebase": "^3.8.0",
     "fs": "0.0.1-security",
-    "hsts": "^2.0.0",
+    "helmet": "^3.6.1",
     "http": "0.0.0",
     "https": "^1.0.0",
     "request": "^2.81.0",

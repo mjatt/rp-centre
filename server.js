@@ -8,7 +8,7 @@ const request = require('request');
 const cookieParser = require('cookie-parser');
 const firebase = require('firebase');
 var parseString = require('xml2js').parseString;
-const hsts = require('hsts');
+const helmet = require('helmet');
 
 firebase.initializeApp({
   databaseURL: 'https://norrland-rp-centre.firebaseio.com/'
@@ -17,6 +17,10 @@ firebase.initializeApp({
 const SITE_CODE = process.env.CODE || 'norrland-rp';
 
 const app = express();
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(helmet());
+}
 
 if (process.env.NODE_ENV !== 'production') {
   var webpackDevMiddleware = require('webpack-dev-middleware');
@@ -47,10 +51,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use(cookieParser());
-
-app.use(hsts({
-  maxAge: 15552000 // 180 days
-}));
 
 // eslint-disable-next-line new-cap
 var router = express.Router();
