@@ -99,7 +99,7 @@ router.route('/calc/data').get(function (req, res) {
         firebase.database().ref('nations/' + req.query.nation).update({
           budget: budget
         });
-        res.send('Budget calculated successfully, your budget is ' + budget);
+        res.send('Budget calculated successfully, your budget is ' + budget + ', economy:' + economy + ', defense:' + defense + ', integrity:' + integrity);
       });
     } else {
       res.status(400).send('An error occured, please check the information provided and try again.');
