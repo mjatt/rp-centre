@@ -89,17 +89,18 @@ router.route('/calc/data').get(function (req, res) {
     if (!error) {
       parseString(body, function (err, result) {
         if (err) console.error(err);
-        let economy = Math.round(result.NATION.CENSUS[0].SCALE[0].SCORE[0]);
-        let defense = Math.round(result.NATION.CENSUS[0].SCALE[1].SCORE[0]);
-        let integrity = Math.round(result.NATION.CENSUS[0].SCALE[2].SCORE[0]);
+        var economy = Math.round(result.NATION.CENSUS[0].SCALE[0].SCORE[0]);
+        var defense = Math.round(result.NATION.CENSUS[0].SCALE[1].SCORE[0]);
+        var integrity = Math.round(result.NATION.CENSUS[0].SCALE[2].SCORE[0]);
 
-        let physicalStrength = Math.sqrt((defense * 2) * (economy / 100) * req.query.population);
-        let integrityModifier = (integrity + 20) / 120;
-        let budget = Math.round((30 * integrityModifier * physicalStrength));
+        var physicalStrength = Math.sqrt((defense * 2) * (economy / 100) * req.query.population);
+        var integrityModifier = (integrity + 20) / 120;
+        var budget = 30 * integrityModifier * physicalStrength;
+        budget = Math.round(budget);
         firebase.database().ref('nations/' + req.query.nation).update({
           budget: budget
         });
-        res.send('Budget calculated successfully, your budget is ' + budget + ', economy:' + economy + ', defense:' + defense + ', integrity:' + integrity);
+        res.send('Budget calculated successfully, your budget is ' + budget);
       });
     } else {
       res.status(400).send('An error occured, please check the information provided and try again.');
