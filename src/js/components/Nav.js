@@ -10,7 +10,7 @@ class MyNavbar extends React.Component {
   }
 
   render() {
-    let nation = this.props.nation.replace('_', ' ');
+    let nation = this.props.nation.replace(new RegExp('_', 'g'), ' ');
     nation = nation.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
     let welcomeText = 'Welcome ' + nation;
     return (
@@ -19,6 +19,7 @@ class MyNavbar extends React.Component {
           <Link to="/" style={{ textDecoration: 'none', color: 'rgba(0, 0, 0, 0.4)' }}><ToolbarTitle style={{ fontSize: '25px', fontWeight: 700 }} text="Norrland RP" /></Link>
           <ToolbarSeparator />
           <Link style={{ paddingLeft: '15px', paddingRight: '15px' }} to="/events"><RaisedButton label="Events" labelStyle={{ fontWeight: 700 }} /></Link>
+          <Link style={{ paddingLeft: '15px', paddingRight: '15px' }} to="/calc"><RaisedButton label="Military Calculator" labelStyle={{ fontWeight: 700 }} /></Link>
         </ToolbarGroup>
         {
           (this.props.nation) ? (

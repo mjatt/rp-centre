@@ -76,6 +76,37 @@ router.route('/event/comment').post(function (req, res) {
   res.send('Success');
 });
 
+router.route('/calc/data').get(function (req, res) {
+  let censusUrl = 'https://www.nationstates.net/cgi-bin/api.cgi?nation=' + req.query.nation + ';q=census;scale=52+46+1;mode=score';
+
+  var censusOptions = {
+    url: censusUrl,
+    headers: {
+      'User-Agent': 'Norrland RP Centre'
+    }
+  };
+  request(censusOptions, function (error, response, body) {
+    if (!error) {
+      parseString(body, function (err, result) {
+        if (err) console.error(err);
+        let economy = result.NATION.CENSUS[0].SCALE[0].SCORE[0];
+        let defense = result.NATION.CENSUS[0].SCALE[1].SCORE[0];
+        let integrity = result.NATION.CENSUS[0].SCALE[2].SCORE[0];
+
+        let physicalStrength = Math.sqrt((defense * 2) * (economy / 100) * req.query.population);
+        let integrityModifier = (integrity + 20) / 120;
+        let budget = Math.round((30 * integrityModifier * physicalStrength));
+        firebase.database().ref('nations/' + req.query.nation).update({
+          budget: budget
+        });
+        res.send('Budget calculated successfully, your budget is ' + budget);
+      });
+    } else {
+      res.status(400).send('An error occured, please check the information provided and try again.');
+    }
+  });
+});
+
 router.route('/verify').post(function (req, res) {
   let verifyUrl = 'https://www.nationstates.net/cgi-bin/api.cgi?a=verify&nation=' + req.body.nation + '&checksum=' + req.body.code + '&token=' + SITE_CODE;
   let nationCheckUrl = 'https://www.nationstates.net/cgi-bin/api.cgi?nation=' + req.body.nation + '&q=region';
@@ -95,8 +126,8 @@ router.route('/verify').post(function (req, res) {
   request(verifyOptions, function (error, response, body) {
     if (!error) {
       let nation = req.body.nation.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
-      nation = nation.replace('%20', '_');
-      nation = nation.replace(' ', '_');
+      nation = nation.replaceAll('%20', '_');
+      nation = nation.replaceAll(' ', '_');
       if (parseInt(body, 10) === 1) {
         request(nationCheckOptions, function (nationCheckError, nationCheckResponse, nationCheckBody) {
           if (nationCheckError) console.error(error);
@@ -107,7 +138,7 @@ router.route('/verify').post(function (req, res) {
               console.error('User: ' + nation + ' attempted to login but it not a member of Norrland!');
             } else {
               getFlagUrl(req.body.nation, function (flagUrl) {
-                firebase.database().ref('nations/' + nation).set({
+                firebase.database().ref('nations/' + nation).update({
                   flag: flagUrl
                 });
               });
@@ -165,3 +196,10 @@ function getFlagUrl(nation, callback) {
     callback(parts[1].replace('</', '').replace('>', ''));
   });
 }
+
+// We are adding our method to the string definition, this isn't usually recommended.
+// eslint-disable-next-line no-extend-native
+String.prototype.replaceAll = function (search, replacement) {
+  var target = this;
+  return target.replace(new RegExp(search, 'g'), replacement);
+};

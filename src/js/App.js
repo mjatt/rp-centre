@@ -13,6 +13,7 @@ firebase.initializeApp({
 import GovernmentDisplay from './components/Government';
 import Register from './components/Register';
 import Events from './components/EventDisplay';
+import MilitaryCalculator from './components/MilitaryCalculator';
 
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
@@ -58,6 +59,7 @@ class App extends React.Component {
             <Route exact path="/" component={GovernmentDisplay} />
             <Route path="/register" component={Register} />
             <Route path="/events" render={()=><Events nation={this.state.nation}/>}/>
+            <Route path="/calc" render={()=><MilitaryCalculator nation={this.state.nation}/>}/>
           </div>
         </Router>
       </MuiThemeProvider>
