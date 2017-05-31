@@ -82,7 +82,7 @@ class Register extends React.Component {
       nation: this.state.nation,
       code: this.state.code
     };
-
+    console.log(process.env.WEBSITE_URL);
     const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
     const apiEndpoint = baseUrl + '/api/verify';
 
