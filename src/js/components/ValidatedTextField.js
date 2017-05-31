@@ -42,9 +42,6 @@ class ValidatedTextField extends React.Component {
   }
 
   render() {
-    console.log(this.props.rows);
-    console.log(this.props.rowsMax);
-    console.log(this.props.multiLine);
     return (
       <TextField
         defaultValue={this.props.defaultValue}
