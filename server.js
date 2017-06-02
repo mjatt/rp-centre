@@ -102,14 +102,11 @@ router.route('/calc/data').get(function (req, res) {
         var integrityModifier = (integrity + 20) / 120;
         var budget = 30 * integrityModifier * physicalStrength;
         budget = Math.round(budget); */
+
         var pop = req.query.population;
         var eco = result.NATION.CENSUS[0].SCALE[0].SCORE[0];
         var def = result.NATION.CENSUS[0].SCALE[1].SCORE[0];
         var inte = result.NATION.CENSUS[0].SCALE[2].SCORE[0];
-        console.log(pop);
-        console.log(eco);
-        console.log(def);
-        console.log(inte);
         var physicalStrength = Math.sqrt((def * 2) * (eco / 100) * pop);
         var integrityModifier = (inte + 20) / 120;
         var prelimBudget = 30 * physicalStrength * integrityModifier;
