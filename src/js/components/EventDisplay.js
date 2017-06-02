@@ -15,6 +15,10 @@ import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
+import RemoveRedEyeIcon from 'material-ui/svg-icons/image/remove-red-eye';
+import LanguageIcon from 'material-ui/svg-icons/action/language';
+import DescriptionIcon from 'material-ui/svg-icons/action/description';
+import EventIcon from 'material-ui/svg-icons/action/event';
 
 class Events extends Component {
   constructor(props) {
@@ -27,7 +31,8 @@ class Events extends Component {
       eventTitle: '',
       eventDescription: '',
       eventChannel: '',
-      invalid: true
+      invalid: true,
+      selectedChannel: 'View All'
     };
 
     this.handleClose = this.handleClose.bind(this);
@@ -259,11 +264,11 @@ class Events extends Component {
               <Drawer open width={287} containerStyle={{ height: '240px', top: 57 }}>
                 <MenuItem><b><u>Channels</u></b></MenuItem>
                 <Divider />
-                <MenuItem>General Affairs</MenuItem>
-                <MenuItem>Internal Affairs</MenuItem>
-                <MenuItem>International Affairs</MenuItem>
+                <MenuItem rightIcon={<EventIcon />}>General Affairs</MenuItem>
+                <MenuItem rightIcon={<DescriptionIcon />}>Internal Affairs</MenuItem>
+                <MenuItem rightIcon={<LanguageIcon />}>International Affairs</MenuItem>
                 <Divider />
-                <MenuItem>View All</MenuItem>
+                <MenuItem rightIcon={<RemoveRedEyeIcon />}>View All</MenuItem>
               </Drawer>
             </Col>
             <Col md={10}>
