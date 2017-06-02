@@ -19,6 +19,7 @@ import RemoveRedEyeIcon from 'material-ui/svg-icons/image/remove-red-eye';
 import LanguageIcon from 'material-ui/svg-icons/action/language';
 import DescriptionIcon from 'material-ui/svg-icons/action/description';
 import EventIcon from 'material-ui/svg-icons/action/event';
+import Paper from 'material-ui/Paper';
 
 class Events extends Component {
   constructor(props) {
@@ -354,8 +355,8 @@ class Events extends Component {
         </Dialog>
         <Grid fluid>
           <Row>
-            <Col md={2}>
-              <Drawer open width={287} containerStyle={{ height: '240px', top: 57 }}>
+            <Col md={2} sm={0} xs={0}>
+              <Paper style={{ height: '240px', marginTop: '15px', position: 'fixed' }}>
                 <MenuItem><b><u>Channels</u></b></MenuItem>
                 <Divider />
                 <MenuItem rightIcon={<EventIcon />} disabled={this.state.selectedGeneral} onTouchTap={this.generalSelected}>General Affairs</MenuItem>
@@ -363,9 +364,9 @@ class Events extends Component {
                 <MenuItem rightIcon={<LanguageIcon />} disabled={this.state.selectedInternationalAffairs} onTouchTap={this.internationalAffairsSelected}>International Affairs</MenuItem>
                 <Divider />
                 <MenuItem rightIcon={<RemoveRedEyeIcon />} disabled={this.state.selectedAll} onTouchTap={this.allSelected}>View All</MenuItem>
-              </Drawer>
+              </Paper>
             </Col>
-            <Col md={10}>
+            <Col md={10} sm={12} xs={24}>
               <Grid fluid>
                 <Row center="md" style={{ paddingTop: '15px' }}>
                   {
