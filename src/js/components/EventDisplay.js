@@ -32,7 +32,10 @@ class Events extends Component {
       eventDescription: '',
       eventChannel: '',
       invalid: true,
-      selectedChannel: 'View All'
+      selectedGeneral: false,
+      selectedInternalAffairs: false,
+      selectedInternationalAffairs: false,
+      selectedAll: true
     };
 
     this.handleClose = this.handleClose.bind(this);
@@ -42,6 +45,11 @@ class Events extends Component {
     this.handleUpdateTitle = this.handleUpdateTitle.bind(this);
     this.handleUpdateDescription = this.handleUpdateDescription.bind(this);
     this.isFormValid = this.isFormValid.bind(this);
+    this.generalSelected = this.generalSelected.bind(this);
+    this.internalAffairsSelected = this.internalAffairsSelected.bind(this);
+    this.internationalAffairsSelected = this.internationalAffairsSelected.bind(this);
+    this.allSelected = this.allSelected.bind(this);
+    this.removeUnrelated = this.removeUnrelated.bind(this);
   }
 
   handleOpen() {
@@ -111,11 +119,81 @@ class Events extends Component {
       }
       return 0;
     });
+    if (this.state.selectedGeneral) {
+      this.removeUnrelated('General');
+    } else if (this.state.selectedInternalAffairs) {
+      this.removeUnrelated('Internal Affairs');
+    } else if (this.state.selectedInternationalAffairs) {
+      this.removeUnrelated('International Affairs');
+    }
     this.setState({ loading: false, events: newData });
   }
 
-  filterEvents() {
+  generalSelected() {
+    this.setState({
+      selectedGeneral: true,
+      selectedInternalAffairs: false,
+      selectedInternationalAffairs: false,
+      selectedAll: false
+    });
+    this.removeUnrelated('General');
+  }
 
+  internalAffairsSelected() {
+    this.setState({
+      selectedGeneral: false,
+      selectedInternalAffairs: true,
+      selectedInternationalAffairs: false,
+      selectedAll: false
+    });
+    this.removeUnrelated('Internal Affairs');
+  }
+
+  internationalAffairsSelected() {
+    this.setState({
+      selectedGeneral: false,
+      selectedInternalAffairs: false,
+      selectedInternationalAffairs: true,
+      selectedAll: false
+    });
+    this.removeUnrelated('International Affairs');
+  }
+
+  allSelected() {
+    this.setState({
+      selectedGeneral: false,
+      selectedInternalAffairs: false,
+      selectedInternationalAffairs: false,
+      selectedAll: true
+    });
+    this.removeUnrelated('All');
+  }
+
+  removeUnrelated(channel) {
+    if (channel === 'All') {
+      this.componentWillReceiveProps(this.props);
+    } else {
+      let newData = [];
+      this.state.events.forEach(function (element) {
+        if (element.channel === channel) {
+          newData.push(element);
+          console.log(element);
+        }
+      }, this);
+      newData.sort(function (event1, event2) {
+        let date1 = moment(event1.createdOn, 'DD/MM/YYYY HH:mm:ss');
+        let date2 = moment(event2.createdOn, 'DD/MM/YYYY HH:mm:ss');
+        if (date2 > date1) {
+          return 1;
+        } else if (date1 > date2) {
+          return -1;
+        }
+        return 0;
+      });
+      this.setState({
+        events: newData
+      });
+    }
   }
 
   createEvent() {
@@ -264,11 +342,11 @@ class Events extends Component {
               <Drawer open width={287} containerStyle={{ height: '240px', top: 57 }}>
                 <MenuItem><b><u>Channels</u></b></MenuItem>
                 <Divider />
-                <MenuItem rightIcon={<EventIcon />}>General Affairs</MenuItem>
-                <MenuItem rightIcon={<DescriptionIcon />}>Internal Affairs</MenuItem>
-                <MenuItem rightIcon={<LanguageIcon />}>International Affairs</MenuItem>
+                <MenuItem rightIcon={<EventIcon />} disabled={this.state.selectedGeneral} onTouchTap={this.generalSelected}>General Affairs</MenuItem>
+                <MenuItem rightIcon={<DescriptionIcon />} disabled={this.state.selectedInternalAffairs} onTouchTap={this.internalAffairsSelected}>Internal Affairs</MenuItem>
+                <MenuItem rightIcon={<LanguageIcon />} disabled={this.state.selectedInternationalAffairs} onTouchTap={this.internationalAffairsSelected}>International Affairs</MenuItem>
                 <Divider />
-                <MenuItem rightIcon={<RemoveRedEyeIcon />}>View All</MenuItem>
+                <MenuItem rightIcon={<RemoveRedEyeIcon />} disabled={this.state.selectedAll} onTouchTap={this.allSelected}>View All</MenuItem>
               </Drawer>
             </Col>
             <Col md={10}>
