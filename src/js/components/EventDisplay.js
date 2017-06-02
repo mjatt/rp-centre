@@ -64,7 +64,7 @@ class Events extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
+  sanitiseData(nextProps) {
     let newData = [];
     let nations = {};
     for (let key in nextProps.nations) {
@@ -119,6 +119,12 @@ class Events extends Component {
       }
       return 0;
     });
+    return newData;
+  }
+
+  componentWillReceiveProps(nextProps) {
+    let newData = this.sanitiseData(nextProps);
+    console.log(newData);
     if (this.state.selectedGeneral) {
       this.removeUnrelated('General');
     } else if (this.state.selectedInternalAffairs) {
@@ -170,11 +176,15 @@ class Events extends Component {
   }
 
   removeUnrelated(channel) {
-    if (channel === 'All') {
-      this.componentWillReceiveProps(this.props);
-    } else {
+    this.setState({
+      loading: true
+    });
+    let events = this.sanitiseData(this.props);
+    console.log(channel);
+    if (channel !== 'All') {
       let newData = [];
-      this.state.events.forEach(function (element) {
+      events.forEach(function (element) {
+        console.log(element.channel + ':' + channel);
         if (element.channel === channel) {
           newData.push(element);
           console.log(element);
@@ -191,7 +201,13 @@ class Events extends Component {
         return 0;
       });
       this.setState({
-        events: newData
+        events: newData,
+        loading: false
+      });
+    } else {
+      this.setState({
+        events: events,
+        loading: false
       });
     }
   }
