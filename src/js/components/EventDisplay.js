@@ -256,7 +256,7 @@ class Events extends Component {
         <Grid fluid>
           <Row>
             <Col md={2}>
-              <Drawer open containerStyle={{ height: '240px', top: 57 }}>
+              <Drawer open width={287} containerStyle={{ height: '240px', top: 57 }}>
                 <MenuItem><b><u>Channels</u></b></MenuItem>
                 <Divider />
                 <MenuItem>General Affairs</MenuItem>
