@@ -12,6 +12,9 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from './ValidatedTextField';
 import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
+import Drawer from 'material-ui/Drawer';
+import MenuItem from 'material-ui/MenuItem';
+import Divider from 'material-ui/Divider';
 
 class Events extends Component {
   constructor(props) {
@@ -104,6 +107,10 @@ class Events extends Component {
       return 0;
     });
     this.setState({ loading: false, events: newData });
+  }
+
+  filterEvents() {
+
   }
 
   createEvent() {
@@ -247,56 +254,73 @@ class Events extends Component {
           </Grid>
         </Dialog>
         <Grid fluid>
-          <Row center="md" style={{ paddingTop: '15px' }}>
-            {
-              (this.props.nation) ? (
-                <Col md>
-                  <RaisedButton style={{ width: '75%' }} onTouchTap={this.handleOpen} backgroundColor="rgb(232, 232, 232)" label="Create new event" />
-                </Col>
-              ) : (
-                  <Col md>
-                    <Link to="/register">
-                      <RaisedButton style={{ width: '75%' }} backgroundColor="rgb(232, 232, 232)" label="Log in" />
-                    </Link>
-                  </Col>
-                )
-            }
+          <Row>
+            <Col md={2}>
+              <Drawer open containerStyle={{ height: '240px', top: 57 }}>
+                <MenuItem><b><u>Channels</u></b></MenuItem>
+                <Divider />
+                <MenuItem>General Affairs</MenuItem>
+                <MenuItem>Internal Affairs</MenuItem>
+                <MenuItem>International Affairs</MenuItem>
+                <Divider />
+                <MenuItem>View All</MenuItem>
+              </Drawer>
+            </Col>
+            <Col md={10}>
+              <Grid fluid>
+                <Row center="md" style={{ paddingTop: '15px' }}>
+                  {
+                    (this.props.nation) ? (
+                      <Col md>
+                        <RaisedButton style={{ width: '75%' }} onTouchTap={this.handleOpen} backgroundColor="rgb(232, 232, 232)" label="Create new event" />
+                      </Col>
+                    ) : (
+                        <Col md>
+                          <Link to="/register">
+                            <RaisedButton style={{ width: '75%' }} backgroundColor="rgb(232, 232, 232)" label="Log in" />
+                          </Link>
+                        </Col>
+                      )
+                  }
+                </Row>
+                {
+                  (this.state.loading) ? (
+                    <div>
+                      <Row center="xs" style={{ paddingTop: '15px' }}>
+                        <Col md >
+                          <RefreshIndicator
+                            size={60}
+                            left={10}
+                            top={0}
+                            status="loading"
+                            style={{ display: 'inline-block', position: 'relative' }}
+                          />
+                        </Col>
+                      </Row>
+                      <Row center="xs">
+                        <Col md>
+                          <p>Loading data...</p>
+                        </Col>
+                      </Row>
+                    </div>
+                  ) : (
+                      null
+                    )
+                }
+                {
+                  this.state.events.map((event) => {
+                    return (
+                      <Row style={{ paddingTop: '15px' }} key={event.key} center="md">
+                        <Col md>
+                          <Event event={event} nation={this.props.nation} />
+                        </Col>
+                      </Row>
+                    );
+                  })
+                }
+              </Grid>
+            </Col>
           </Row>
-          {
-            (this.state.loading) ? (
-              <div>
-                <Row center="xs" style={{ paddingTop: '15px' }}>
-                  <Col md >
-                    <RefreshIndicator
-                      size={60}
-                      left={10}
-                      top={0}
-                      status="loading"
-                      style={{ display: 'inline-block', position: 'relative' }}
-                    />
-                  </Col>
-                </Row>
-                <Row center="xs">
-                  <Col md>
-                    <p>Loading data...</p>
-                  </Col>
-                </Row>
-              </div>
-            ) : (
-                null
-              )
-          }
-          {
-            this.state.events.map((event) => {
-              return (
-                <Row style={{ paddingTop: '15px' }} key={event.key} center="md">
-                  <Col md>
-                    <Event event={event} nation={this.props.nation} />
-                  </Col>
-                </Row>
-              );
-            })
-          }
         </Grid>
       </div>
     );

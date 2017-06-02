@@ -103,7 +103,7 @@ class Event extends Component {
           </Badge>
           {
             (this.props.nation) ? (
-              <Grid fluid style={{ paddingTop: '15px' }}>
+              <Grid fluid style={{ paddingTop: '15px', paddingBottom: '15px' }}>
                 <Row style={{ borderStyle: 'solid', borderWidth: '1px', borderColor: 'rgb(232, 232, 232)' }}>
                   <Col md>
                     <TextField hintText="Comment"
