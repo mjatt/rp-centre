@@ -38,6 +38,7 @@
     "eslint": "^3.19.0",
     "eslint-config-airbnb-es5": "^1.1.0",
     "eslint-plugin-react": "^6.10.3",
+    "flexboxgrid-helpers": "^1.1.1",
     "material-ui": "^0.17.4",
     "moment": "^2.18.1",
     "nodemon": "^1.11.0",
