@@ -344,8 +344,8 @@ class Events extends Component {
           <Row>
             <FilterPicker
               md={2}
-              sm={2}
-              xs={4}
+              sm={0}
+              xs={0}
               selectedAll={this.state.selectedAll}
               selectedGeneral={this.state.selectedGeneral}
               selectedInternalAffairs={this.state.selectedInternalAffairs}
@@ -353,7 +353,7 @@ class Events extends Component {
               allSelected={this.allSelected} generalSelected={this.generalSelected}
               internalAffairsSelected={this.internalAffairsSelected}
               internationalAffairsSelected={this.internationalAffairsSelected} />
-            <Col md={10} sm={10} xs={20}>
+            <Col md={10} sm={12} xs={24}>
               <Grid fluid>
                 <Row center="xs" style={{ paddingTop: '15px' }}>
                   {
@@ -398,7 +398,7 @@ class Events extends Component {
                   this.state.events.map((event) => {
                     return (
                       <Row style={{ paddingTop: '15px' }} key={event.key} center="xs">
-                        <Col md={12} sm={12} xs={24}>
+                        <Col md={12} sm={24} xs={24}>
                           <Event event={event} nation={this.props.nation} />
                         </Col>
                       </Row>
