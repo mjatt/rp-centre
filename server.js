@@ -94,14 +94,23 @@ router.route('/calc/data').get(function (req, res) {
     if (!error) {
       parseString(body, function (err, result) {
         if (err) console.error(err);
-        var economy = Math.round(result.NATION.CENSUS[0].SCALE[0].SCORE[0]);
+        /* var economy = Math.round(result.NATION.CENSUS[0].SCALE[0].SCORE[0]);
         var defense = Math.round(result.NATION.CENSUS[0].SCALE[1].SCORE[0]);
         var integrity = Math.round(result.NATION.CENSUS[0].SCALE[2].SCORE[0]);
 
         var physicalStrength = Math.sqrt((defense * 2) * (economy / 100) * req.query.population);
         var integrityModifier = (integrity + 20) / 120;
         var budget = 30 * integrityModifier * physicalStrength;
-        budget = Math.round(budget);
+        budget = Math.round(budget); */
+
+        var pop = req.query.population;
+        var eco = result.NATION.CENSUS[0].SCALE[0].SCORE[0];
+        var def = result.NATION.CENSUS[0].SCALE[1].SCORE[0];
+        var inte = result.NATION.CENSUS[0].SCALE[2].SCORE[0];
+        var physicalStrength = Math.sqrt((def * 2) * (eco / 100) * pop);
+        var integrityModifier = (inte + 20) / 120;
+        var prelimBudget = 30 * physicalStrength * integrityModifier;
+        var budget = Math.round(prelimBudget);
         firebase.database().ref('nations/' + req.query.nation).update({
           budget: budget
         });
