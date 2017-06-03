@@ -351,8 +351,8 @@ class Events extends Component {
           <Row>
             <FilterPicker
               md={2}
-              sm={0}
-              xs={0}
+              sm={2}
+              xs={4}
               selectedAll={this.state.selectedAll}
               selectedGeneral={this.state.selectedGeneral}
               selectedInternalAffairs={this.state.selectedInternalAffairs}
@@ -360,16 +360,16 @@ class Events extends Component {
               allSelected={this.allSelected} generalSelected={this.generalSelected}
               internalAffairsSelected={this.internalAffairsSelected}
               internationalAffairsSelected={this.internationalAffairsSelected} />
-            <Col md={10} sm={12} xs={24}>
+            <Col md={10} sm={10} xs={20}>
               <Grid fluid>
-                <Row center="md" style={{ paddingTop: '15px' }}>
+                <Row center="xs" style={{ paddingTop: '15px' }}>
                   {
                     (this.props.nation) ? (
-                      <Col md>
+                      <Col md={12} sm={12} xs={24}>
                         <RaisedButton style={{ width: '75%' }} onTouchTap={this.handleOpen} backgroundColor="rgb(232, 232, 232)" label="Create new event" />
                       </Col>
                     ) : (
-                        <Col md>
+                        <Col md={12} sm={12} xs={24}>
                           <Link to="/register">
                             <RaisedButton style={{ width: '75%' }} backgroundColor="rgb(232, 232, 232)" label="Log in" />
                           </Link>
@@ -381,7 +381,7 @@ class Events extends Component {
                   (this.state.loading) ? (
                     <div>
                       <Row center="xs" style={{ paddingTop: '15px' }}>
-                        <Col md >
+                        <Col md={12} sm={12} xs={24} >
                           <RefreshIndicator
                             size={60}
                             left={10}
@@ -392,7 +392,7 @@ class Events extends Component {
                         </Col>
                       </Row>
                       <Row center="xs">
-                        <Col md>
+                        <Col md={12} sm={12} xs={24}>
                           <p>Loading data...</p>
                         </Col>
                       </Row>
@@ -404,8 +404,8 @@ class Events extends Component {
                 {
                   this.state.events.map((event) => {
                     return (
-                      <Row style={{ paddingTop: '15px' }} key={event.key} center="md">
-                        <Col md>
+                      <Row style={{ paddingTop: '15px' }} key={event.key} center="xs">
+                        <Col md={12} sm={12} xs={24}>
                           <Event event={event} nation={this.props.nation} />
                         </Col>
                       </Row>

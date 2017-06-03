@@ -11,16 +11,31 @@ import EventIcon from 'material-ui/svg-icons/action/event';
 
 class SizeAwareCol extends Component {
   render() {
+    console.log(this.props.size.width);
     return (
-      <Col xs={this.props.xs} sm={this.props.sm} md={this.props.md} lg={this.props.lg} xsOffset={this.props.xsOffset} smOffset={this.props.smOffset} mdOffset={this.props.mdOffset} lgOffset={this.props.lgOffset}>
+      <Col className="hidden-sm hidden-xs" xs={this.props.xs} sm={this.props.sm} md={this.props.md} lg={this.props.lg} xsOffset={this.props.xsOffset} smOffset={this.props.smOffset} mdOffset={this.props.mdOffset} lgOffset={this.props.lgOffset}>
         <Paper style={{ height: '240px', marginTop: '15px', position: 'fixed', width: this.props.size.width }}>
           <MenuItem><b><u>Channels</u></b></MenuItem>
           <Divider />
-          <MenuItem rightIcon={<EventIcon />} disabled={this.props.selectedGeneral} onTouchTap={this.props.generalSelected}>General Affairs</MenuItem>
-          <MenuItem rightIcon={<DescriptionIcon />} disabled={this.props.selectedInternalAffairs} onTouchTap={this.props.internalAffairsSelected}>Internal Affairs</MenuItem>
-          <MenuItem rightIcon={<LanguageIcon />} disabled={this.props.selectedInternationalAffairs} onTouchTap={this.props.internationalAffairsSelected}>International Affairs</MenuItem>
-          <Divider />
-          <MenuItem rightIcon={<RemoveRedEyeIcon />} disabled={this.props.selectedAll} onTouchTap={this.props.allSelected}>View All</MenuItem>
+          {
+            (this.props.size.width <= 194) ? (
+              <div>
+                <MenuItem disabled={this.props.selectedGeneral} onTouchTap={this.props.generalSelected}>General Affairs</MenuItem>
+                <MenuItem disabled={this.props.selectedInternalAffairs} onTouchTap={this.props.internalAffairsSelected}>Internal Affairs</MenuItem>
+                <MenuItem disabled={this.props.selectedInternationalAffairs} onTouchTap={this.props.internationalAffairsSelected}>International Affairs</MenuItem>
+                <Divider />
+                <MenuItem disabled={this.props.selectedAll} onTouchTap={this.props.allSelected}>View All</MenuItem>
+              </div>
+            ) : (
+                <div>
+                  <MenuItem rightIcon={<EventIcon />} disabled={this.props.selectedGeneral} onTouchTap={this.props.generalSelected}>General Affairs</MenuItem>
+                  <MenuItem rightIcon={<DescriptionIcon />} disabled={this.props.selectedInternalAffairs} onTouchTap={this.props.internalAffairsSelected}>Internal Affairs</MenuItem>
+                  <MenuItem rightIcon={<LanguageIcon />} disabled={this.props.selectedInternationalAffairs} onTouchTap={this.props.internationalAffairsSelected}>International Affairs</MenuItem>
+                  <Divider />
+                  <MenuItem rightIcon={<RemoveRedEyeIcon />} disabled={this.props.selectedAll} onTouchTap={this.props.allSelected}>View All</MenuItem>
+                </div>
+              )
+          }
         </Paper>
       </Col>
     );
