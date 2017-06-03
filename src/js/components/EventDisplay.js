@@ -12,6 +12,7 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from './ValidatedTextField';
 import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
+import FilterPicker from './FilterPicker';
 
 class Events extends Component {
   constructor(props) {
@@ -24,7 +25,11 @@ class Events extends Component {
       eventTitle: '',
       eventDescription: '',
       eventChannel: '',
-      invalid: true
+      invalid: true,
+      selectedGeneral: false,
+      selectedInternalAffairs: false,
+      selectedInternationalAffairs: false,
+      selectedAll: true
     };
 
     this.handleClose = this.handleClose.bind(this);
@@ -34,6 +39,11 @@ class Events extends Component {
     this.handleUpdateTitle = this.handleUpdateTitle.bind(this);
     this.handleUpdateDescription = this.handleUpdateDescription.bind(this);
     this.isFormValid = this.isFormValid.bind(this);
+    this.generalSelected = this.generalSelected.bind(this);
+    this.internalAffairsSelected = this.internalAffairsSelected.bind(this);
+    this.internationalAffairsSelected = this.internationalAffairsSelected.bind(this);
+    this.allSelected = this.allSelected.bind(this);
+    this.removeUnrelated = this.removeUnrelated.bind(this);
   }
 
   handleOpen() {
@@ -48,7 +58,7 @@ class Events extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
+  sanitiseData(nextProps) {
     let newData = [];
     let nations = {};
     for (let key in nextProps.nations) {
@@ -103,7 +113,93 @@ class Events extends Component {
       }
       return 0;
     });
+    return newData;
+  }
+
+  componentWillReceiveProps(nextProps) {
+    let newData = this.sanitiseData(nextProps);
+    if (this.state.selectedGeneral) {
+      this.removeUnrelated('General');
+    } else if (this.state.selectedInternalAffairs) {
+      this.removeUnrelated('Internal Affairs');
+    } else if (this.state.selectedInternationalAffairs) {
+      this.removeUnrelated('International Affairs');
+    }
     this.setState({ loading: false, events: newData });
+  }
+
+  generalSelected() {
+    this.setState({
+      selectedGeneral: true,
+      selectedInternalAffairs: false,
+      selectedInternationalAffairs: false,
+      selectedAll: false
+    });
+    this.removeUnrelated('General');
+  }
+
+  internalAffairsSelected() {
+    this.setState({
+      selectedGeneral: false,
+      selectedInternalAffairs: true,
+      selectedInternationalAffairs: false,
+      selectedAll: false
+    });
+    this.removeUnrelated('Internal Affairs');
+  }
+
+  internationalAffairsSelected() {
+    this.setState({
+      selectedGeneral: false,
+      selectedInternalAffairs: false,
+      selectedInternationalAffairs: true,
+      selectedAll: false
+    });
+    this.removeUnrelated('International Affairs');
+  }
+
+  allSelected() {
+    this.setState({
+      selectedGeneral: false,
+      selectedInternalAffairs: false,
+      selectedInternationalAffairs: false,
+      selectedAll: true
+    });
+    this.removeUnrelated('All');
+  }
+
+  removeUnrelated(channel) {
+    this.setState({
+      loading: true
+    });
+    let events = this.sanitiseData(this.props);
+    if (channel !== 'All') {
+      let newData = [];
+      events.forEach(function (element) {
+        if (element.channel === channel) {
+          newData.push(element);
+        }
+      }, this);
+      newData.sort(function (event1, event2) {
+        let date1 = moment(event1.createdOn, 'DD/MM/YYYY HH:mm:ss');
+        let date2 = moment(event2.createdOn, 'DD/MM/YYYY HH:mm:ss');
+        if (date2 > date1) {
+          return 1;
+        } else if (date1 > date2) {
+          return -1;
+        }
+        return 0;
+      });
+      this.setState({
+        events: newData,
+        loading: false
+      });
+    } else {
+      this.setState({
+        events: events,
+        loading: false
+      });
+    }
   }
 
   createEvent() {
@@ -115,8 +211,6 @@ class Events extends Component {
       createdBy: this.props.nation,
       createdOn: rightNow
     };
-
-    console.log(data);
 
     const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
     const apiEndpoint = baseUrl + '/api/event/create';
@@ -247,56 +341,73 @@ class Events extends Component {
           </Grid>
         </Dialog>
         <Grid fluid>
-          <Row center="md" style={{ paddingTop: '15px' }}>
-            {
-              (this.props.nation) ? (
-                <Col md>
-                  <RaisedButton style={{ width: '75%' }} onTouchTap={this.handleOpen} backgroundColor="rgb(232, 232, 232)" label="Create new event" />
-                </Col>
-              ) : (
-                  <Col md>
-                    <Link to="/register">
-                      <RaisedButton style={{ width: '75%' }} backgroundColor="rgb(232, 232, 232)" label="Log in" />
-                    </Link>
-                  </Col>
-                )
-            }
-          </Row>
-          {
-            (this.state.loading) ? (
-              <div>
+          <Row>
+            <FilterPicker
+              md={2}
+              sm={0}
+              xs={0}
+              selectedAll={this.state.selectedAll}
+              selectedGeneral={this.state.selectedGeneral}
+              selectedInternalAffairs={this.state.selectedInternalAffairs}
+              selectedInternationalAffairs={this.state.selectedInternationalAffairs}
+              allSelected={this.allSelected} generalSelected={this.generalSelected}
+              internalAffairsSelected={this.internalAffairsSelected}
+              internationalAffairsSelected={this.internationalAffairsSelected} />
+            <Col md={10} sm={12} xs={24}>
+              <Grid fluid>
                 <Row center="xs" style={{ paddingTop: '15px' }}>
-                  <Col md >
-                    <RefreshIndicator
-                      size={60}
-                      left={10}
-                      top={0}
-                      status="loading"
-                      style={{ display: 'inline-block', position: 'relative' }}
-                    />
-                  </Col>
+                  {
+                    (this.props.nation) ? (
+                      <Col md={12} sm={12} xs={24}>
+                        <RaisedButton style={{ width: '75%' }} onTouchTap={this.handleOpen} backgroundColor="rgb(232, 232, 232)" label="Create new event" />
+                      </Col>
+                    ) : (
+                        <Col md={12} sm={12} xs={24}>
+                          <Link to="/register">
+                            <RaisedButton style={{ width: '75%' }} backgroundColor="rgb(232, 232, 232)" label="Log in" />
+                          </Link>
+                        </Col>
+                      )
+                  }
                 </Row>
-                <Row center="xs">
-                  <Col md>
-                    <p>Loading data...</p>
-                  </Col>
-                </Row>
-              </div>
-            ) : (
-                null
-              )
-          }
-          {
-            this.state.events.map((event) => {
-              return (
-                <Row style={{ paddingTop: '15px' }} key={event.key} center="md">
-                  <Col md>
-                    <Event event={event} nation={this.props.nation} />
-                  </Col>
-                </Row>
-              );
-            })
-          }
+                {
+                  (this.state.loading) ? (
+                    <div>
+                      <Row center="xs" style={{ paddingTop: '15px' }}>
+                        <Col md={12} sm={12} xs={24} >
+                          <RefreshIndicator
+                            size={60}
+                            left={10}
+                            top={0}
+                            status="loading"
+                            style={{ display: 'inline-block', position: 'relative' }}
+                          />
+                        </Col>
+                      </Row>
+                      <Row center="xs">
+                        <Col md={12} sm={12} xs={24}>
+                          <p>Loading data...</p>
+                        </Col>
+                      </Row>
+                    </div>
+                  ) : (
+                      null
+                    )
+                }
+                {
+                  this.state.events.map((event) => {
+                    return (
+                      <Row style={{ paddingTop: '15px' }} key={event.key} center="xs">
+                        <Col md={12} sm={24} xs={24}>
+                          <Event event={event} nation={this.props.nation} />
+                        </Col>
+                      </Row>
+                    );
+                  })
+                }
+              </Grid>
+            </Col>
+          </Row>
         </Grid>
       </div>
     );

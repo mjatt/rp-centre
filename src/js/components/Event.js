@@ -103,16 +103,16 @@ class Event extends Component {
           </Badge>
           {
             (this.props.nation) ? (
-              <Grid fluid style={{ paddingTop: '15px' }}>
+              <Grid fluid style={{ paddingTop: '15px', paddingBottom: '15px' }}>
                 <Row style={{ borderStyle: 'solid', borderWidth: '1px', borderColor: 'rgb(232, 232, 232)' }}>
-                  <Col md>
+                  <Col md={6} sm={6} xs={12}>
                     <TextField hintText="Comment"
                       onChange={this.handleUpdateComment}
                       validate={['required']}
                       errorText="Please enter a comment"
                       style={{ width: '100%', height: '100%' }} />
                   </Col>
-                  <Col md>
+                  <Col md={6} sm={6} xs={12}>
                     <RaisedButton style={{ width: '100%' }} onTouchTap={this.newComment} disabled={this.state.invalid} primary label="Comment" />
                   </Col>
                 </Row>
