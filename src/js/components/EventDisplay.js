@@ -12,7 +12,6 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from './ValidatedTextField';
 import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
-import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
 import RemoveRedEyeIcon from 'material-ui/svg-icons/image/remove-red-eye';
@@ -20,6 +19,7 @@ import LanguageIcon from 'material-ui/svg-icons/action/language';
 import DescriptionIcon from 'material-ui/svg-icons/action/description';
 import EventIcon from 'material-ui/svg-icons/action/event';
 import Paper from 'material-ui/Paper';
+import FilterPicker from './FilterPicker';
 
 class Events extends Component {
   constructor(props) {
@@ -125,7 +125,6 @@ class Events extends Component {
 
   componentWillReceiveProps(nextProps) {
     let newData = this.sanitiseData(nextProps);
-    console.log(newData);
     if (this.state.selectedGeneral) {
       this.removeUnrelated('General');
     } else if (this.state.selectedInternalAffairs) {
@@ -181,14 +180,11 @@ class Events extends Component {
       loading: true
     });
     let events = this.sanitiseData(this.props);
-    console.log(channel);
     if (channel !== 'All') {
       let newData = [];
       events.forEach(function (element) {
-        console.log(element.channel + ':' + channel);
         if (element.channel === channel) {
           newData.push(element);
-          console.log(element);
         }
       }, this);
       newData.sort(function (event1, event2) {
@@ -222,8 +218,6 @@ class Events extends Component {
       createdBy: this.props.nation,
       createdOn: rightNow
     };
-
-    console.log(data);
 
     const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
     const apiEndpoint = baseUrl + '/api/event/create';
@@ -355,17 +349,17 @@ class Events extends Component {
         </Dialog>
         <Grid fluid>
           <Row>
-            <Col md={2} sm={0} xs={0}>
-              <Paper style={{ height: '240px', marginTop: '15px', position: 'fixed' }}>
-                <MenuItem><b><u>Channels</u></b></MenuItem>
-                <Divider />
-                <MenuItem rightIcon={<EventIcon />} disabled={this.state.selectedGeneral} onTouchTap={this.generalSelected}>General Affairs</MenuItem>
-                <MenuItem rightIcon={<DescriptionIcon />} disabled={this.state.selectedInternalAffairs} onTouchTap={this.internalAffairsSelected}>Internal Affairs</MenuItem>
-                <MenuItem rightIcon={<LanguageIcon />} disabled={this.state.selectedInternationalAffairs} onTouchTap={this.internationalAffairsSelected}>International Affairs</MenuItem>
-                <Divider />
-                <MenuItem rightIcon={<RemoveRedEyeIcon />} disabled={this.state.selectedAll} onTouchTap={this.allSelected}>View All</MenuItem>
-              </Paper>
-            </Col>
+            <FilterPicker
+              md={2}
+              sm={0}
+              xs={0}
+              selectedAll={this.state.selectedAll}
+              selectedGeneral={this.state.selectedGeneral}
+              selectedInternalAffairs={this.state.selectedInternalAffairs}
+              selectedInternationalAffairs={this.state.selectedInternationalAffairs}
+              allSelected={this.allSelected} generalSelected={this.generalSelected}
+              internalAffairsSelected={this.internalAffairsSelected}
+              internationalAffairsSelected={this.internationalAffairsSelected} />
             <Col md={10} sm={12} xs={24}>
               <Grid fluid>
                 <Row center="md" style={{ paddingTop: '15px' }}>
