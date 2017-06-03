@@ -12,13 +12,6 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from './ValidatedTextField';
 import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
-import MenuItem from 'material-ui/MenuItem';
-import Divider from 'material-ui/Divider';
-import RemoveRedEyeIcon from 'material-ui/svg-icons/image/remove-red-eye';
-import LanguageIcon from 'material-ui/svg-icons/action/language';
-import DescriptionIcon from 'material-ui/svg-icons/action/description';
-import EventIcon from 'material-ui/svg-icons/action/event';
-import Paper from 'material-ui/Paper';
 import FilterPicker from './FilterPicker';
 
 class Events extends Component {
