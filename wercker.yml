@@ -66,7 +66,7 @@ deploy-dev:
   after-steps:
     - slack-notifier:
         url: $DISCORD_URL
-        username: Deploy Bot
+        username: Dev Deploy Bot
 deploy:
   steps:
     - add-to-known_hosts:
@@ -102,4 +102,4 @@ deploy:
   after-steps:
     - slack-notifier:
         url: $DISCORD_URL
-        username: Deploy Bot
+        username: Live Deploy Bot
