@@ -8,6 +8,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from './ValidatedTextField';
 import axios from 'axios';
 import moment from 'moment';
+import Markdown from 'react-markdown';
 
 class Event extends Component {
   constructor(props) {
@@ -91,7 +92,7 @@ class Event extends Component {
             subtitle={subtitle}
             avatar={this.props.event.flag}
           />
-          <CardText>{this.props.event.description}</CardText>
+          <CardText><Markdown source={this.props.event.description} /></CardText>
           <Badge
             badgeContent={this.props.event.comments.length}
             secondary
@@ -128,7 +129,7 @@ class Event extends Component {
             nation = nation.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
             return (
               <Card key={comment.message} expandable expanded={this.state.expanded} initiallyExpanded={false}>
-                <CardText expandable><b>{nation} - {comment.createdOn}</b><br />{comment.message}</CardText>
+                <CardText expandable><b>{nation} - {comment.createdOn}</b><br /><Markdown source={comment.message} /></CardText>
               </Card>
             );
           })
