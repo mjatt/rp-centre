@@ -92,7 +92,7 @@ class Event extends Component {
             subtitle={subtitle}
             avatar={this.props.event.flag}
           />
-          <CardText><Markdown source={this.props.event.description} /></CardText>
+          <CardText style={{textAlign: 'left'}}><Markdown source={this.props.event.description} /></CardText>
           <Badge
             badgeContent={this.props.event.comments.length}
             secondary
@@ -125,7 +125,7 @@ class Event extends Component {
         </Card>
         {
           this.props.event.comments.map((comment) => {
-            let nation = comment.nation.replace('_', ' ');
+            let nation = comment.nation.replace(new RegExp('_', 'g'), ' ');
             nation = nation.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
             return (
               <Card key={comment.message} expandable expanded={this.state.expanded} initiallyExpanded={false}>
