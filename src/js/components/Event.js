@@ -9,6 +9,9 @@ import TextField from './ValidatedTextField';
 import axios from 'axios';
 import moment from 'moment';
 import Markdown from 'react-markdown';
+import SettingsIcon from 'material-ui/svg-icons/action/settings';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
 
 class Event extends Component {
   constructor(props) {
@@ -84,6 +87,11 @@ class Event extends Component {
 
   render() {
     let subtitle = this.props.event.createdBy + ' - Created On: ' + this.props.event.createdOn + ' - Channel: ' + this.props.event.channel;
+    var shouldBeDisabled = (this.props.nation === this.props.event.createdBy) ? false : true;
+    if (shouldBeDisabled && this.props.isAdmin) {
+      shouldBeDisabled = false;
+    }
+    console.log(shouldBeDisabled);
     return (
       <div>
         <Card>
@@ -91,17 +99,28 @@ class Event extends Component {
             title={this.props.event.title}
             subtitle={subtitle}
             avatar={this.props.event.flag}
+            style={{ width: '100%' }}
           />
-          <CardText style={{textAlign: 'left'}}><Markdown source={this.props.event.description} /></CardText>
-          <Badge
-            badgeContent={this.props.event.comments.length}
-            secondary
-            badgeStyle={{ top: 12, right: 12 }}
-          >
-            <IconButton tooltip="Notifications" onTouchTap={this.expand}>
-              <CommentIcon />
-            </IconButton>
-          </Badge>
+          <CardText style={{ textAlign: 'left' }}><Markdown source={this.props.event.description} /></CardText>
+          <div>
+            <Badge
+              badgeContent={this.props.event.comments.length}
+              secondary
+              badgeStyle={{ top: 12, right: 12 }}
+            >
+              <IconButton tooltip="Notifications" onTouchTap={this.expand}>
+                <CommentIcon />
+              </IconButton>
+            </Badge>
+            <IconMenu
+              iconButtonElement={<IconButton><SettingsIcon /></IconButton>}
+              anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+              targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+            >
+              <MenuItem primaryText="Edit" disabled={shouldBeDisabled} />
+              <MenuItem primaryText="Delete" disabled={shouldBeDisabled} />
+            </IconMenu>
+          </div>
           {
             (this.props.nation) ? (
               <Grid fluid style={{ paddingTop: '15px', paddingBottom: '15px' }}>
@@ -141,7 +160,8 @@ class Event extends Component {
 
 Event.propTypes = {
   event: PropTypes.object.isRequired,
-  nation: PropTypes.string
+  nation: PropTypes.string,
+  isAdmin: PropTypes.bool
 };
 
 export default Event;

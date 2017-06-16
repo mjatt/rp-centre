@@ -399,7 +399,7 @@ class Events extends Component {
                     return (
                       <Row style={{ paddingTop: '15px' }} key={event.key} center="xs">
                         <Col md={12} sm={24} xs={24}>
-                          <Event event={event} nation={this.props.nation} />
+                          <Event event={event} nation={this.props.nation} isAdmin={this.props.isAdmin} />
                         </Col>
                       </Row>
                     );
@@ -416,6 +416,7 @@ class Events extends Component {
 
 Events.propTypes = {
   nation: PropTypes.string,
+  isAdmin: PropTypes.bool,
   data: PropTypes.object,
   nations: PropTypes.object
 };

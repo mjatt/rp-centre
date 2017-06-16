@@ -152,20 +152,29 @@ router.route('/verify').post(function (req, res) {
               res.status(400).send('Error... You are not a member of Norrland...');
               console.error('User: ' + nation + ' attempted to login but it not a member of Norrland!');
             } else {
-              getFlagUrl(req.body.nation, function (flagUrl) {
-                firebase.database().ref('nations/' + nation).update({
-                  flag: flagUrl
-                });
+              checkIfWeHaveFlagUrl(nation, function (checkFlagResult, nationData) {
+                if (!checkFlagResult) {
+                  console.log('Getting user: ' + nation + '\'s flag.');
+                  getFlagUrl(req.body.nation, function (flagUrl) {
+                    firebase.database().ref('nations/' + nation).update({
+                      flag: flagUrl
+                    });
+                  });
+                }
+                console.log(nationData.isAdmin);
+                if (nationData.isAdmin === true) {
+                  res.cookie('isAdmin', true);
+                }
+                res.cookie('nation', nation);
+                res.send('Signed in successfully, you will be redirected in 3 seconds...');
+                console.log('User: ' + nation + ' signed in successfully.');
               });
-              res.cookie('nation', nation);
-              res.send('Signed in successfully, you will be redirected in 3 seconds...');
-              console.log('User: ' + nation + ' signed in successfully.');
             }
           });
         });
       } else {
         res.status(400).send('Please make sure you got your verification code correct and try again...');
-        console.error('user: ' + nation + ' failed to login.');
+        console.error('User: ' + nation + ' failed to login.');
       }
     } else {
       res.status(400).send('A unexpected error occured, please try again later...');
@@ -205,6 +214,17 @@ function getFlagUrl(nation, callback) {
     if (error) console.log(error);
     let parts = body.split('FLAG');
     callback(parts[1].replace('</', '').replace('>', ''));
+  });
+}
+
+function checkIfWeHaveFlagUrl(nation, callback) {
+  firebase.database().ref('nations/' + nation).once('value').then(function (snapshot) {
+    var values = snapshot.val();
+    if (values && values.flag) {
+      callback(true, values);
+    } else {
+      callback(false, values);
+    }
   });
 }
 
