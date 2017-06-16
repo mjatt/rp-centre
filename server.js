@@ -57,9 +57,10 @@ var router = express.Router();
 
 router.route('/event/create').post(function (req, res) {
   let flag;
+  let rightNow = new Date().getTime();
   firebase.database().ref('/nations/' + req.body.createdBy).once('value').then(function (snapshot) {
     flag = snapshot.val().flag;
-    firebase.database().ref('/events/' + req.body.title).set({
+    firebase.database().ref('/events/' + rightNow).set({
       channel: req.body.channel,
       createdBy: req.body.createdBy,
       createdOn: req.body.createdOn,
@@ -68,6 +69,14 @@ router.route('/event/create').post(function (req, res) {
       flag: flag
     });
     res.send('Success!');
+  });
+});
+
+router.route('/event/delete').delete(function (req, res) {
+  firebase.database().ref('/events/' + req.params.event).remove().then(function () {
+    res.send('Success!');
+  }).catch(function () {
+    res.status(500).send('Failure!');
   });
 });
 

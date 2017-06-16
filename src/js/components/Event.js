@@ -27,6 +27,8 @@ class Event extends Component {
     this.handleUpdateComment = this.handleUpdateComment.bind(this);
     this.isFormValid = this.isFormValid.bind(this);
     this.newComment = this.newComment.bind(this);
+    this.handleEdit = this.handleEdit.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   expand() {
@@ -85,6 +87,19 @@ class Event extends Component {
     });
   }
 
+  handleEdit() {
+
+  }
+
+  handleDelete() {
+    const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
+    const apiEndpoint = baseUrl + '/api/event/delete?event=' + this.props.event.key;
+
+    axios.delete(apiEndpoint).then(function (response) {
+      console.log(response);
+    });
+  }
+
   render() {
     let subtitle = this.props.event.createdBy + ' - Created On: ' + this.props.event.createdOn + ' - Channel: ' + this.props.event.channel;
     var shouldBeDisabled = (this.props.nation === this.props.event.createdBy) ? false : true;
@@ -117,8 +132,8 @@ class Event extends Component {
               anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
               targetOrigin={{ horizontal: 'left', vertical: 'top' }}
             >
-              <MenuItem primaryText="Edit" disabled={shouldBeDisabled} />
-              <MenuItem primaryText="Delete" disabled={shouldBeDisabled} />
+              <MenuItem primaryText="Edit" disabled={shouldBeDisabled} onTouchTap={this.handleEdit} />
+              <MenuItem primaryText="Delete" disabled={shouldBeDisabled} onTouchTap={this.handleDelete} />
             </IconMenu>
           </div>
           {
