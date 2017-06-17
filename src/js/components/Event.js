@@ -145,7 +145,7 @@ class Event extends Component {
         invalid: false
       });
     }
-  } X
+  }
 
   render() {
     const actions = [
