@@ -13,6 +13,9 @@ import Markdown from 'react-markdown';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
 
 class Event extends Component {
   constructor(props) {
@@ -30,6 +33,10 @@ class Event extends Component {
     this.newComment = this.newComment.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleUpdateTitle = this.handleUpdateTitle.bind(this);
+    this.handleUpdateDescription = this.handleUpdateDescription.bind(this);
+    this.handleEventChannelChange = this.handleEventChannelChange.bind(this);
+    this.isFormValid = this.isFormValid.bind(this);
   }
 
   expand() {
@@ -100,7 +107,60 @@ class Event extends Component {
     });
   }
 
+  handleUpdateTitle(errors, values) {
+    if (!errors) {
+      this.setState({
+        eventTitle: values
+      }, this.isFormValid);
+    } else {
+      this.setState({
+        invalid: true
+      });
+    }
+  }
+
+  handleUpdateDescription(errors, values) {
+    if (!errors) {
+      this.setState({
+        eventDescription: values
+      }, this.isFormValid);
+    } else {
+      this.setState({
+        invalid: true
+      });
+    }
+  }
+
+  handleEventChannelChange(event, value) {
+    let myVal = value.replace('_', ' ');
+    myVal = myVal.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+    this.setState({
+      eventChannel: myVal
+    }, this.isFormValid);
+  }
+
+  isFormValid() {
+    if (this.state.eventTitle && this.state.eventDescription && this.state.eventChannel) {
+      this.setState({
+        invalid: false
+      });
+    }
+  } X
+
   render() {
+    const actions = [
+      <FlatButton
+        label="Cancel"
+        primary
+        onTouchTap={this.handleClose}
+      />,
+      <FlatButton
+        label="Update"
+        primary
+        onTouchTap={this.updateEvent}
+        disabled={this.state.invalid}
+      />
+    ];
     let subtitle = this.props.event.createdBy + ' - Created On: ' + this.props.event.createdOn + ' - Channel: ' + this.props.event.channel;
     var shouldBeDisabled = (this.props.nation === this.props.event.createdBy) ? false : true;
     if (shouldBeDisabled && this.props.isAdmin) {
@@ -108,6 +168,60 @@ class Event extends Component {
     }
     return (
       <div>
+        <Dialog open={this.state.createEvent} title="Create an event..." actions={actions} modal>
+          <Grid fluid>
+            <Row center="md" style={{ paddingTop: '15px' }}>
+              <Col md>
+                <p>Please fill out the following fields</p>
+              </Col>
+            </Row>
+            <Row center="md">
+              <Col md style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                Event Title:
+              </Col>
+              <Col md>
+                <TextField hintText="Event Title"
+                  onChange={this.handleUpdateTitle}
+                  validate={['required']}
+                  errorText="Please enter an event title"
+                  style={{ width: '100%' }} />
+              </Col>
+            </Row>
+            <Row center="md" style={{ paddingTop: '15px' }}>
+              <Col md style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                Event Description:
+              </Col>
+              <Col md>
+                <TextField hintText="Description"
+                  onChange={this.handleUpdateDescription}
+                  validate={['required']}
+                  errorText="Please enter an event description"
+                  style={{ width: '100%' }}
+                  rows={4}
+                  rowsMax={10}
+                  multiLine />
+              </Col>
+            </Row>
+            <Row center="md" style={{ paddingTop: '15px' }}>
+              <Col md mdOffset={4}>
+                <RadioButtonGroup onChange={this.handleEventChannelChange} style={{ width: '50%' }} name="channel" defaultSelected="general">
+                  <RadioButton
+                    value="general"
+                    label="General"
+                  />
+                  <RadioButton
+                    value="international_affairs"
+                    label="International Affairs"
+                  />
+                  <RadioButton
+                    value="internal_affairs"
+                    label="Internal Affairs"
+                  />
+                </RadioButtonGroup>
+              </Col>
+            </Row>
+          </Grid>
+        </Dialog>
         <Card>
           <CardHeader
             title={this.props.event.title}
