@@ -73,7 +73,7 @@ router.route('/event/create').post(function (req, res) {
 });
 
 router.route('/event/delete').delete(function (req, res) {
-  firebase.database().ref('/events/' + req.params.event).remove().then(function () {
+  firebase.database().ref('/events/' + req.query.event).remove().then(function () {
     res.send('Success!');
   }).catch(function () {
     res.status(500).send('Failure!');

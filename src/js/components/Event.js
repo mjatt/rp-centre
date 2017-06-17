@@ -62,7 +62,6 @@ class Event extends Component {
       invalid: true
     });
     let rightNow = moment().format('DD/MM/YYYY HH:mm:ss');
-    console.log(rightNow);
     let data = {
       nation: this.props.nation,
       message: this.state.comment,
@@ -106,7 +105,6 @@ class Event extends Component {
     if (shouldBeDisabled && this.props.isAdmin) {
       shouldBeDisabled = false;
     }
-    console.log(shouldBeDisabled);
     return (
       <div>
         <Card>
@@ -162,7 +160,7 @@ class Event extends Component {
             let nation = comment.nation.replace(new RegExp('_', 'g'), ' ');
             nation = nation.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
             return (
-              <Card key={comment.message} expandable expanded={this.state.expanded} initiallyExpanded={false}>
+              <Card key={comment.key} expandable expanded={this.state.expanded} initiallyExpanded={false}>
                 <CardText expandable><b>{nation} - {comment.createdOn}</b><br /><Markdown source={comment.message} /></CardText>
               </Card>
             );

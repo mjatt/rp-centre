@@ -85,7 +85,9 @@ class Events extends Component {
           let comments = [];
           for (let commentKey in nextProps.data[key].comments) {
             if (nextProps.data[key].comments.hasOwnProperty(commentKey)) {
-              comments.push(nextProps.data[key].comments[commentKey]);
+              let comment = nextProps.data[key].comments[commentKey];
+              comment.key = commentKey;
+              comments.push(comment);
             }
           }
           comments.sort(function (comment1, comment2) {
