@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import axios from 'axios';
@@ -9,7 +9,7 @@ import Snackbar from 'material-ui/Snackbar';
 
 const SITE_CODE = process.env.CODE || 'norrland-rp';
 
-class Register extends React.Component {
+class Register extends Component {
   constructor(props) {
     super(props);
 
