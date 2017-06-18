@@ -16,6 +16,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
+import Snackbar from 'material-ui/Snackbar';
 
 const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
 
@@ -36,7 +37,9 @@ class Event extends Component {
       eventChannel: '',
       updateInvalid: false,
       eventKey: '',
-      updateEvent: false
+      updateEvent: false,
+      snackbarOpen: false,
+      responseMsg: ''
     };
 
     this.expand = this.expand.bind(this);
@@ -52,6 +55,7 @@ class Event extends Component {
     this.handleClose = this.handleClose.bind(this);
     this.updateEvent = this.updateEvent.bind(this);
     this.isUpdateFormValid = this.isUpdateFormValid.bind(this);
+    this.handleSnackbarClose = this.handleSnackbarClose.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -114,13 +118,16 @@ class Event extends Component {
     axios.post(apiEndpoint, data).then(function (response) {
       console.log(response);
       _this.setState({
-        createEvent: false
-      });
-      _this.setState({
-        comment: ''
+        comment: '',
+        responseMsg: response.data,
+        snackbarOpen: true
       });
     }).catch(function (error) {
       console.log(error);
+      _this.setState({
+        responseMsg: error.response.data,
+        snackbarOpen: true
+      });
     });
   }
 
@@ -133,8 +140,18 @@ class Event extends Component {
   handleDelete() {
     const apiEndpoint = baseUrl + '/api/event?event=' + this.props.event.key;
 
+    let _this = this;
     axios.delete(apiEndpoint).then(function (response) {
       console.log(response);
+      _this.setState({
+        responseMsg: response.data,
+        snackbarOpen: true
+      });
+    }).catch(function (error) {
+      _this.setState({
+        responseMsg: error.response.data,
+        snackbarOpen: true
+      });
     });
   }
 
@@ -196,8 +213,22 @@ class Event extends Component {
     axios.patch(apiEndpoint, data).then(function (response) {
       console.log(response);
       _this.setState({
-        updateEvent: false
+        updateEvent: false,
+        responseMsg: response.data,
+        snackbarOpen: true
       });
+    }).catch(function (error) {
+      _this.setState({
+        updateEvent: false,
+        responseMsg: error.response.data,
+        snackbarOpen: true
+      });
+    });
+  }
+
+  handleSnackbarClose() {
+    this.setState({
+      snackbarOpen: false
     });
   }
 
@@ -217,6 +248,12 @@ class Event extends Component {
     ];
     return (
       <div>
+        <Snackbar
+          open={this.state.snackbarOpen}
+          message={this.state.responseMsg}
+          autoHideDuration={3000}
+          onRequestClose={this.handleSnackbarClose}
+        />
         <Dialog open={this.state.updateEvent} title="Update an event..." actions={actions}>
           <Grid fluid>
             <Row center="md" style={{ paddingTop: '15px' }}>

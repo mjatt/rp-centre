@@ -68,15 +68,15 @@ router.route('/event').post(function (req, res) {
       title: req.body.title,
       flag: flag
     });
-    res.send('Success!');
+    res.send('Event created successfully...');
   });
 });
 
 router.route('/event').delete(function (req, res) {
   firebase.database().ref('/events/' + req.query.event).remove().then(function () {
-    res.send('Success!');
+    res.send('Event deleted successfully...');
   }).catch(function () {
-    res.status(500).send('Failure!');
+    res.status(500).send('There was a problem deleting the event, please try again...');
   });
 });
 
@@ -86,7 +86,7 @@ router.route('/event').patch(function (req, res) {
     description: req.body.eventDescription,
     channel: req.body.eventChannel
   });
-  res.send('Success!');
+  res.send('Event updated successfully...');
 });
 
 router.route('/event/comment').post(function (req, res) {
@@ -96,7 +96,7 @@ router.route('/event/comment').post(function (req, res) {
     message: req.body.message,
     nation: req.body.nation
   });
-  res.send('Success');
+  res.send('Commented successfully...');
 });
 
 router.route('/calc/data').get(function (req, res) {
