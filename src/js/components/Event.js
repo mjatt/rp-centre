@@ -24,7 +24,15 @@ class Event extends Component {
     this.state = {
       expanded: false,
       invalid: true,
-      comment: ''
+      comment: '',
+      eventTitle: '',
+      eventDescription: '',
+      subtitle: '',
+      shouldBeDisabled: true,
+      flag: '',
+      comments: [],
+      eventChannel: '',
+      updateInvalid: false
     };
 
     this.expand = this.expand.bind(this);
@@ -37,6 +45,25 @@ class Event extends Component {
     this.handleUpdateDescription = this.handleUpdateDescription.bind(this);
     this.handleEventChannelChange = this.handleEventChannelChange.bind(this);
     this.isFormValid = this.isFormValid.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.updateEvent = this.updateEvent.bind(this);
+    this.isUpdateFormValid = this.isUpdateFormValid.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    let shouldBeDisabled = (nextProps.nation === nextProps.event.createdBy) ? false : true;
+    if (shouldBeDisabled && nextProps.isAdmin) {
+      shouldBeDisabled = false;
+    }
+    this.setState({
+      eventTitle: nextProps.event.title,
+      eventDescription: nextProps.event.description,
+      subtitle: nextProps.event.createdBy + ' - Created On: ' + nextProps.event.createdOn + ' - Channel: ' + nextProps.event.channel,
+      shouldBeDisabled: shouldBeDisabled,
+      flag: nextProps.event.flag,
+      comments: nextProps.event.comments,
+      eventChannel: nextProps.event.channel
+    });
   }
 
   expand() {
@@ -95,7 +122,9 @@ class Event extends Component {
   }
 
   handleEdit() {
-
+    this.setState({
+      updateEvent: true
+    });
   }
 
   handleDelete() {
@@ -114,7 +143,7 @@ class Event extends Component {
       }, this.isFormValid);
     } else {
       this.setState({
-        invalid: true
+        updateInvalid: true
       });
     }
   }
@@ -126,25 +155,33 @@ class Event extends Component {
       }, this.isFormValid);
     } else {
       this.setState({
-        invalid: true
+        updateInvalid: true
       });
     }
   }
 
   handleEventChannelChange(event, value) {
-    let myVal = value.replace('_', ' ');
-    myVal = myVal.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
     this.setState({
-      eventChannel: myVal
+      eventChannel: value
     }, this.isFormValid);
   }
 
-  isFormValid() {
+  isUpdateFormValid() {
     if (this.state.eventTitle && this.state.eventDescription && this.state.eventChannel) {
       this.setState({
-        invalid: false
+        updateInvalid: false
       });
     }
+  }
+
+  handleClose() {
+    this.setState({
+      updateEvent: false
+    });
+  }
+
+  updateEvent() {
+    console.log('bant');
   }
 
   render() {
@@ -158,17 +195,12 @@ class Event extends Component {
         label="Update"
         primary
         onTouchTap={this.updateEvent}
-        disabled={this.state.invalid}
+        disabled={this.state.updateInvalid}
       />
     ];
-    let subtitle = this.props.event.createdBy + ' - Created On: ' + this.props.event.createdOn + ' - Channel: ' + this.props.event.channel;
-    var shouldBeDisabled = (this.props.nation === this.props.event.createdBy) ? false : true;
-    if (shouldBeDisabled && this.props.isAdmin) {
-      shouldBeDisabled = false;
-    }
     return (
       <div>
-        <Dialog open={this.state.createEvent} title="Create an event..." actions={actions} modal>
+        <Dialog open={this.state.updateEvent} title="Create an event..." actions={actions}>
           <Grid fluid>
             <Row center="md" style={{ paddingTop: '15px' }}>
               <Col md>
@@ -184,6 +216,7 @@ class Event extends Component {
                   onChange={this.handleUpdateTitle}
                   validate={['required']}
                   errorText="Please enter an event title"
+                  value={this.state.eventTitle}
                   style={{ width: '100%' }} />
               </Col>
             </Row>
@@ -196,6 +229,7 @@ class Event extends Component {
                   onChange={this.handleUpdateDescription}
                   validate={['required']}
                   errorText="Please enter an event description"
+                  value={this.state.eventDescription}
                   style={{ width: '100%' }}
                   rows={4}
                   rowsMax={10}
@@ -204,17 +238,17 @@ class Event extends Component {
             </Row>
             <Row center="md" style={{ paddingTop: '15px' }}>
               <Col md mdOffset={4}>
-                <RadioButtonGroup onChange={this.handleEventChannelChange} style={{ width: '50%' }} name="channel" defaultSelected="general">
+                <RadioButtonGroup onChange={this.handleEventChannelChange} style={{ width: '50%' }} name="channel" defaultSelected="general" valueSelected={this.state.eventChannel}>
                   <RadioButton
-                    value="general"
+                    value="General"
                     label="General"
                   />
                   <RadioButton
-                    value="international_affairs"
+                    value="International Affairs"
                     label="International Affairs"
                   />
                   <RadioButton
-                    value="internal_affairs"
+                    value="Internal Affairs"
                     label="Internal Affairs"
                   />
                 </RadioButtonGroup>
@@ -224,15 +258,15 @@ class Event extends Component {
         </Dialog>
         <Card>
           <CardHeader
-            title={this.props.event.title}
-            subtitle={subtitle}
-            avatar={this.props.event.flag}
+            title={this.state.eventTitle}
+            subtitle={this.state.subtitle}
+            avatar={this.state.flag}
             style={{ width: '100%' }}
           />
-          <CardText style={{ textAlign: 'left' }}><Markdown source={this.props.event.description} /></CardText>
+          <CardText style={{ textAlign: 'left' }}><Markdown source={this.state.eventDescription} /></CardText>
           <div>
             <Badge
-              badgeContent={this.props.event.comments.length}
+              badgeContent={this.state.comments.length}
               secondary
               badgeStyle={{ top: 12, right: 12 }}
             >
@@ -245,8 +279,8 @@ class Event extends Component {
               anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
               targetOrigin={{ horizontal: 'left', vertical: 'top' }}
             >
-              <MenuItem primaryText="Edit" disabled={shouldBeDisabled} onTouchTap={this.handleEdit} />
-              <MenuItem primaryText="Delete" disabled={shouldBeDisabled} onTouchTap={this.handleDelete} />
+              <MenuItem primaryText="Edit" disabled={this.state.shouldBeDisabled} onTouchTap={this.handleEdit} />
+              <MenuItem primaryText="Delete" disabled={this.state.shouldBeDisabled} onTouchTap={this.handleDelete} />
             </IconMenu>
           </div>
           {
@@ -271,7 +305,7 @@ class Event extends Component {
           }
         </Card>
         {
-          this.props.event.comments.map((comment) => {
+          this.state.comments.map((comment) => {
             let nation = comment.nation.replace(new RegExp('_', 'g'), ' ');
             nation = nation.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
             return (

@@ -327,15 +327,15 @@ class Events extends Component {
               <Col md mdOffset={4}>
                 <RadioButtonGroup onChange={this.handleEventChannelChange} style={{ width: '50%' }} name="channel" defaultSelected="general">
                   <RadioButton
-                    value="general"
+                    value="General"
                     label="General"
                   />
                   <RadioButton
-                    value="international_affairs"
+                    value="International Affairs"
                     label="International Affairs"
                   />
                   <RadioButton
-                    value="internal_affairs"
+                    value="Internal Affairs"
                     label="Internal Affairs"
                   />
                 </RadioButtonGroup>

@@ -56,7 +56,8 @@ class ValidatedTextField extends Component {
         }
         onBlur={this.onBlur}
         style={this.props.style}
-        name={this.props.name} />
+        name={this.props.name}
+        value={this.props.value} />
     );
   }
 }
@@ -71,7 +72,8 @@ ValidatedTextField.propTypes = {
   name: PropTypes.string,
   rows: PropTypes.number,
   rowsMax: PropTypes.number,
-  multiLine: PropTypes.bool
+  multiLine: PropTypes.bool,
+  value: PropTypes.string
 };
 
 export default ValidatedTextField;
