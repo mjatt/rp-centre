@@ -216,7 +216,7 @@ class Events extends Component {
     };
 
     const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
-    const apiEndpoint = baseUrl + '/api/event/create';
+    const apiEndpoint = baseUrl + '/api/event';
 
     let _this = this;
     axios.post(apiEndpoint, data).then(function (response) {

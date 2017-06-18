@@ -17,6 +17,8 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
 
+const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
+
 class Event extends Component {
   constructor(props) {
     super(props);
@@ -32,7 +34,9 @@ class Event extends Component {
       flag: '',
       comments: [],
       eventChannel: '',
-      updateInvalid: false
+      updateInvalid: false,
+      eventKey: '',
+      updateEvent: false
     };
 
     this.expand = this.expand.bind(this);
@@ -62,7 +66,8 @@ class Event extends Component {
       shouldBeDisabled: shouldBeDisabled,
       flag: nextProps.event.flag,
       comments: nextProps.event.comments,
-      eventChannel: nextProps.event.channel
+      eventChannel: nextProps.event.channel,
+      eventKey: nextProps.event.key
     });
   }
 
@@ -103,8 +108,6 @@ class Event extends Component {
       createdOn: rightNow,
       event: this.props.event.key
     };
-
-    const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
     const apiEndpoint = baseUrl + '/api/event/comment';
 
     let _this = this;
@@ -128,8 +131,7 @@ class Event extends Component {
   }
 
   handleDelete() {
-    const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
-    const apiEndpoint = baseUrl + '/api/event/delete?event=' + this.props.event.key;
+    const apiEndpoint = baseUrl + '/api/event?event=' + this.props.event.key;
 
     axios.delete(apiEndpoint).then(function (response) {
       console.log(response);
@@ -181,7 +183,22 @@ class Event extends Component {
   }
 
   updateEvent() {
-    console.log('bant');
+    const apiEndpoint = baseUrl + '/api/event';
+
+    let data = {
+      eventKey: this.state.eventKey,
+      eventTitle: this.state.eventTitle,
+      eventDescription: this.state.eventDescription,
+      eventChannel: this.state.eventChannel
+    };
+
+    let _this = this;
+    axios.patch(apiEndpoint, data).then(function (response) {
+      console.log(response);
+      _this.setState({
+        updateEvent: false
+      });
+    });
   }
 
   render() {
@@ -200,7 +217,7 @@ class Event extends Component {
     ];
     return (
       <div>
-        <Dialog open={this.state.updateEvent} title="Create an event..." actions={actions}>
+        <Dialog open={this.state.updateEvent} title="Update an event..." actions={actions}>
           <Grid fluid>
             <Row center="md" style={{ paddingTop: '15px' }}>
               <Col md>
@@ -216,7 +233,7 @@ class Event extends Component {
                   onChange={this.handleUpdateTitle}
                   validate={['required']}
                   errorText="Please enter an event title"
-                  value={this.state.eventTitle}
+                  defaultValue={this.state.eventTitle}
                   style={{ width: '100%' }} />
               </Col>
             </Row>
@@ -229,7 +246,7 @@ class Event extends Component {
                   onChange={this.handleUpdateDescription}
                   validate={['required']}
                   errorText="Please enter an event description"
-                  value={this.state.eventDescription}
+                  defaultValue={this.state.eventDescription}
                   style={{ width: '100%' }}
                   rows={4}
                   rowsMax={10}

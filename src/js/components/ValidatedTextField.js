@@ -56,8 +56,7 @@ class ValidatedTextField extends Component {
         }
         onBlur={this.onBlur}
         style={this.props.style}
-        name={this.props.name}
-        value={this.props.value} />
+        name={this.props.name} />
     );
   }
 }

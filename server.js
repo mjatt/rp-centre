@@ -55,7 +55,7 @@ app.use(cookieParser());
 // eslint-disable-next-line new-cap
 var router = express.Router();
 
-router.route('/event/create').post(function (req, res) {
+router.route('/event').post(function (req, res) {
   let flag;
   let rightNow = new Date().getTime();
   firebase.database().ref('/nations/' + req.body.createdBy).once('value').then(function (snapshot) {
@@ -72,12 +72,21 @@ router.route('/event/create').post(function (req, res) {
   });
 });
 
-router.route('/event/delete').delete(function (req, res) {
+router.route('/event').delete(function (req, res) {
   firebase.database().ref('/events/' + req.query.event).remove().then(function () {
     res.send('Success!');
   }).catch(function () {
     res.status(500).send('Failure!');
   });
+});
+
+router.route('/event').patch(function (req, res) {
+  firebase.database().ref('/events/' + req.body.eventKey).update({
+    title: req.body.eventTitle,
+    description: req.body.eventDescription,
+    channel: req.body.eventChannel
+  });
+  res.send('Success!');
 });
 
 router.route('/event/comment').post(function (req, res) {
@@ -159,36 +168,34 @@ router.route('/verify').post(function (req, res) {
             if (err) console.error(err);
             if (result.NATION.REGION[0] !== 'Norrland') {
               res.status(400).send('Error... You are not a member of Norrland...');
-              console.error('User: ' + nation + ' attempted to login but it not a member of Norrland!');
+              console.error(new Date() + ': User, ' + nation + ', attempted to login but it not a member of Norrland!');
             } else {
               checkIfWeHaveFlagUrl(nation, function (checkFlagResult, nationData) {
                 if (!checkFlagResult) {
-                  console.log('Getting user: ' + nation + '\'s flag.');
+                  console.log('Getting ' + nation + '\'s flag.');
                   getFlagUrl(req.body.nation, function (flagUrl) {
                     firebase.database().ref('nations/' + nation).update({
                       flag: flagUrl
                     });
                   });
                 }
-                console.log(nationData.isAdmin);
                 if (nationData.isAdmin === true) {
                   res.cookie('isAdmin', true);
                 }
                 res.cookie('nation', nation);
                 res.send('Signed in successfully, you will be redirected in 3 seconds...');
-                console.log('User: ' + nation + ' signed in successfully.');
+                console.log(new Date() + ': User, ' + nation + ', signed in successfully.');
               });
             }
           });
         });
       } else {
         res.status(400).send('Please make sure you got your verification code correct and try again...');
-        console.error('User: ' + nation + ' failed to login.');
+        console.error(new Date() + ': User, ' + nation + ', failed to login.');
       }
     } else {
       res.status(400).send('A unexpected error occured, please try again later...');
       console.error('Ran into an error: ' + error);
-      console.error(error);
     }
   });
 });
