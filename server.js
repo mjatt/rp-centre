@@ -141,9 +141,12 @@ router.route('/calc/data').get(function (req, res) {
         if (inte < 0) {
           inte = 0;
         }
-        var physicalStrength = Math.sqrt((def * 2) * (eco / 100) * pop);
-        var integrityModifier = (inte + 20) / 120;
-        var prelimBudget = 30 * physicalStrength * integrityModifier;
+        var scale = 50000.0;
+        var factor = pop / scale;
+        var position = (Math.sqrt(8.0 * factor + 1.0) - 1.0) / 2.0;
+        var physicalStrength = Math.sqrt((def * 2.0) * (eco / 100.0) * (position * scale));
+        var integrityModifier = (inte + 20.0) / 120.0;
+        var prelimBudget = 30.0 * physicalStrength * integrityModifier;
         var budget = Math.round(prelimBudget);
         firebase.database().ref('nations/' + req.query.nation).update({
           budget: budget
@@ -159,63 +162,63 @@ router.route('/calc/data').get(function (req, res) {
 });
 
 router.route('/verify').post(function (req, res) {
-  // let verifyUrl = 'https://www.nationstates.net/cgi-bin/api.cgi?a=verify&nation=' + req.body.nation + '&checksum=' + req.body.code + '&token=' + SITE_CODE;
-  // let nationCheckUrl = 'https://www.nationstates.net/cgi-bin/api.cgi?nation=' + req.body.nation + '&q=region';
+  let verifyUrl = 'https://www.nationstates.net/cgi-bin/api.cgi?a=verify&nation=' + req.body.nation + '&checksum=' + req.body.code + '&token=' + SITE_CODE;
+  let nationCheckUrl = 'https://www.nationstates.net/cgi-bin/api.cgi?nation=' + req.body.nation + '&q=region';
 
-  // var verifyOptions = {
-  //   url: verifyUrl,
-  //   headers: {
-  //     'User-Agent': 'Norrland RP Centre'
-  //   }
-  // };
-  // var nationCheckOptions = {
-  //   url: nationCheckUrl,
-  //   headers: {
-  //     'User-Agent': 'Norrland RP Centre'
-  //   }
-  // };
-  // request(verifyOptions, function (error, response, body) {
-  //   if (!error) {
-  //     let nation = req.body.nation.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
-  //     nation = nation.replaceAll('%20', '_');
-  //     nation = nation.replaceAll(' ', '_');
-  //     if (parseInt(body, 10) === 1) {
-  //       request(nationCheckOptions, function (nationCheckError, nationCheckResponse, nationCheckBody) {
-  //         if (nationCheckError) console.error(error);
-  //         parseString(nationCheckBody, function (err, result) {
-  //           if (err) console.error(err);
-  //           if (result.NATION.REGION[0] !== 'Norrland') {
-  //             res.status(400).send('Error... You are not a member of Norrland...');
-  //             console.error(new Date() + ': User, ' + nation + ', attempted to login but it not a member of Norrland!');
-  //           } else {
-  //             checkIfWeHaveFlagUrl(nation, function (checkFlagResult, nationData) {
-  //               if (!checkFlagResult) {
-  //                 console.log('Getting ' + nation + '\'s flag.');
-  //                 getFlagUrl(req.body.nation, function (flagUrl) {
-  //                   firebase.database().ref('nations/' + nation).update({
-  //                     flag: flagUrl
-  //                   });
-  //                 });
-  //               }
-  //               if (nationData.isAdmin === true) {
-  //                 res.cookie('isAdmin', true);
-  //               }
-                res.cookie('nation', 'Retinentia');
+  var verifyOptions = {
+    url: verifyUrl,
+    headers: {
+      'User-Agent': 'Norrland RP Centre'
+    }
+  };
+  var nationCheckOptions = {
+    url: nationCheckUrl,
+    headers: {
+      'User-Agent': 'Norrland RP Centre'
+    }
+  };
+  request(verifyOptions, function (error, response, body) {
+    if (!error) {
+      let nation = req.body.nation.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+      nation = nation.replaceAll('%20', '_');
+      nation = nation.replaceAll(' ', '_');
+      if (parseInt(body, 10) === 1) {
+        request(nationCheckOptions, function (nationCheckError, nationCheckResponse, nationCheckBody) {
+          if (nationCheckError) console.error(error);
+          parseString(nationCheckBody, function (err, result) {
+            if (err) console.error(err);
+            if (result.NATION.REGION[0] !== 'Norrland') {
+              res.status(400).send('Error... You are not a member of Norrland...');
+              console.error(new Date() + ': User, ' + nation + ', attempted to login but it not a member of Norrland!');
+            } else {
+              checkIfWeHaveFlagUrl(nation, function (checkFlagResult, nationData) {
+                if (!checkFlagResult) {
+                  console.log('Getting ' + nation + '\'s flag.');
+                  getFlagUrl(req.body.nation, function (flagUrl) {
+                    firebase.database().ref('nations/' + nation).update({
+                      flag: flagUrl
+                    });
+                  });
+                }
+                if (nationData.isAdmin === true) {
+                  res.cookie('isAdmin', true);
+                }
+                res.cookie('nation', nation);
                 res.send('Signed in successfully, you will be redirected in 3 seconds...');
                 console.log(new Date() + ': User, ' + nation + ', signed in successfully.');
-  //             });
-  //           }
-  //         });
-  //       });
-  //     } else {
-  //       res.status(400).send('Please make sure you got your verification code correct and try again...');
-  //       console.error(new Date() + ': User, ' + nation + ', failed to login.');
-  //     }
-  //   } else {
-  //     res.status(400).send('A unexpected error occured, please try again later...');
-  //     console.error('Ran into an error: ' + error);
-  //   }
-  // });
+              });
+            }
+          });
+        });
+      } else {
+        res.status(400).send('Please make sure you got your verification code correct and try again...');
+        console.error(new Date() + ': User, ' + nation + ', failed to login.');
+      }
+    } else {
+      res.status(400).send('A unexpected error occured, please try again later...');
+      console.error('Ran into an error: ' + error);
+    }
+  });
 });
 
 app.use('/api', router);
