@@ -1,5 +1,16 @@
 box: node
 
+lint:
+  steps:
+    - npm-install
+
+    - script:
+        name: lint
+        code: npm run lint
+  after-steps:
+    - slack-notifier:
+        url: $DISCORD_URL
+        username: Lint Bot
 build:
   steps:
     - npm-install
@@ -10,6 +21,20 @@ build:
     - script:
         name: build
         code: npm run build
+  after-steps:
+    - slack-notifier:
+        url: $DISCORD_URL
+        username: Build Bot
+preprod-build:
+  steps:
+    - npm-install
+
+    - script:
+        name: lint
+        code: npm run lint
+    - script:
+        name: build
+        code: npm run preprod-build
   after-steps:
     - slack-notifier:
         url: $DISCORD_URL
