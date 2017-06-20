@@ -393,6 +393,16 @@ class Events extends Component {
                       )
                   }
                 </Row>
+                <Row center="md">
+                  <Col md>
+                    <Pagination
+                      total={this.state.total}
+                      current={this.state.current}
+                      display={5}
+                      onChange={this.handlePageSelectionChanged}
+                    />
+                  </Col>
+                </Row>
                 {
                   (this.state.loading) ? (
                     <div>
@@ -431,7 +441,7 @@ class Events extends Component {
                       <Col md>
                         <Pagination
                           total={this.state.total}
-                          current={this.state.number}
+                          current={this.state.current}
                           display={5}
                           onChange={this.handlePageSelectionChanged}
                         />
