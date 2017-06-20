@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import sizeMe from 'react-sizeme';
 import { Col } from 'react-flexbox-grid';
 import Paper from 'material-ui/Paper';
@@ -11,7 +12,6 @@ import EventIcon from 'material-ui/svg-icons/action/event';
 
 class SizeAwareCol extends Component {
   render() {
-    console.log(this.props.size.width);
     return (
       <Col className="hidden-sm hidden-xs" xs={this.props.xs} sm={this.props.sm} md={this.props.md} lg={this.props.lg} xsOffset={this.props.xsOffset} smOffset={this.props.smOffset} mdOffset={this.props.mdOffset} lgOffset={this.props.lgOffset}>
         <Paper style={{ height: '240px', marginTop: '15px', position: 'fixed', width: this.props.size.width }}>
