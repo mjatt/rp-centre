@@ -14,6 +14,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from './ValidatedTextField';
 import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
 import FilterPicker from './FilterPicker';
+import Pagination from 'material-ui-pagination';
 
 class Events extends Component {
   constructor(props) {
@@ -30,7 +31,9 @@ class Events extends Component {
       selectedGeneral: false,
       selectedInternalAffairs: false,
       selectedInternationalAffairs: false,
-      selectedAll: true
+      selectedAll: true,
+      total: 0,
+      current: 0
     };
 
     this.handleClose = this.handleClose.bind(this);
@@ -45,6 +48,7 @@ class Events extends Component {
     this.internationalAffairsSelected = this.internationalAffairsSelected.bind(this);
     this.allSelected = this.allSelected.bind(this);
     this.removeUnrelated = this.removeUnrelated.bind(this);
+    this.handlePageSelectionChanged = this.handlePageSelectionChanged.bind(this);
   }
 
   handleOpen() {
@@ -122,13 +126,24 @@ class Events extends Component {
   componentWillReceiveProps(nextProps) {
     let newData = this.sanitiseData(nextProps);
     if (this.state.selectedGeneral) {
-      this.removeUnrelated('General');
+      newData = this.removeUnrelated('General');
     } else if (this.state.selectedInternalAffairs) {
-      this.removeUnrelated('Internal Affairs');
+      newData = this.removeUnrelated('Internal Affairs');
     } else if (this.state.selectedInternationalAffairs) {
-      this.removeUnrelated('International Affairs');
+      newData = this.removeUnrelated('International Affairs');
     }
-    this.setState({ loading: false, events: newData });
+    let numberOfPages = Math.round(newData.length / 5);
+    let paginatedData = [];
+    let currentPointer = 0;
+    for (let x = 0; x < numberOfPages; x++) {
+      let temp = [];
+      for (let y = 0; y < 5; y++) {
+        temp[y] = newData[currentPointer];
+        currentPointer++;
+      }
+      paginatedData[x] = temp;
+    }
+    this.setState({ loading: false, events: paginatedData, total: numberOfPages, current: 1 });
   }
 
   generalSelected() {
@@ -148,7 +163,10 @@ class Events extends Component {
       selectedInternationalAffairs: false,
       selectedAll: false
     });
-    this.removeUnrelated('Internal Affairs');
+    let events = this.removeUnrelated('Internal Affairs');
+    this.setState({
+      events: events
+    });
   }
 
   internationalAffairsSelected() {
@@ -158,7 +176,10 @@ class Events extends Component {
       selectedInternationalAffairs: true,
       selectedAll: false
     });
-    this.removeUnrelated('International Affairs');
+    let events = this.removeUnrelated('International Affairs');
+    this.setState({
+      events: events
+    });
   }
 
   allSelected() {
@@ -168,14 +189,13 @@ class Events extends Component {
       selectedInternationalAffairs: false,
       selectedAll: true
     });
-    this.removeUnrelated('All');
+    let events = this.removeUnrelated('All');
+    this.setState({
+      events: events
+    });
   }
 
-  removeUnrelated(channel) {
-    this.setState({
-      loading: true
-    });
-    let events = this.sanitiseData(this.props);
+  removeUnrelated(channel, events) {
     if (channel !== 'All') {
       let newData = [];
       events.forEach(function (element) {
@@ -193,16 +213,9 @@ class Events extends Component {
         }
         return 0;
       });
-      this.setState({
-        events: newData,
-        loading: false
-      });
-    } else {
-      this.setState({
-        events: events,
-        loading: false
-      });
+      return newData;
     }
+    return events;
   }
 
   createEvent() {
@@ -271,6 +284,13 @@ class Events extends Component {
 
   toggle(thingToToggle) {
     return !thingToToggle;
+  }
+
+  handlePageSelectionChanged(numberSelected) {
+    let _this = this;
+    this.setState({ current: numberSelected }, function () {
+      _this.forceUpdate();
+    });
   }
 
   render() {
@@ -394,19 +414,32 @@ class Events extends Component {
                       </Row>
                     </div>
                   ) : (
-                      null
+                      this.state.events[this.state.current - 1].map((event) => {
+                        return (
+                          <Row style={{ paddingTop: '15px' }} key={event.key} center="xs">
+                            <Col md={12} sm={24} xs={24}>
+                              <Event event={event} nation={this.props.nation} isAdmin={this.props.isAdmin} />
+                            </Col>
+                          </Row>
+                        );
+                      })
                     )
                 }
                 {
-                  this.state.events.map((event) => {
-                    return (
-                      <Row style={{ paddingTop: '15px' }} key={event.key} center="xs">
-                        <Col md={12} sm={24} xs={24}>
-                          <Event event={event} nation={this.props.nation} isAdmin={this.props.isAdmin} />
-                        </Col>
-                      </Row>
-                    );
-                  })
+                  (!this.state.loading) ? (
+                    <Row center="md">
+                      <Col md>
+                        <Pagination
+                          total={this.state.total}
+                          current={this.state.number}
+                          display={5}
+                          onChange={this.handlePageSelectionChanged}
+                        />
+                      </Col>
+                    </Row>
+                  ) : (
+                      null
+                    )
                 }
               </Grid>
             </Col>
