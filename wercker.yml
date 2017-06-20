@@ -15,9 +15,8 @@ build:
   steps:
     - npm-install
 
-    - script:
-        name: build
-        code: npm run build
+    - mitelone/webpack:
+        config-file: webpack.prod.js
   after-steps:
     - slack-notifier:
         url: $DISCORD_URL
