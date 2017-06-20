@@ -9,7 +9,6 @@
     "start": "node server.js",
     "dev": "nodemon -V -w server.js",
     "build": "webpack --config webpack.prod.js",
-    "preprod-build": "webpack --config webpack.preprod.js"
   },
   "keywords": [
     "react"
