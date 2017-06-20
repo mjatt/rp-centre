@@ -393,7 +393,7 @@ class Events extends Component {
                       )
                   }
                 </Row>
-                <Row center="md">
+                <Row center="md" style={{ paddingTop: '15px' }}>
                   <Col md>
                     <Pagination
                       total={this.state.total}
@@ -437,7 +437,7 @@ class Events extends Component {
                 }
                 {
                   (!this.state.loading) ? (
-                    <Row center="md">
+                    <Row center="md" style={{ paddingTop: '15px' }}>
                       <Col md>
                         <Pagination
                           total={this.state.total}
