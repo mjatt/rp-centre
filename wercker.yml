@@ -77,9 +77,6 @@ deploy-dev:
     - script:
         name: clean up
         code: ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre-indev.bancey.xyz rm /home/bancey/rp-centre.tar.gz
-    - script:
-        name: build webpack
-        code: ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre-indev.bancey.xyz cd /home/bancey/rp-centre && npm run preprod-build
     - script:		
         name: start server		
         code: ssh -i $PRIVATEKEY_PATH -o StrictHostKeyChecking=no -o UserKnownHostsFile=no -l bancey rpcentre-indev.bancey.xyz sudo /home/bancey/scripts/startServer.sh
