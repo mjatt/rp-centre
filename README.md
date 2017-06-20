@@ -6,6 +6,8 @@
 
 You can find the live version [here](http://rpcentre.bancey.xyz)
 
+You can find the indev version [here](http://rpcentre-indev.bancey.xyz), please be aware that this is _*not*_ stable.
+
 ### Vagrant
 
 ---
