@@ -11,6 +11,12 @@ import TextField from './ValidatedTextField';
 import axios from 'axios';
 import Snackbar from 'material-ui/Snackbar';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
+import {
+  Step,
+  Stepper,
+  StepLabel,
+  StepContent,
+} from 'material-ui/Stepper';
 
 class MilitaryCalculator extends Component {
   constructor(props) {
@@ -21,7 +27,9 @@ class MilitaryCalculator extends Component {
       openCalculate: false,
       invalid: true,
       population: null,
-      loading: true
+      loading: true,
+      stepIndex: 0,
+      finished: false
     };
 
     this.handleRequestCloseSnackbar = this.handleRequestCloseSnackbar.bind(this);
@@ -30,6 +38,8 @@ class MilitaryCalculator extends Component {
     this.openCalculate = this.openCalculate.bind(this);
     this.closeCalculate = this.closeCalculate.bind(this);
     this.calculate = this.calculate.bind(this);
+    this.handleNext = this.handleNext.bind(this);
+    this.handleBack = this.handleBack.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -111,6 +121,47 @@ class MilitaryCalculator extends Component {
     });
   }
 
+  handleNext() {
+    let currentStep = this.state.stepIndex;
+    this.setState({
+      stepIndex: currentStep + 1
+    });
+  }
+
+  handleBack() {
+    let currentStep = this.state.stepIndex;
+    this.setState({
+      stepIndex: currentStep - 1
+    });
+  }
+
+  renderStepActions(step) {
+    const { stepIndex } = this.state;
+
+    return (
+      <div style={{ margin: '12px 0' }}>
+        <RaisedButton
+          label={stepIndex === 2 ? 'Finish' : 'Next'}
+          disableTouchRipple
+          disableFocusRipple
+          primary
+          onTouchTap={this.handleNext}
+          style={{ marginRight: 12 }}
+        />
+        {step > 0 && (
+          <FlatButton
+            label="Back"
+            disabled={stepIndex === 0}
+            disableTouchRipple
+            disableFocusRipple
+            onTouchTap={this.handlePrev}
+          />
+        )}
+      </div>
+    );
+  }
+
+
   render() {
     if (this.state.loading) {
       return (
@@ -181,35 +232,42 @@ class MilitaryCalculator extends Component {
           </Dialog>
           <Grid fluid>
             <Paper style={{ marginTop: '15px', paddingTop: '5px', paddingBottom: '5px' }}>
-              {
-                (this.state.budget) ? (
-                  <div>
-                    <Row center="md">
-                      <Col md>
-                        Your current budget is {this.state.budget}
-                      </Col>
-                    </Row>
-                    <Row center="md" style={{ paddingTop: '10px' }}>
-                      <Col md>
-                        <RaisedButton primary label="Recalculate Budget" onTouchTap={this.openCalculate} style={{ width: '90%' }} />
-                      </Col>
-                    </Row>
-                  </div>
-                ) : (
-                    <div>
-                      <Row center="md">
-                        <Col md>
-                          You don't have a budget yet, calculate one!
-                    </Col>
-                      </Row>
-                      <Row center="md" style={{ paddingTop: '10px' }}>
-                        <Col md>
-                          <RaisedButton primary label="Calculate Budget" onTouchTap={this.openCalculate} style={{ width: '90%' }} />
-                        </Col>
-                      </Row>
-                    </div>
-                  )
-              }
+              <Row center="md" style={{ paddingTop: '10px' }}>
+                <Col md>
+                  <Stepper activeStep={this.state.stepIndex} orientation="vertical">
+                    <Step>
+                      <StepLabel>Select campaign settings</StepLabel>
+                      <StepContent>
+                        <p>
+                          For each ad campaign that you create, you can control how much
+                you're willing to spend on clicks and conversions, which networks
+                and geographical locations you want your ads to show on, and more.
+              </p>
+                        {this.renderStepActions(0)}
+                      </StepContent>
+                    </Step>
+                    <Step>
+                      <StepLabel>Create an ad group</StepLabel>
+                      <StepContent>
+                        <p>An ad group contains one or more ads which target a shared set of keywords.</p>
+                        {this.renderStepActions(1)}
+                      </StepContent>
+                    </Step>
+                    <Step>
+                      <StepLabel>Create an ad</StepLabel>
+                      <StepContent>
+                        <p>
+                          Try out different ad text to see what brings in the most customers,
+                and learn how to enhance your ads using features like ad extensions.
+                If you run into any problems with your ads, find out how to tell if
+                they're running and how to resolve approval issues.
+              </p>
+                        {this.renderStepActions(2)}
+                      </StepContent>
+                    </Step>
+                  </Stepper>
+                </Col>
+              </Row>
             </Paper >
           </Grid >
         </div>
