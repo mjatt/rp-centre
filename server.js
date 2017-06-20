@@ -70,6 +70,7 @@ router.route('/event').post(function (req, res) {
     });
     res.send('Event created successfully...');
   });
+  console.log(new Date() + ': Event created.');
 });
 
 router.route('/event').delete(function (req, res) {
@@ -78,6 +79,7 @@ router.route('/event').delete(function (req, res) {
   }).catch(function () {
     res.status(500).send('There was a problem deleting the event, please try again...');
   });
+  console.log(new Date() + ': Event, ' + req.query.event + ', was deleted.');
 });
 
 router.route('/event').patch(function (req, res) {
@@ -87,6 +89,7 @@ router.route('/event').patch(function (req, res) {
     channel: req.body.eventChannel
   });
   res.send('Event updated successfully...');
+  console.log(new Date() + ': Event, ' + req.body.eventKey + ', was modified.');
 });
 
 router.route('/event/comment').post(function (req, res) {
@@ -97,6 +100,7 @@ router.route('/event/comment').post(function (req, res) {
     nation: req.body.nation
   });
   res.send('Commented successfully...');
+  console.log(new Date() + ': Event, ' + req.body.event + ', was commented on by ' + req.body.nation + '.');
 });
 
 router.route('/calc/data').get(function (req, res) {
@@ -133,9 +137,11 @@ router.route('/calc/data').get(function (req, res) {
           budget: budget
         });
         res.send('Budget calculated successfully, your budget is ' + budget);
+        console.log(new Date() + ': User, ' + req.query.nation + ', calculated their budget.');
       });
     } else {
       res.status(400).send('An error occured, please check the information provided and try again.');
+      console.log(new Date() + ': User, ' + req.query.nation + ', failed to calculate their budget.');
     }
   });
 });
