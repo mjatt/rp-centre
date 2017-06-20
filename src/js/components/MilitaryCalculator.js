@@ -15,8 +15,16 @@ import {
   Step,
   Stepper,
   StepLabel,
-  StepContent,
+  StepContent
 } from 'material-ui/Stepper';
+import {
+  Table,
+  TableBody,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+  TableRowColumn,
+} from 'material-ui/Table';
 
 class MilitaryCalculator extends Component {
   constructor(props) {
@@ -29,7 +37,9 @@ class MilitaryCalculator extends Component {
       population: null,
       loading: true,
       stepIndex: 0,
-      finished: false
+      finished: false,
+      responseMsg: '',
+      openSnackbar: false
     };
 
     this.handleRequestCloseSnackbar = this.handleRequestCloseSnackbar.bind(this);
@@ -140,23 +150,50 @@ class MilitaryCalculator extends Component {
 
     return (
       <div style={{ margin: '12px 0' }}>
-        <RaisedButton
-          label={stepIndex === 2 ? 'Finish' : 'Next'}
-          disableTouchRipple
-          disableFocusRipple
-          primary
-          onTouchTap={this.handleNext}
-          style={{ marginRight: 12 }}
-        />
-        {step > 0 && (
-          <FlatButton
-            label="Back"
-            disabled={stepIndex === 0}
-            disableTouchRipple
-            disableFocusRipple
-            onTouchTap={this.handlePrev}
-          />
-        )}
+        {
+          (stepIndex === 0) ? (
+            <div>
+              <RaisedButton
+                label="Next"
+                disableTouchRipple
+                disableFocusRipple
+                primary
+                onTouchTap={this.handleNext}
+                disabled={!this.state.budget || this.state.budget < 0}
+                style={{ marginRight: 12 }}
+              />
+              {step > 0 && (
+                <FlatButton
+                  label="Back"
+                  disabled={stepIndex === 0}
+                  disableTouchRipple
+                  disableFocusRipple
+                  onTouchTap={this.handleBack}
+                />
+              )}
+            </div>
+          ) : (
+              <div>
+                <RaisedButton
+                  label={stepIndex === 2 ? 'Finish' : 'Next'}
+                  disableTouchRipple
+                  disableFocusRipple
+                  primary
+                  onTouchTap={this.handleNext}
+                  style={{ marginRight: 12 }}
+                />
+                {step > 0 && (
+                  <FlatButton
+                    label="Back"
+                    disabled={stepIndex === 0}
+                    disableTouchRipple
+                    disableFocusRipple
+                    onTouchTap={this.handleBack}
+                  />
+                )}
+              </div>
+            )
+        }
       </div>
     );
   }
@@ -209,7 +246,7 @@ class MilitaryCalculator extends Component {
             autoHideDuration={10000}
             onRequestClose={this.handleRequestCloseSnackbar}
           />
-          <Dialog open={this.state.openCalculate} title="Create an event..." actions={actions} modal>
+          <Dialog open={this.state.openCalculate} title="Calculate your budget..." actions={actions} modal>
             <Grid fluid>
               <Row center="md" style={{ paddingTop: '15px' }}>
                 <Col md>
@@ -235,26 +272,91 @@ class MilitaryCalculator extends Component {
               <Row center="md" style={{ paddingTop: '10px' }}>
                 <Col md>
                   <Stepper activeStep={this.state.stepIndex} orientation="vertical">
+                    {
+                      (this.state.budget) ? (
+                        <Step>
+                          <StepLabel>Check your budget</StepLabel>
+                          <StepContent>
+                            <Grid fluid>
+                              <Row center="md">
+                                <Col md>
+                                  Your current budget is {this.state.budget}
+                                </Col>
+                              </Row>
+                              <Row center="md" style={{ paddingTop: '10px' }}>
+                                <Col md>
+                                  <RaisedButton primary label="Recalculate Budget" onTouchTap={this.openCalculate} style={{ width: '90%' }} />
+                                </Col>
+                              </Row>
+                            </Grid>
+                            {this.renderStepActions(0)}
+                          </StepContent>
+                        </Step>
+                      ) : (
+                          <Step>
+                            <StepLabel>Calculate your budget</StepLabel>
+                            <StepContent>
+                              <Grid fluid>
+                                <Row center="md">
+                                  <Col md>
+                                    You don't have a budget yet, calculate one!
+                                  </Col>
+                                </Row>
+                                <Row center="md" style={{ paddingTop: '10px' }}>
+                                  <Col md>
+                                    <RaisedButton primary label="Calculate Budget" onTouchTap={this.openCalculate} style={{ width: '90%' }} />
+                                  </Col>
+                                </Row>
+                              </Grid>
+                              {this.renderStepActions(0)}
+                            </StepContent>
+                          </Step>
+                        )
+                    }
                     <Step>
-                      <StepLabel>Select campaign settings</StepLabel>
+                      <StepLabel>Select military items</StepLabel>
                       <StepContent>
-                        <p>
-                          For each ad campaign that you create, you can control how much
-                you're willing to spend on clicks and conversions, which networks
-                and geographical locations you want your ads to show on, and more.
-              </p>
-                        {this.renderStepActions(0)}
-                      </StepContent>
-                    </Step>
-                    <Step>
-                      <StepLabel>Create an ad group</StepLabel>
-                      <StepContent>
-                        <p>An ad group contains one or more ads which target a shared set of keywords.</p>
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHeaderColumn>ID</TableHeaderColumn>
+                              <TableHeaderColumn>Name</TableHeaderColumn>
+                              <TableHeaderColumn>Status</TableHeaderColumn>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            <TableRow>
+                              <TableRowColumn>1</TableRowColumn>
+                              <TableRowColumn>John Smith</TableRowColumn>
+                              <TableRowColumn>Employed</TableRowColumn>
+                            </TableRow>
+                            <TableRow>
+                              <TableRowColumn>2</TableRowColumn>
+                              <TableRowColumn>Randal White</TableRowColumn>
+                              <TableRowColumn>Unemployed</TableRowColumn>
+                            </TableRow>
+                            <TableRow>
+                              <TableRowColumn>3</TableRowColumn>
+                              <TableRowColumn>Stephanie Sanders</TableRowColumn>
+                              <TableRowColumn>Employed</TableRowColumn>
+                            </TableRow>
+                            <TableRow>
+                              <TableRowColumn>4</TableRowColumn>
+                              <TableRowColumn>Steve Brown</TableRowColumn>
+                              <TableRowColumn>Employed</TableRowColumn>
+                            </TableRow>
+                            <TableRow>
+                              <TableRowColumn>5</TableRowColumn>
+                              <TableRowColumn>Christopher Nolan</TableRowColumn>
+                              <TableRowColumn>Unemployed</TableRowColumn>
+                            </TableRow>
+                          </TableBody>
+                        </Table>
                         {this.renderStepActions(1)}
                       </StepContent>
                     </Step>
                     <Step>
-                      <StepLabel>Create an ad</StepLabel>
+                      <StepLabel>Confirm purchase</StepLabel>
                       <StepContent>
                         <p>
                           Try out different ad text to see what brings in the most customers,
