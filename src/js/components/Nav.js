@@ -1,11 +1,12 @@
-import React, { PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui/Toolbar';
 import RaisedButton from 'material-ui/RaisedButton';
 import { Link } from 'react-router-dom';
 import IconButton from 'material-ui/IconButton';
 import dimensions from 'react-dimensions';
 
-class MyNavbar extends React.Component {
+class MyNavbar extends Component {
   constructor(props) {
     super(props);
   }

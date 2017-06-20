@@ -1,10 +1,11 @@
-import React, { PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import GovMember from './GovernmentMember';
 import { connect } from 'react-firebase';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 
-class GovernmentDisplay extends React.Component {
+class GovernmentDisplay extends Component {
   constructor(props) {
     super(props);
 

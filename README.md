@@ -6,6 +6,8 @@
 
 You can find the live version [here](http://rpcentre.bancey.xyz)
 
+You can find the indev version [here](http://rpcentre-indev.bancey.xyz), please be aware that this is _*not*_ stable.
+
 ### Vagrant
 
 ---
@@ -63,4 +65,4 @@ npm run start
 ## Contributing
 
 ---
-We are happy to accept both pull requests and issues requests. Before submitting your pull request please read the [contributing guidlines](./docs/contrib.md).
+We are happy to accept both pull requests and issues requests. Before submitting your pull request please read the [contributing guidlines](./docs/CONTRIBUTING.md).

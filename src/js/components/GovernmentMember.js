@@ -1,7 +1,8 @@
-import React, { PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Card, CardHeader, CardMedia, CardText } from 'material-ui/Card';
 
-class GovMember extends React.Component {
+class GovMember extends Component {
   constructor(props) {
     super(props);
   }

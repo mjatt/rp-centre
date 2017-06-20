@@ -55,11 +55,12 @@ app.use(cookieParser());
 // eslint-disable-next-line new-cap
 var router = express.Router();
 
-router.route('/event/create').post(function (req, res) {
+router.route('/event').post(function (req, res) {
   let flag;
+  let rightNow = new Date().getTime();
   firebase.database().ref('/nations/' + req.body.createdBy).once('value').then(function (snapshot) {
     flag = snapshot.val().flag;
-    firebase.database().ref('/events/' + req.body.title).set({
+    firebase.database().ref('/events/' + rightNow).set({
       channel: req.body.channel,
       createdBy: req.body.createdBy,
       createdOn: req.body.createdOn,
@@ -67,8 +68,28 @@ router.route('/event/create').post(function (req, res) {
       title: req.body.title,
       flag: flag
     });
-    res.send('Success!');
+    res.send('Event created successfully...');
   });
+  console.log(new Date() + ': Event created.');
+});
+
+router.route('/event').delete(function (req, res) {
+  firebase.database().ref('/events/' + req.query.event).remove().then(function () {
+    res.send('Event deleted successfully...');
+  }).catch(function () {
+    res.status(500).send('There was a problem deleting the event, please try again...');
+  });
+  console.log(new Date() + ': Event, ' + req.query.event + ', was deleted.');
+});
+
+router.route('/event').patch(function (req, res) {
+  firebase.database().ref('/events/' + req.body.eventKey).update({
+    title: req.body.eventTitle,
+    description: req.body.eventDescription,
+    channel: req.body.eventChannel
+  });
+  res.send('Event updated successfully...');
+  console.log(new Date() + ': Event, ' + req.body.eventKey + ', was modified.');
 });
 
 router.route('/event/comment').post(function (req, res) {
@@ -78,7 +99,8 @@ router.route('/event/comment').post(function (req, res) {
     message: req.body.message,
     nation: req.body.nation
   });
-  res.send('Success');
+  res.send('Commented successfully...');
+  console.log(new Date() + ': Event, ' + req.body.event + ', was commented on by ' + req.body.nation + '.');
 });
 
 router.route('/calc/data').get(function (req, res) {
@@ -115,9 +137,11 @@ router.route('/calc/data').get(function (req, res) {
           budget: budget
         });
         res.send('Budget calculated successfully, your budget is ' + budget);
+        console.log(new Date() + ': User, ' + req.query.nation + ', calculated their budget.');
       });
     } else {
       res.status(400).send('An error occured, please check the information provided and try again.');
+      console.log(new Date() + ': User, ' + req.query.nation + ', failed to calculate their budget.');
     }
   });
 });
@@ -150,27 +174,34 @@ router.route('/verify').post(function (req, res) {
             if (err) console.error(err);
             if (result.NATION.REGION[0] !== 'Norrland') {
               res.status(400).send('Error... You are not a member of Norrland...');
-              console.error('User: ' + nation + ' attempted to login but it not a member of Norrland!');
+              console.error(new Date() + ': User, ' + nation + ', attempted to login but it not a member of Norrland!');
             } else {
-              getFlagUrl(req.body.nation, function (flagUrl) {
-                firebase.database().ref('nations/' + nation).update({
-                  flag: flagUrl
-                });
+              checkIfWeHaveFlagUrl(nation, function (checkFlagResult, nationData) {
+                if (!checkFlagResult) {
+                  console.log('Getting ' + nation + '\'s flag.');
+                  getFlagUrl(req.body.nation, function (flagUrl) {
+                    firebase.database().ref('nations/' + nation).update({
+                      flag: flagUrl
+                    });
+                  });
+                }
+                if (nationData.isAdmin === true) {
+                  res.cookie('isAdmin', true);
+                }
+                res.cookie('nation', nation);
+                res.send('Signed in successfully, you will be redirected in 3 seconds...');
+                console.log(new Date() + ': User, ' + nation + ', signed in successfully.');
               });
-              res.cookie('nation', nation);
-              res.send('Signed in successfully, you will be redirected in 3 seconds...');
-              console.log('User: ' + nation + ' signed in successfully.');
             }
           });
         });
       } else {
         res.status(400).send('Please make sure you got your verification code correct and try again...');
-        console.error('user: ' + nation + ' failed to login.');
+        console.error(new Date() + ': User, ' + nation + ', failed to login.');
       }
     } else {
       res.status(400).send('A unexpected error occured, please try again later...');
       console.error('Ran into an error: ' + error);
-      console.error(error);
     }
   });
 });
@@ -205,6 +236,17 @@ function getFlagUrl(nation, callback) {
     if (error) console.log(error);
     let parts = body.split('FLAG');
     callback(parts[1].replace('</', '').replace('>', ''));
+  });
+}
+
+function checkIfWeHaveFlagUrl(nation, callback) {
+  firebase.database().ref('nations/' + nation).once('value').then(function (snapshot) {
+    var values = snapshot.val();
+    if (values && values.flag) {
+      callback(true, values);
+    } else {
+      callback(false, values);
+    }
   });
 }
 

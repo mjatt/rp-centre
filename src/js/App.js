@@ -24,7 +24,8 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      nation: ''
+      nation: '',
+      isAdmin: false
     };
     this.handleLogout = this.handleLogout.bind(this);
   }
@@ -37,6 +38,12 @@ class App extends React.Component {
         let value = cookie.split('=')[1];
         _this.setState({
           nation: value
+        });
+      }
+      if (cookie.includes('isAdmin')) {
+        var value = (cookie.split('=')[1] === 'true');
+        _this.setState({
+          isAdmin: value
         });
       }
     }, this);
@@ -58,7 +65,7 @@ class App extends React.Component {
             <Navbar nation={this.state.nation} handleLogout={this.handleLogout} />
             <Route exact path="/" component={GovernmentDisplay} />
             <Route path="/register" component={Register} />
-            <Route path="/events" render={()=><Events nation={this.state.nation}/>}/>
+            <Route path="/events" render={()=><Events nation={this.state.nation} isAdmin={this.state.isAdmin}/>}/>
             <Route path="/calc" render={()=><MilitaryCalculator nation={this.state.nation}/>}/>
           </div>
         </Router>
