@@ -22,7 +22,7 @@ if (process.env.NODE_ENV === 'production') {
   app.use(helmet());
 }
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'preprod') {
   var webpackDevMiddleware = require('webpack-dev-middleware');
   var webpackHotMiddleware = require('webpack-hot-middleware');
   var webpack = require('webpack');
@@ -129,9 +129,24 @@ router.route('/calc/data').get(function (req, res) {
         var eco = result.NATION.CENSUS[0].SCALE[0].SCORE[0];
         var def = result.NATION.CENSUS[0].SCALE[1].SCORE[0];
         var inte = result.NATION.CENSUS[0].SCALE[2].SCORE[0];
-        var physicalStrength = Math.sqrt((def * 2) * (eco / 100) * pop);
-        var integrityModifier = (inte + 20) / 120;
-        var prelimBudget = 30 * physicalStrength * integrityModifier;
+        if (pop < 0) {
+          pop = 0;
+        }
+        if (eco < 0) {
+          eco = 0;
+        }
+        if (def < 0) {
+          def = 0;
+        }
+        if (inte < 0) {
+          inte = 0;
+        }
+        var scale = 50000.0;
+        var factor = pop / scale;
+        var position = (Math.sqrt(8.0 * factor + 1.0) - 1.0) / 2.0;
+        var physicalStrength = Math.sqrt((def * 2.0) * (eco / 100.0) * (position * scale));
+        var integrityModifier = (inte + 20.0) / 120.0;
+        var prelimBudget = 30.0 * physicalStrength * integrityModifier;
         var budget = Math.round(prelimBudget);
         firebase.database().ref('nations/' + req.query.nation).update({
           budget: budget

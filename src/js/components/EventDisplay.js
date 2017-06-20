@@ -15,6 +15,7 @@ import TextField from './ValidatedTextField';
 import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
 import FilterPicker from './FilterPicker';
 import Pagination from 'material-ui-pagination';
+import Paper from 'material-ui/Paper';
 
 class Events extends Component {
   constructor(props) {
@@ -395,12 +396,14 @@ class Events extends Component {
                 </Row>
                 <Row center="md" style={{ paddingTop: '15px' }}>
                   <Col md>
-                    <Pagination
-                      total={this.state.total}
-                      current={this.state.current}
-                      display={5}
-                      onChange={this.handlePageSelectionChanged}
-                    />
+                    <Paper>
+                      <Pagination
+                        total={this.state.total}
+                        current={this.state.current}
+                        display={5}
+                        onChange={this.handlePageSelectionChanged}
+                      />
+                    </Paper>
                   </Col>
                 </Row>
                 {
@@ -439,12 +442,14 @@ class Events extends Component {
                   (!this.state.loading) ? (
                     <Row center="md" style={{ paddingTop: '15px' }}>
                       <Col md>
-                        <Pagination
-                          total={this.state.total}
-                          current={this.state.current}
-                          display={5}
-                          onChange={this.handlePageSelectionChanged}
-                        />
+                        <Paper>
+                          <Pagination
+                            total={this.state.total}
+                            current={this.state.current}
+                            display={5}
+                            onChange={this.handlePageSelectionChanged}
+                          />
+                        </Paper>
                       </Col>
                     </Row>
                   ) : (
