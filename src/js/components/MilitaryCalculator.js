@@ -39,7 +39,8 @@ class MilitaryCalculator extends Component {
       stepIndex: 0,
       finished: false,
       responseMsg: '',
-      openSnackbar: false
+      openSnackbar: false,
+      shopItems: []
     };
 
     this.handleRequestCloseSnackbar = this.handleRequestCloseSnackbar.bind(this);
@@ -53,7 +54,6 @@ class MilitaryCalculator extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     for (var key in nextProps.nationData) {
       if (nextProps.nationData.hasOwnProperty(key)) {
         if (key === nextProps.nation) {
@@ -65,8 +65,29 @@ class MilitaryCalculator extends Component {
         }
       }
     }
+    let items = [];
+    for (var shopItemKey in nextProps.shopItems) {
+      if (nextProps.shopItems.hasOwnProperty(shopItemKey)) {
+        let temp = [];
+        for (var individualItemKey in nextProps.shopItems[shopItemKey]) {
+          if (nextProps.shopItems[shopItemKey].hasOwnProperty(individualItemKey)) {
+            let item = {
+              itemName: individualItemKey,
+              itemPPU: nextProps.shopItems[shopItemKey][individualItemKey]
+            };
+            temp.push(item);
+          }
+        }
+        let shopCategory = {
+          categoryName: shopItemKey,
+          items: temp
+        };
+        items.push(shopCategory);
+      }
+    }
     this.setState({
-      loading: false
+      loading: false,
+      shopItems: items
     });
   }
 
@@ -143,6 +164,10 @@ class MilitaryCalculator extends Component {
     this.setState({
       stepIndex: currentStep - 1
     });
+  }
+
+  toggle(thingToToggle) {
+    return !thingToToggle;
   }
 
   renderStepActions(step) {
@@ -316,7 +341,21 @@ class MilitaryCalculator extends Component {
                     <Step>
                       <StepLabel>Select military items</StepLabel>
                       <StepContent>
-                        
+                        {
+                          this.state.shopItems.map((category) => {
+                            let expanded = false;
+                            return (
+                              // eslint-disable-next-line no-return-assign
+                              <Card expanded={expanded} onExpandChange={() => expanded = this.thingToToggle(expanded)} key={category.categoryName}>
+                                <CardHeader
+                                  title={category.categoryName}
+                                  actAsExpander
+                                  showExpandableButton
+                                />
+                              </Card>
+                            );
+                          })
+                        }
                         {this.renderStepActions(1)}
                       </StepContent>
                     </Step>
@@ -363,11 +402,13 @@ class MilitaryCalculator extends Component {
 
 MilitaryCalculator.propTypes = {
   nation: PropTypes.string,
-  nationData: PropTypes.object
+  nationData: PropTypes.object,
+  shopItems: PropTypes.object
 };
 
 const mapFirebaseToProps = {
-  nationData: 'nations'
+  nationData: 'nations',
+  shopItems: 'shop-items'
 };
 
 export default connect(mapFirebaseToProps)(MilitaryCalculator);
