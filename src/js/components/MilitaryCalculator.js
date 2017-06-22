@@ -17,14 +17,7 @@ import {
   StepLabel,
   StepContent
 } from 'material-ui/Stepper';
-import {
-  Card,
-  CardActions,
-  CardHeader,
-  CardMedia,
-  CardTitle,
-  CardText
-} from 'material-ui/Card';
+import ShopCategory from './ShopCategory';
 
 class MilitaryCalculator extends Component {
   constructor(props) {
@@ -343,16 +336,8 @@ class MilitaryCalculator extends Component {
                       <StepContent>
                         {
                           this.state.shopItems.map((category) => {
-                            let expanded = false;
                             return (
-                              // eslint-disable-next-line no-return-assign
-                              <Card expanded={expanded} onExpandChange={() => expanded = this.thingToToggle(expanded)} key={category.categoryName}>
-                                <CardHeader
-                                  title={category.categoryName}
-                                  actAsExpander
-                                  showExpandableButton
-                                />
-                              </Card>
+                              <ShopCategory items={category.items} categoryName={category.categoryName} key={category.categoryName} />
                             );
                           })
                         }
