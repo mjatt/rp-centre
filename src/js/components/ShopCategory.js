@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
+import { Grid, Row, Col } from 'react-flexbox-grid';
+import RaisedButton from 'material-ui/RaisedButton';
+import AddShoppingIcon from 'material-ui/svg-icons/action/add-shopping-cart';
+import Divider from 'material-ui/Divider';
 
 class ShopCategory extends Component {
   constructor(props) {
@@ -27,12 +31,25 @@ class ShopCategory extends Component {
           actAsExpander
           showExpandableButton
         />
+        <Divider />
         {
           this.props.items.map((item) => {
             return (
               <CardText expandable key={item.itemName}>
-                <p>{item.itemName}</p>
-                <p>{item.itemPPU}</p>
+                <Grid fluid>
+                  <Row>
+                    <Col md>
+                      <p><b>Item Name:</b> {item.itemName}</p>
+                    </Col>
+                    <Col md>
+                      <p><b>Item Cost:</b> {item.itemPPU}</p>
+                    </Col>
+                    <Col md>
+                      <RaisedButton icon={<AddShoppingIcon />} secondary />
+                    </Col>
+                  </Row>
+                </Grid>
+                <Divider style={{ marginTop: '5px' }} />
               </CardText>
             );
           })

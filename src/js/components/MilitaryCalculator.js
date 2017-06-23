@@ -338,7 +338,7 @@ class MilitaryCalculator extends Component {
                           {
                             this.state.shopItems.map((category) => {
                               return (
-                                <Row center="md" key={category.categoryName} style={{ padding: '0 30 15 20' }}>
+                                <Row center="md" key={category.categoryName} style={{ paddingBottom: '10px', paddingTop: '5px' }}>
                                   <Col md>
                                     <ShopCategory items={category.items} categoryName={category.categoryName}/>
                                   </Col>
