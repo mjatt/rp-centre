@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Card, CardHeader } from 'material-ui/Card';
+import { Card, CardHeader, CardText } from 'material-ui/Card';
 
 class ShopCategory extends Component {
   constructor(props) {
@@ -21,7 +21,7 @@ class ShopCategory extends Component {
 
   render() {
     return (
-      <Card expanded={this.state.expanded} onExpandChange={this.handleExpandedChange}>
+      <Card expandable initiallyExpanded expanded={this.state.expanded} onExpandChange={this.handleExpandedChange}>
         <CardHeader
           title={this.props.categoryName}
           actAsExpander
@@ -30,10 +30,10 @@ class ShopCategory extends Component {
         {
           this.props.items.map((item) => {
             return (
-              <div>
-              <p>{item.itemName}</p>
-              <p>{item.itemPPU}</p>
-              </div>
+              <CardText expandable key={item.itemName}>
+                <p>{item.itemName}</p>
+                <p>{item.itemPPU}</p>
+              </CardText>
             );
           })
         }

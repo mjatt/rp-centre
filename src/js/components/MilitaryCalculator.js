@@ -334,13 +334,19 @@ class MilitaryCalculator extends Component {
                     <Step>
                       <StepLabel>Select military items</StepLabel>
                       <StepContent>
-                        {
-                          this.state.shopItems.map((category) => {
-                            return (
-                              <ShopCategory items={category.items} categoryName={category.categoryName} key={category.categoryName} />
-                            );
-                          })
-                        }
+                        <Grid fluid>
+                          {
+                            this.state.shopItems.map((category) => {
+                              return (
+                                <Row center="md" key={category.categoryName} style={{ padding: '0 30 15 20' }}>
+                                  <Col md>
+                                    <ShopCategory items={category.items} categoryName={category.categoryName}/>
+                                  </Col>
+                                </Row>
+                              );
+                            })
+                          }
+                        </Grid>
                         {this.renderStepActions(1)}
                       </StepContent>
                     </Step>
