@@ -128,45 +128,56 @@ class Register extends Component {
       );
     }
     return (
-      <Paper style={{ height: '70%', width: '50%', margin: '0 auto', marginTop: '25px', textAlign: 'center', padding: '20px' }}>
-        <Snackbar
-          open={this.state.open}
-          message={this.state.responseMsg}
-          autoHideDuration={10000}
-          onRequestClose={this.handleRequestClose}
-        />
-        <Grid fluid>
-          <Row style={{ padding: '10 0 10 0' }}>
-            <Col sm>
-              <h4>Nation:</h4>
-            </Col>
-            <Col md>
-              <TextField hintText="Nation"
-                onChange={this.handleUpdateNation}
-                validate={['required']}
-                errorText="Please enter your nation's name"
-                style={{ width: '100%' }} />
-            </Col>
-          </Row>
-          <Row style={{ padding: '10 0 10 0' }}>
-            <Col sm>
-              <h4>Verification Code:</h4>
-            </Col>
-            <Col md>
-              <TextField hintText="Verification Code"
-                onChange={this.handleUpdateCode}
-                validate={['required']}
-                errorText="Please enter your verification code"
-                style={{ width: '100%' }} />
-            </Col>
-          </Row>
-          <Row>
-            <Col md>
-              <RaisedButton label="Register" primary style={{ width: '100%' }} onTouchTap={this.submit} disabled={this.state.invalid} />
-            </Col>
-          </Row>
-        </Grid>
-      </Paper>
+      <div>
+        <Paper style={{ height: '70%', width: '50%', margin: '0 auto', marginTop: '25px', textAlign: 'center', padding: '20px' }}>
+          <Snackbar
+            open={this.state.open}
+            message={this.state.responseMsg}
+            autoHideDuration={10000}
+            onRequestClose={this.handleRequestClose}
+          />
+          <Grid fluid>
+            <Row style={{ padding: '10 0 10 0' }}>
+              <Col sm>
+                <h4>Nation:</h4>
+              </Col>
+              <Col md>
+                <TextField hintText="Nation"
+                  onChange={this.handleUpdateNation}
+                  validate={['required']}
+                  errorText="Please enter your nation's name"
+                  style={{ width: '100%' }} />
+              </Col>
+            </Row>
+            <Row style={{ padding: '10 0 10 0' }}>
+              <Col sm>
+                <h4>Verification Code:</h4>
+              </Col>
+              <Col md>
+                <TextField hintText="Verification Code"
+                  onChange={this.handleUpdateCode}
+                  validate={['required']}
+                  errorText="Please enter your verification code"
+                  style={{ width: '100%' }} />
+              </Col>
+            </Row>
+            <Row>
+              <Col md>
+                <RaisedButton label="Register" primary style={{ width: '100%' }} onTouchTap={this.submit} disabled={this.state.invalid} />
+              </Col>
+            </Row>
+          </Grid>
+        </Paper>
+        <Paper style={{ margin: '0 auto', marginTop: '15px', width: '50%', textAlign: 'center' }}>
+          <Grid fluid>
+            <Row center="md">
+              <Col md>
+                <p><b><u>Please note:</u></b> this site uses cookies to improve the user experiance, by continuing to login using the above form you consent to our use of cookies</p>
+              </Col>
+            </Row>
+          </Grid>
+        </Paper>
+      </div >
     );
   }
 }
