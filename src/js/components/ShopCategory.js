@@ -5,22 +5,48 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import RaisedButton from 'material-ui/RaisedButton';
 import AddShoppingIcon from 'material-ui/svg-icons/action/add-shopping-cart';
 import Divider from 'material-ui/Divider';
+import TextField from './ValidatedTextField';
+import ShopItem from './ShopItem';
 
 class ShopCategory extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      expanded: false
+      expanded: false,
+      quantity: 0,
+      invalid: true
     };
 
     this.handleExpandedChange = this.handleExpandedChange.bind(this);
+    this.handleUpdateQuantity = this.handleUpdateQuantity.bind(this);
+    this.isFormValid = this.isFormValid.bind(this);
   }
 
   handleExpandedChange() {
     this.setState({
       expanded: !this.state.expanded
     });
+  }
+
+  handleUpdateQuantity(errors, values) {
+    if (!errors) {
+      this.setState({
+        quantity: values
+      }, this.isFormValid);
+    } else {
+      this.setState({
+        invalid: true
+      });
+    }
+  }
+
+  isFormValid() {
+    if (this.state.quantity && this.state.quantity > 0) {
+      this.setState({
+        invalid: false
+      });
+    }
   }
 
   render() {
@@ -35,21 +61,8 @@ class ShopCategory extends Component {
         {
           this.props.items.map((item) => {
             return (
-              <CardText expandable key={item.itemName}>
-                <Grid fluid>
-                  <Row>
-                    <Col md>
-                      <p><b>Item Name:</b> {item.itemName}</p>
-                    </Col>
-                    <Col md>
-                      <p><b>Item Cost:</b> {item.itemPPU}</p>
-                    </Col>
-                    <Col md>
-                      <RaisedButton icon={<AddShoppingIcon />} secondary />
-                    </Col>
-                  </Row>
-                </Grid>
-                <Divider style={{ marginTop: '5px' }} />
+              <CardText expandable> key={item.itemName}>
+                <ShopItem item={item} basket={[]}/>
               </CardText>
             );
           })
