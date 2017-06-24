@@ -200,7 +200,8 @@ router.route('/verify').post(function (req, res) {
                     });
                   });
                 }
-                if (nationData.isAdmin === true) {
+                if (nationData.isAdmin && nationData.isAdmin === true) {
+                  console.log(new Date() + ': User, ' + nation + ', is an admin');
                   res.cookie('isAdmin', true);
                 }
                 res.cookie('nation', nation);
