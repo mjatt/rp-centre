@@ -24,6 +24,7 @@ class Events extends Component {
     this.state = {
       loading: true,
       events: [],
+      rawEvents: [],
       createEvent: false,
       eventTitle: '',
       eventDescription: '',
@@ -127,24 +128,36 @@ class Events extends Component {
   componentWillReceiveProps(nextProps) {
     let newData = this.sanitiseData(nextProps);
     if (this.state.selectedGeneral) {
-      newData = this.removeUnrelated('General');
+      newData = this.removeUnrelated('General', newData);
     } else if (this.state.selectedInternalAffairs) {
-      newData = this.removeUnrelated('Internal Affairs');
+      newData = this.removeUnrelated('Internal Affairs', newData);
     } else if (this.state.selectedInternationalAffairs) {
-      newData = this.removeUnrelated('International Affairs');
+      newData = this.removeUnrelated('International Affairs', newData);
     }
+    this.setState({
+      rawEvents: newData
+    });
+    let paginatedData = this.paginateData(newData);
     let numberOfPages = Math.round(newData.length / 5);
+    this.setState({ loading: false, events: paginatedData, total: numberOfPages, current: 1 });
+  }
+
+  paginateData(events) {
+    let numberOfPages = Math.round(events.length / 5);
     let paginatedData = [];
     let currentPointer = 0;
     for (let x = 0; x < numberOfPages; x++) {
       let temp = [];
       for (let y = 0; y < 5; y++) {
-        temp[y] = newData[currentPointer];
+        if (currentPointer > events.length - 1) {
+          break;
+        }
+        temp[y] = events[currentPointer];
         currentPointer++;
       }
       paginatedData[x] = temp;
     }
-    this.setState({ loading: false, events: paginatedData, total: numberOfPages, current: 1 });
+    return paginatedData;
   }
 
   generalSelected() {
@@ -154,7 +167,16 @@ class Events extends Component {
       selectedInternationalAffairs: false,
       selectedAll: false
     });
-    this.removeUnrelated('General');
+    let events = this.removeUnrelated('General', this.state.rawEvents);
+    let numberOfPages = Math.round(events.length / 5);
+    let paginatedEvents = this.paginateData(events);
+    let _this = this;
+    this.setState({
+      events: paginatedEvents,
+      total: numberOfPages
+    }, function () {
+      _this.forceUpdate();
+    });
   }
 
   internalAffairsSelected() {
@@ -164,9 +186,15 @@ class Events extends Component {
       selectedInternationalAffairs: false,
       selectedAll: false
     });
-    let events = this.removeUnrelated('Internal Affairs');
+    let events = this.removeUnrelated('Internal Affairs', this.state.rawEvents);
+    let numberOfPages = Math.round(events.length / 5);
+    let paginatedEvents = this.paginateData(events);
+    let _this = this;
     this.setState({
-      events: events
+      events: paginatedEvents,
+      total: numberOfPages
+    }, function () {
+      _this.forceUpdate();
     });
   }
 
@@ -177,9 +205,15 @@ class Events extends Component {
       selectedInternationalAffairs: true,
       selectedAll: false
     });
-    let events = this.removeUnrelated('International Affairs');
+    let events = this.removeUnrelated('International Affairs', this.state.rawEvents);
+    let numberOfPages = Math.round(events.length / 5);
+    let paginatedEvents = this.paginateData(events);
+    let _this = this;
     this.setState({
-      events: events
+      events: paginatedEvents,
+      total: numberOfPages
+    }, function () {
+      _this.forceUpdate();
     });
   }
 
@@ -190,9 +224,15 @@ class Events extends Component {
       selectedInternationalAffairs: false,
       selectedAll: true
     });
-    let events = this.removeUnrelated('All');
+    let events = this.removeUnrelated('All', this.state.rawEvents);
+    let numberOfPages = Math.round(events.length / 5);
+    let paginatedEvents = this.paginateData(events);
+    let _this = this;
     this.setState({
-      events: events
+      events: paginatedEvents,
+      total: numberOfPages
+    }, function () {
+      _this.forceUpdate();
     });
   }
 
@@ -216,6 +256,16 @@ class Events extends Component {
       });
       return newData;
     }
+    events.sort(function (event1, event2) {
+      let date1 = moment(event1.createdOn, 'DD/MM/YYYY HH:mm:ss');
+      let date2 = moment(event2.createdOn, 'DD/MM/YYYY HH:mm:ss');
+      if (date2 > date1) {
+        return 1;
+      } else if (date1 > date2) {
+        return -1;
+      }
+      return 0;
+    });
     return events;
   }
 
