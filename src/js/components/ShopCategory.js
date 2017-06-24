@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
-import { Grid, Row, Col } from 'react-flexbox-grid';
-import RaisedButton from 'material-ui/RaisedButton';
-import AddShoppingIcon from 'material-ui/svg-icons/action/add-shopping-cart';
 import Divider from 'material-ui/Divider';
-import TextField from './ValidatedTextField';
 import ShopItem from './ShopItem';
 
 class ShopCategory extends Component {
