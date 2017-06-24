@@ -191,16 +191,16 @@ router.route('/verify').post(function (req, res) {
               res.status(400).send('Error... You are not a member of Norrland...');
               console.error(new Date() + ': User, ' + nation + ', attempted to login but it not a member of Norrland!');
             } else {
-              checkIfWeHaveFlagUrl(nation, function (checkFlagResult, nationData) {
+              checkIfUserExists(nation, function (checkFlagResult, nationData) {
                 if (!checkFlagResult) {
-                  console.log('Getting ' + nation + '\'s flag.');
+                  console.log('Creating ' + nation + '\'s user data...');
                   getFlagUrl(req.body.nation, function (flagUrl) {
-                    firebase.database().ref('nations/' + nation).update({
-                      flag: flagUrl
+                    firebase.database().ref('nations/' + nation).set({
+                      flag: flagUrl,
+                      isAdmin: false
                     });
                   });
-                }
-                if (nationData.isAdmin && nationData.isAdmin === true) {
+                } else if (checkFlagResult && nationData.isAdmin) {
                   console.log(new Date() + ': User, ' + nation + ', is an admin');
                   res.cookie('isAdmin', true);
                 }
@@ -255,7 +255,7 @@ function getFlagUrl(nation, callback) {
   });
 }
 
-function checkIfWeHaveFlagUrl(nation, callback) {
+function checkIfUserExists(nation, callback) {
   firebase.database().ref('nations/' + nation).once('value').then(function (snapshot) {
     var values = snapshot.val();
     if (values && values.flag) {
