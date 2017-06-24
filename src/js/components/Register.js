@@ -172,7 +172,7 @@ class Register extends Component {
           <Grid fluid>
             <Row center="md">
               <Col md>
-                <p><b><u>Please note:</u></b> this site uses cookies to improve the user experiance, by continuing to login using the above form you consent to our use of cookies</p>
+                <p><b><u>Please note:</u></b> this site uses cookies to improve the user experiance, by continuing to login using the above form you consent to our use of cookies. For further information please ask on <a href="https://github.com/alexbance/rp-centre">github</a></p>
               </Col>
             </Row>
           </Grid>
