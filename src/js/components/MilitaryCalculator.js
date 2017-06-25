@@ -42,7 +42,8 @@ class MilitaryCalculator extends Component {
       responseMsg: '',
       openSnackbar: false,
       shopItems: [],
-      basket: []
+      basket: [],
+      selectedRows: []
     };
 
     this.handleRequestCloseSnackbar = this.handleRequestCloseSnackbar.bind(this);
@@ -53,6 +54,8 @@ class MilitaryCalculator extends Component {
     this.calculate = this.calculate.bind(this);
     this.handleNext = this.handleNext.bind(this);
     this.handleBack = this.handleBack.bind(this);
+    this.handleRowSelect = this.handleRowSelect.bind(this);
+    this.handleRemoveSelected = this.handleRemoveSelected.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -225,6 +228,32 @@ class MilitaryCalculator extends Component {
     );
   }
 
+  handleRowSelect(selectedRows) {
+    this.setState({ selectedRows: selectedRows });
+  }
+
+  handleRemoveSelected() {
+    if (this.state.selectedRows === 'all') {
+      this.setState({
+        basket: []
+      });
+    } else {
+      let basket = [];
+      for (var row in this.state.selectedRows) {
+        if (Object.prototype.hasOwnProperty.call(this.state.selectedRows, row)) {
+          let rowKey = this.state.selectedRows[row];
+          for (var x = 0; x < this.state.basket.length; x++) {
+            if (x !== rowKey) {
+              basket.push(this.state.basket[x]);
+            }
+          }
+        }
+      }
+      this.setState({
+        basket: basket
+      });
+    }
+  }
 
   render() {
     if (this.state.loading) {
@@ -362,7 +391,7 @@ class MilitaryCalculator extends Component {
                     <Step>
                       <StepLabel>Review purchases</StepLabel>
                       <StepContent>
-                        <Table multiSelectable>
+                        <Table multiSelectable onRowSelection={this.handleRowSelect}>
                           <TableHeader enableSelectAll>
                             <TableRow>
                               <TableHeaderColumn>Item Name</TableHeaderColumn>
@@ -372,9 +401,9 @@ class MilitaryCalculator extends Component {
                           </TableHeader>
                           <TableBody>
                             {
-                              this.state.basket.map((item) => {
+                              this.state.basket.map((item, index) => {
                                 return (
-                                  <TableRow>
+                                  <TableRow key={index} selected={this.state.selectedRows.indexOf(index) !== -1}>
                                     <TableRowColumn>{item.itemName}</TableRowColumn>
                                     <TableRowColumn>{item.itemCost}</TableRowColumn>
                                     <TableRowColumn>{item.quantity}</TableRowColumn>
@@ -387,7 +416,7 @@ class MilitaryCalculator extends Component {
                         <Grid fluid>
                           <Row center="md">
                             <Col md>
-                              <RaisedButton secondary label="Remove Selected Item(s)" style={{ width: '100%' }} />
+                              <RaisedButton disabled={this.state.selectedRows.length < 1 || this.state.selectedRows === 'none'} secondary label="Remove Selected Item(s)" style={{ width: '100%' }} onTouchTap={this.handleRemoveSelected} />
                             </Col>
                           </Row>
                         </Grid>

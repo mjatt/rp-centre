@@ -57,7 +57,7 @@ class ShopCategory extends Component {
         {
           this.props.items.map((item) => {
             return (
-              <CardText expandable> key={item.itemName}>
+              <CardText expandable key={item.itemName}>
                 <ShopItem item={item} basket={this.props.basket}/>
               </CardText>
             );
