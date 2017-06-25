@@ -175,58 +175,79 @@ class MilitaryCalculator extends Component {
     return !thingToToggle;
   }
 
-  renderStepActions(step) {
+  renderStepActions(step, remainingBudget) {
     const { stepIndex } = this.state;
-
+    if (stepIndex === 0) {
+      return (
+        <div style={{ margin: '12px 0' }}>
+          <RaisedButton
+            label="Next"
+            disableTouchRipple
+            disableFocusRipple
+            primary
+            onTouchTap={this.handleNext}
+            disabled={!this.state.budget || this.state.budget < 0}
+            style={{ marginRight: 12 }}
+          />
+          {step > 0 && (
+            <FlatButton
+              label="Back"
+              disabled={stepIndex === 0}
+              disableTouchRipple
+              disableFocusRipple
+              onTouchTap={this.handleBack}
+            />
+          )}
+        </div>
+      );
+    }
+    if (stepIndex === 2) {
+      return (
+        <div style={{ margin: '12px 0' }}>
+          <RaisedButton
+            label="Finish"
+            disableTouchRipple
+            disableFocusRipple
+            primary
+            onTouchTap={this.handleNext}
+            style={{ marginRight: 12 }}
+            disabled={remainingBudget < 0}
+          />
+          {step > 0 && (
+            <FlatButton
+              label="Back"
+              disabled={stepIndex === 0}
+              disableTouchRipple
+              disableFocusRipple
+              onTouchTap={this.handleBack}
+            />
+          )}
+        </div>
+      );
+    }
     return (
       <div style={{ margin: '12px 0' }}>
-        {
-          (stepIndex === 0) ? (
-            <div>
-              <RaisedButton
-                label="Next"
-                disableTouchRipple
-                disableFocusRipple
-                primary
-                onTouchTap={this.handleNext}
-                disabled={!this.state.budget || this.state.budget < 0}
-                style={{ marginRight: 12 }}
-              />
-              {step > 0 && (
-                <FlatButton
-                  label="Back"
-                  disabled={stepIndex === 0}
-                  disableTouchRipple
-                  disableFocusRipple
-                  onTouchTap={this.handleBack}
-                />
-              )}
-            </div>
-          ) : (
-              <div>
-                <RaisedButton
-                  label={stepIndex === 2 ? 'Finish' : 'Next'}
-                  disableTouchRipple
-                  disableFocusRipple
-                  primary
-                  onTouchTap={this.handleNext}
-                  style={{ marginRight: 12 }}
-                />
-                {step > 0 && (
-                  <FlatButton
-                    label="Back"
-                    disabled={stepIndex === 0}
-                    disableTouchRipple
-                    disableFocusRipple
-                    onTouchTap={this.handleBack}
-                  />
-                )}
-              </div>
-            )
-        }
+          <RaisedButton
+            label="Next"
+            disableTouchRipple
+            disableFocusRipple
+            primary
+            onTouchTap={this.handleNext}
+            style={{ marginRight: 12 }}
+          />
+          {step > 0 && (
+            <FlatButton
+              label="Back"
+              disabled={stepIndex === 0}
+              disableTouchRipple
+              disableFocusRipple
+              onTouchTap={this.handleBack}
+            />
+          )}
       </div>
     );
   }
+
 
   handleRowSelect(selectedRows) {
     this.setState({ selectedRows: selectedRows });
@@ -256,6 +277,12 @@ class MilitaryCalculator extends Component {
   }
 
   render() {
+    let totalSpend = 0;
+    this.state.basket.map((item) => {
+      let tempTotal = item.itemCost * item.quantity;
+      totalSpend += tempTotal;
+    });
+    let remainingBudget = this.state.budget - totalSpend;
     if (this.state.loading) {
       return (
         <Grid fluid>
@@ -414,13 +441,24 @@ class MilitaryCalculator extends Component {
                           </TableBody>
                         </Table>
                         <Grid fluid>
-                          <Row center="md">
+                          <Row center="md" style={{ paddingTop: '15px' }}>
                             <Col md>
                               <RaisedButton disabled={this.state.selectedRows.length < 1 || this.state.selectedRows === 'none'} secondary label="Remove Selected Item(s)" style={{ width: '100%' }} onTouchTap={this.handleRemoveSelected} />
                             </Col>
                           </Row>
+                          <Row style={{ paddingTop: '15px' }}>
+                            <Col md>
+                              <b>Budget:</b> {this.state.budget}
+                            </Col>
+                            <Col md>
+                              <b>Total Spend:</b> {totalSpend}
+                            </Col>
+                            <Col md>
+                              <b>Remaining Budget:</b> {remainingBudget}
+                            </Col>
+                          </Row>
                         </Grid>
-                        {this.renderStepActions(2)}
+                        {this.renderStepActions(2, remainingBudget)}
                       </StepContent>
                     </Step>
                   </Stepper>
