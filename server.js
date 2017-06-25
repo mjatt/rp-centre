@@ -103,6 +103,17 @@ router.route('/event/comment').post(function (req, res) {
   console.log(new Date() + ': Event, ' + req.body.event + ', was commented on by ' + req.body.nation + '.');
 });
 
+router.route('/calc/budget').post(function (req, res) {
+  firebase.database().ref('nations/' + req.body.nation).set({
+    remainingBudget: req.body.remainingBudget,
+    military: req.body.military
+  }).then(function () {
+    res.send('Military items successfully...');
+  }).catch(function () {
+    res.status(500).send('Something went wrong, please try again...');
+  });
+});
+
 router.route('/calc/data').get(function (req, res) {
   let censusUrl = 'https://www.nationstates.net/cgi-bin/api.cgi?nation=' + req.query.nation + ';q=census;scale=52+46+1;mode=score';
 

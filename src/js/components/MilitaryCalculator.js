@@ -164,6 +164,34 @@ class MilitaryCalculator extends Component {
     });
   }
 
+  handleFinish(remainingBudget) {
+    let data = {
+      nation: this.props.nation,
+      remainingBudget: remainingBudget,
+      items: this.state.basket
+    };
+
+    const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
+    const apiEndpoint = baseUrl + '/api/calc/budget';
+
+    let _this = this;
+    axios.post(apiEndpoint, data).then(function (response) {
+      console.log(response.data);
+      _this.setState({
+        responseMsg: response.data
+      }, function () {
+        this.handleNext();
+      });
+    }).catch(function (error) {
+      console.log(error.response.data);
+      _this.setState({
+        responseMsg: error.response.data
+      }, function () {
+        this.handleNext();
+      });
+    });
+  }
+
   handleBack() {
     let currentStep = this.state.stepIndex;
     this.setState({
@@ -209,7 +237,7 @@ class MilitaryCalculator extends Component {
             disableTouchRipple
             disableFocusRipple
             primary
-            onTouchTap={this.handleNext}
+            onTouchTap={this.handleFinish.bind(this, remainingBudget)}
             style={{ marginRight: 12 }}
             disabled={remainingBudget < 0}
           />
