@@ -17,6 +17,14 @@ import {
   StepLabel,
   StepContent
 } from 'material-ui/Stepper';
+import {
+  Table,
+  TableBody,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+  TableRowColumn,
+} from 'material-ui/Table';
 import ShopCategory from './ShopCategory';
 
 class MilitaryCalculator extends Component {
@@ -33,7 +41,8 @@ class MilitaryCalculator extends Component {
       finished: false,
       responseMsg: '',
       openSnackbar: false,
-      shopItems: []
+      shopItems: [],
+      basket: []
     };
 
     this.handleRequestCloseSnackbar = this.handleRequestCloseSnackbar.bind(this);
@@ -340,7 +349,7 @@ class MilitaryCalculator extends Component {
                               return (
                                 <Row center="md" key={category.categoryName} style={{ paddingBottom: '10px', paddingTop: '5px' }}>
                                   <Col md>
-                                    <ShopCategory items={category.items} categoryName={category.categoryName}/>
+                                    <ShopCategory items={category.items} categoryName={category.categoryName} basket={this.state.basket} />
                                   </Col>
                                 </Row>
                               );
@@ -351,14 +360,37 @@ class MilitaryCalculator extends Component {
                       </StepContent>
                     </Step>
                     <Step>
-                      <StepLabel>Confirm purchase</StepLabel>
+                      <StepLabel>Review purchases</StepLabel>
                       <StepContent>
-                        <p>
-                          Try out different ad text to see what brings in the most customers,
-                and learn how to enhance your ads using features like ad extensions.
-                If you run into any problems with your ads, find out how to tell if
-                they're running and how to resolve approval issues.
-              </p>
+                        <Table multiSelectable>
+                          <TableHeader enableSelectAll>
+                            <TableRow>
+                              <TableHeaderColumn>Item Name</TableHeaderColumn>
+                              <TableHeaderColumn>PPU</TableHeaderColumn>
+                              <TableHeaderColumn>Quantity</TableHeaderColumn>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {
+                              this.state.basket.map((item) => {
+                                return (
+                                  <TableRow>
+                                    <TableRowColumn>{item.itemName}</TableRowColumn>
+                                    <TableRowColumn>{item.itemCost}</TableRowColumn>
+                                    <TableRowColumn>{item.quantity}</TableRowColumn>
+                                  </TableRow>
+                                );
+                              })
+                            }
+                          </TableBody>
+                        </Table>
+                        <Grid fluid>
+                          <Row center="md">
+                            <Col md>
+                              <RaisedButton secondary label="Remove Selected Item(s)" style={{ width: '100%' }} />
+                            </Col>
+                          </Row>
+                        </Grid>
                         {this.renderStepActions(2)}
                       </StepContent>
                     </Step>

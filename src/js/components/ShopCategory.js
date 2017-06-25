@@ -58,7 +58,7 @@ class ShopCategory extends Component {
           this.props.items.map((item) => {
             return (
               <CardText expandable> key={item.itemName}>
-                <ShopItem item={item} basket={[]}/>
+                <ShopItem item={item} basket={this.props.basket}/>
               </CardText>
             );
           })
@@ -70,7 +70,8 @@ class ShopCategory extends Component {
 
 ShopCategory.propTypes = {
   items: PropTypes.array.isRequired,
-  categoryName: PropTypes.string.isRequired
+  categoryName: PropTypes.string.isRequired,
+  basket: PropTypes.array.isRequired
 };
 
 export default ShopCategory;
