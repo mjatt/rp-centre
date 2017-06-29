@@ -178,14 +178,16 @@ class MilitaryCalculator extends Component {
     axios.post(apiEndpoint, data).then(function (response) {
       console.log(response.data);
       _this.setState({
-        responseMsg: response.data
+        responseMsg: response.data,
+        openSnackbar: true
       }, function () {
         this.handleNext();
       });
     }).catch(function (error) {
       console.log(error.response.data);
       _this.setState({
-        responseMsg: error.response.data
+        responseMsg: error.response.data,
+        openSnackbar: true
       }, function () {
         this.handleNext();
       });
