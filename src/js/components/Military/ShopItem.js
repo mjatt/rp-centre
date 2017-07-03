@@ -4,7 +4,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import RaisedButton from 'material-ui/RaisedButton';
 import AddShoppingIcon from 'material-ui/svg-icons/action/add-shopping-cart';
 import Divider from 'material-ui/Divider';
-import TextField from './ValidatedTextField';
+import TextField from './../ValidatedTextField';
 import Snackbar from 'material-ui/Snackbar';
 
 class ShopItem extends Component {
