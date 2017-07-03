@@ -22,7 +22,7 @@ class MyNavbar extends Component {
             <Link to="/" style={{ textDecoration: 'none', color: 'rgba(0, 0, 0, 0.4)' }}><ToolbarTitle style={{ fontSize: '25px', fontWeight: 700 }} text="Norrland RP" /></Link>
             <ToolbarSeparator />
             <Link style={{ paddingLeft: '15px', paddingRight: '15px' }} to="/events"><RaisedButton label="Events" labelStyle={{ fontWeight: 700 }} /></Link>
-            <Link style={{ paddingLeft: '15px', paddingRight: '15px' }} to="/calc"><RaisedButton label="Budget" labelStyle={{ fontWeight: 700 }} /></Link>
+            <Link style={{ paddingLeft: '15px', paddingRight: '15px' }} to="/calc"><RaisedButton label="Military" labelStyle={{ fontWeight: 700 }} /></Link>
           </ToolbarGroup>
           <ToolbarGroup>
             {
@@ -49,7 +49,7 @@ class MyNavbar extends Component {
             <Link to="/" style={{ textDecoration: 'none', color: 'rgba(0, 0, 0, 0.4)' }}><ToolbarTitle style={{ fontSize: '25px', fontWeight: 700 }} text="Norrland RP" /></Link>
             <ToolbarSeparator />
             <Link style={{ paddingLeft: '15px', paddingRight: '15px' }} to="/events"><RaisedButton label="Events" labelStyle={{ fontWeight: 700 }} /></Link>
-            <Link style={{ paddingLeft: '15px', paddingRight: '15px' }} to="/calc"><RaisedButton label="Budget" labelStyle={{ fontWeight: 700 }} /></Link>
+            <Link style={{ paddingLeft: '15px', paddingRight: '15px' }} to="/calc"><RaisedButton label="Military" labelStyle={{ fontWeight: 700 }} /></Link>
           </ToolbarGroup>
           <ToolbarGroup lastChild>
             {
@@ -71,7 +71,7 @@ class MyNavbar extends Component {
         <Toolbar style={{ paddingLeft: '50px', paddingRight: '50px' }}>
           <ToolbarGroup firstChild>
             <Link style={{ paddingLeft: '15px', paddingRight: '15px' }} to="/events"><RaisedButton label="Events" labelStyle={{ fontWeight: 700 }} /></Link>
-            <Link style={{ paddingLeft: '15px', paddingRight: '15px' }} to="/calc"><RaisedButton label="Budget" labelStyle={{ fontWeight: 700 }} /></Link>
+            <Link style={{ paddingLeft: '15px', paddingRight: '15px' }} to="/calc"><RaisedButton label="Military" labelStyle={{ fontWeight: 700 }} /></Link>
           </ToolbarGroup>
           <ToolbarGroup lastChild>
             {
