@@ -13,7 +13,7 @@ firebase.initializeApp({
 import GovernmentDisplay from './components/Government';
 import Register from './components/Register';
 import Events from './components/EventDisplay';
-import MilitaryCalculator from './components/MilitaryCalculator';
+import MilitaryCalculator from './components/Military/MilitaryTabs';
 
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941

@@ -103,6 +103,18 @@ router.route('/event/comment').post(function (req, res) {
   console.log(new Date() + ': Event, ' + req.body.event + ', was commented on by ' + req.body.nation + '.');
 });
 
+router.route('/calc/budget').post(function (req, res) {
+  firebase.database().ref('nations/' + req.body.nation).set({
+    remainingBudget: req.body.remainingBudget,
+    military: req.body.items,
+    budget: req.body.budget
+  }).then(function () {
+    res.send('Military items successfully purchased...');
+  }).catch(function () {
+    res.status(500).send('Something went wrong, please try again...');
+  });
+});
+
 router.route('/calc/data').get(function (req, res) {
   let censusUrl = 'https://www.nationstates.net/cgi-bin/api.cgi?nation=' + req.query.nation + ';q=census;scale=52+46+1;mode=score';
 
@@ -191,16 +203,17 @@ router.route('/verify').post(function (req, res) {
               res.status(400).send('Error... You are not a member of Norrland...');
               console.error(new Date() + ': User, ' + nation + ', attempted to login but it not a member of Norrland!');
             } else {
-              checkIfWeHaveFlagUrl(nation, function (checkFlagResult, nationData) {
+              checkIfUserExists(nation, function (checkFlagResult, nationData) {
                 if (!checkFlagResult) {
-                  console.log('Getting ' + nation + '\'s flag.');
+                  console.log('Creating ' + nation + '\'s user data...');
                   getFlagUrl(req.body.nation, function (flagUrl) {
-                    firebase.database().ref('nations/' + nation).update({
-                      flag: flagUrl
+                    firebase.database().ref('nations/' + nation).set({
+                      flag: flagUrl,
+                      isAdmin: false
                     });
                   });
-                }
-                if (nationData.isAdmin === true) {
+                } else if (checkFlagResult && nationData.isAdmin) {
+                  console.log(new Date() + ': User, ' + nation + ', is an admin');
                   res.cookie('isAdmin', true);
                 }
                 res.cookie('nation', nation);
@@ -254,7 +267,7 @@ function getFlagUrl(nation, callback) {
   });
 }
 
-function checkIfWeHaveFlagUrl(nation, callback) {
+function checkIfUserExists(nation, callback) {
   firebase.database().ref('nations/' + nation).once('value').then(function (snapshot) {
     var values = snapshot.val();
     if (values && values.flag) {
