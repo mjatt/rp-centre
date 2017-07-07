@@ -55,6 +55,7 @@ class ShopTab extends Component {
     this.handleNext = this.handleNext.bind(this);
     this.handleBack = this.handleBack.bind(this);
     this.handleRowSelect = this.handleRowSelect.bind(this);
+    this.resetStepper = this.resetStepper.bind(this);
     this.handleRemoveSelected = this.handleRemoveSelected.bind(this);
   }
 
@@ -325,26 +326,26 @@ class ShopTab extends Component {
     let remainingBudget = this.state.budget - totalSpend;
     if (this.state.loading) {
       return (
-          <Grid fluid>
-            <Paper style={{ marginTop: '15px', paddingTop: '5px', paddingBottom: '5px' }}>
-              <Row center="md">
-                <Col md>
-                  Loading data...
+        <Grid fluid>
+          <Paper style={{ marginTop: '15px', paddingTop: '5px', paddingBottom: '5px' }}>
+            <Row center="md">
+              <Col md>
+                Loading data...
               </Col>
-              </Row>
-              <Row center="md" style={{ paddingTop: '10px' }}>
-                <Col md>
-                  <RefreshIndicator
-                    size={60}
-                    left={10}
-                    top={0}
-                    status="loading"
-                    style={{ display: 'inline-block', position: 'relative' }}
-                  />
-                </Col>
-              </Row>
-            </Paper >
-          </Grid>
+            </Row>
+            <Row center="md" style={{ paddingTop: '10px' }}>
+              <Col md>
+                <RefreshIndicator
+                  size={60}
+                  left={10}
+                  top={0}
+                  status="loading"
+                  style={{ display: 'inline-block', position: 'relative' }}
+                />
+              </Col>
+            </Row>
+          </Paper >
+        </Grid>
       );
     }
     const actions = [
