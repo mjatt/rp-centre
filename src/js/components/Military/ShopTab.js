@@ -301,14 +301,22 @@ class ShopTab extends Component {
       });
     } else {
       let basket = [];
-      for (var row in this.state.selectedRows) {
-        if (Object.prototype.hasOwnProperty.call(this.state.selectedRows, row)) {
-          let rowKey = this.state.selectedRows[row];
-          for (var x = 0; x < this.state.basket.length; x++) {
-            if (x !== rowKey) {
-              basket.push(this.state.basket[x]);
+      for (var itemKey = 0; itemKey < this.state.basket.length; itemKey++) {
+        var isSelected = false;
+        for (var row in this.state.selectedRows) {
+          if (isSelected) {
+            break;
+          }
+          if (this.state.selectedRows.hasOwnProperty(row)) {
+            let rowKey = this.state.selectedRows[row];
+            if (rowKey === itemKey) {
+              isSelected = true;
+              break;
             }
           }
+        }
+        if (!isSelected) {
+          basket.push(this.state.basket[itemKey]);
         }
       }
       this.setState({
