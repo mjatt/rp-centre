@@ -166,7 +166,8 @@ router.route('/calc/data').get(function (req, res) {
 
         var baseRef = 'nations/' + req.query.nation;
         firebase.database().ref(baseRef).update({
-          budget: budget
+          budget: budget,
+          population: pop
         });
         firebase.database().ref(baseRef + '/military').remove();
         firebase.database().ref(baseRef + '/remainingBudget').remove();

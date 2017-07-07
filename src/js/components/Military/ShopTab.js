@@ -94,6 +94,7 @@ class ShopTab extends Component {
       loading: false,
       shopItems: items
     });
+    this.resetStepper();
   }
 
   handleRequestCloseSnackbar() {
@@ -177,7 +178,8 @@ class ShopTab extends Component {
       console.log(response.data);
       _this.setState({
         responseMsg: response.data,
-        openSnackbar: true
+        openSnackbar: true,
+        finished: true
       }, function () {
         this.handleNext();
       });
@@ -185,7 +187,8 @@ class ShopTab extends Component {
       console.log(error.response.data);
       _this.setState({
         responseMsg: error.response.data,
-        openSnackbar: true
+        openSnackbar: true,
+        finished: true
       }, function () {
         this.handleNext();
       });
@@ -279,6 +282,15 @@ class ShopTab extends Component {
 
   handleRowSelect(selectedRows) {
     this.setState({ selectedRows: selectedRows });
+  }
+
+  resetStepper() {
+    if (this.state.finished) {
+      this.setState({
+        stepIndex: 0,
+        finished: false
+      });
+    }
   }
 
   handleRemoveSelected() {
