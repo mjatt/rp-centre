@@ -107,7 +107,7 @@ router.route('/event/comment').post(function (req, res) {
 });
 
 router.route('/calc/budget').post(function (req, res) {
-  firebase.database().ref('nations/' + req.body.nation).set({
+  firebase.database().ref('nations/' + req.body.nation).update({
     remainingBudget: req.body.remainingBudget,
     military: req.body.items,
     budget: req.body.budget
@@ -156,16 +156,20 @@ router.route('/calc/data').get(function (req, res) {
         if (inte < 0) {
           inte = 0;
         }
-        var scale = 50000.0;
+        var scale = 75000.0;
         var factor = pop / scale;
         var position = (Math.sqrt(8.0 * factor + 1.0) - 1.0) / 2.0;
         var physicalStrength = Math.sqrt((def * 2.0) * (eco / 100.0) * (position * scale));
         var integrityModifier = (inte + 20.0) / 120.0;
         var prelimBudget = 30.0 * physicalStrength * integrityModifier;
         var budget = Math.round(prelimBudget);
-        firebase.database().ref('nations/' + req.query.nation).update({
+
+        var baseRef = 'nations/' + req.query.nation;
+        firebase.database().ref(baseRef).update({
           budget: budget
         });
+        firebase.database().ref(baseRef + '/military').remove();
+        firebase.database().ref(baseRef + '/remainingBudget').remove();
         res.send('Budget calculated successfully, your budget is ' + budget);
         console.log(new Date() + ': User, ' + req.query.nation + ', calculated their budget.');
       });
