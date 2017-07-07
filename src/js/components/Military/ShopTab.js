@@ -24,6 +24,7 @@ import {
 } from 'material-ui/Table';
 import ShopCategory from './ShopCategory';
 import axios from 'axios';
+import LinearProgress from 'material-ui/LinearProgress';
 
 const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
 
@@ -43,7 +44,8 @@ class ShopTab extends Component {
       openSnackbar: false,
       shopItems: [],
       basket: [],
-      selectedRows: []
+      selectedRows: [],
+      processing: false
     };
 
     this.handleRequestCloseSnackbar = this.handleRequestCloseSnackbar.bind(this);
@@ -166,46 +168,54 @@ class ShopTab extends Component {
   }
 
   handleFinish(remainingBudget) {
-    if (remainingBudget < 0) {
-      this.setState({
-        responseMsg: 'You cannot spend more than you have...',
-        openSnackbar: true
-      });
-    } else if (this.state.basket.length < 1) {
-      this.setState({
-        responseMsg: 'You need to select some items first...',
-        openSnackbar: true
-      });
-    } else {
-      let data = {
-        nation: this.props.nation,
-        remainingBudget: remainingBudget,
-        items: this.state.basket,
-        budget: this.state.budget
-      };
-      const apiEndpoint = baseUrl + '/api/calc/budget';
+    this.setState({
+      processing: true
+    }, function () {
+      if (remainingBudget < 0) {
+        this.setState({
+          responseMsg: 'You cannot spend more than you have...',
+          openSnackbar: true,
+          processing: false
+        });
+      } else if (this.state.basket.length < 1) {
+        this.setState({
+          responseMsg: 'You need to select some items first...',
+          openSnackbar: true,
+          processing: false
+        });
+      } else {
+        let data = {
+          nation: this.props.nation,
+          remainingBudget: remainingBudget,
+          items: this.state.basket,
+          budget: this.state.budget
+        };
+        const apiEndpoint = baseUrl + '/api/calc/budget';
 
-      let _this = this;
-      axios.post(apiEndpoint, data).then(function (response) {
-        console.log(response.data);
-        _this.setState({
-          responseMsg: response.data,
-          openSnackbar: true,
-          finished: true
-        }, function () {
-          this.handleNext();
+        let _this = this;
+        axios.post(apiEndpoint, data).then(function (response) {
+          console.log(response.data);
+          _this.setState({
+            responseMsg: response.data,
+            openSnackbar: true,
+            finished: true,
+            processing: false
+          }, function () {
+            this.handleNext();
+          });
+        }).catch(function (error) {
+          console.log(error.response.data);
+          _this.setState({
+            responseMsg: error.response.data,
+            openSnackbar: true,
+            finished: true,
+            processing: false
+          }, function () {
+            this.handleNext();
+          });
         });
-      }).catch(function (error) {
-        console.log(error.response.data);
-        _this.setState({
-          responseMsg: error.response.data,
-          openSnackbar: true,
-          finished: true
-        }, function () {
-          this.handleNext();
-        });
-      });
-    }
+      }
+    });
   }
 
   handleBack() {
@@ -383,6 +393,13 @@ class ShopTab extends Component {
     ];
     return (
       <div>
+        {
+          (this.state.processing) ? (
+            <LinearProgress mode="indeterminate" />
+          ) : (
+              null
+            )
+        }
         <Snackbar
           open={this.state.openSnackbar}
           message={this.state.responseMsg}

@@ -105,11 +105,9 @@ class Event extends Component {
     this.setState({
       invalid: true
     });
-    let rightNow = moment().format('DD/MM/YYYY HH:mm:ss');
     let data = {
       nation: this.props.nation,
       message: this.state.comment,
-      createdOn: rightNow,
       event: this.props.event.key
     };
     const apiEndpoint = baseUrl + '/api/event/comment';

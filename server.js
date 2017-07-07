@@ -10,6 +10,7 @@ const firebase = require('firebase');
 var parseString = require('xml2js').parseString;
 const helmet = require('helmet');
 const config = require('config');
+const moment = require('moment');
 
 var APP_PORT = config.get('App.PORT');
 
@@ -61,12 +62,13 @@ var router = express.Router();
 router.route('/event').post(function (req, res) {
   let flag;
   let rightNow = new Date().getTime();
+  let createdOn = moment().format('DD/MM/YYYY HH:mm:ss');
   firebase.database().ref('/nations/' + req.body.createdBy).once('value').then(function (snapshot) {
     flag = snapshot.val().flag;
     firebase.database().ref('/events/' + rightNow).set({
       channel: req.body.channel,
       createdBy: req.body.createdBy,
-      createdOn: req.body.createdOn,
+      createdOn: createdOn,
       description: req.body.description,
       title: req.body.title,
       flag: flag
@@ -97,8 +99,9 @@ router.route('/event').patch(function (req, res) {
 
 router.route('/event/comment').post(function (req, res) {
   let rightNow = new Date().getTime();
+  let createdOn = moment().format('DD/MM/YYYY HH:mm:ss');
   firebase.database().ref('/events/' + req.body.event + '/comments/' + rightNow).set({
-    createdOn: req.body.createdOn,
+    createdOn: createdOn,
     message: req.body.message,
     nation: req.body.nation
   });

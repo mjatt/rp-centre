@@ -26,7 +26,8 @@
     "http": "0.0.0",
     "https": "^1.0.0",
     "request": "^2.81.0",
-    "xml2js": "^0.4.17"
+    "xml2js": "^0.4.17",
+    "moment": "^2.18.1"
   },
   "devDependencies": {
     "axios": "^0.16.1",
@@ -42,7 +43,6 @@
     "flexboxgrid-helpers": "^1.1.1",
     "material-ui": "^0.17.4",
     "material-ui-pagination": "^1.0.4",
-    "moment": "^2.18.1",
     "nodemon": "^1.11.0",
     "prop-types": "^15.5.10",
     "react": "^15.5.4",
