@@ -1,0 +1,9 @@
+{
+  "App": {
+    "URL": "http://localhost:3000/",
+    "PORT": 3000
+  },
+  "NationStates": {
+    "APP_CODE": "norrland-rp"
+  }
+}
