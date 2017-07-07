@@ -1,5 +1,6 @@
 {
   "App": {
-    "URL": "https://rpcentre.bancey.xyz"
+    "URL": "https://rpcentre.bancey.xyz",
+    "PORT": 8080
   }
 }
