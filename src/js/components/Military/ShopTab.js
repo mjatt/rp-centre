@@ -383,7 +383,7 @@ class ShopTab extends Component {
                 <TextField hintText="RP Population (please be realistic)"
                   onChange={this.handleUpdatePopulation}
                   validate={['required', 'isNumber']}
-                  errorText="Please enter an event title"
+                  errorText="Please enter a valid number"
                   style={{ width: '100%' }} />
               </Col>
             </Row>
