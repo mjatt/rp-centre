@@ -13,10 +13,9 @@ lint:
         username: Lint Bot
 build:
   steps:
-    - npm-install
     - script:
         name: npm install
-        code: npm install --only=dev
+        code: npm --production=false install
 
     - mitelone/webpack:
         config-file: webpack.prod.js
