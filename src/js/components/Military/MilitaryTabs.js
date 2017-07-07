@@ -20,8 +20,10 @@ class MilitaryCalculator extends Component {
       loading: true,
       nation: null,
       nationData: null,
-      shopItems: null
+      shopItems: null,
+      slideIndex: 0
     };
+    this.handleChange = this.handleChange.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -30,6 +32,12 @@ class MilitaryCalculator extends Component {
       nationData: nextProps.nationData,
       shopItems: nextProps.shopItems,
       loading: false
+    });
+  }
+
+  handleChange(value) {
+    this.setState({
+      slideIndex: value
     });
   }
 
@@ -60,14 +68,14 @@ class MilitaryCalculator extends Component {
     }
     if (this.props.nation) {
       return (
-        <Tabs>
-          <Tab label="My Current Military">
+        <Tabs onChange={this.handleChange}>
+          <Tab label="My Current Military" value={0}>
             <CurrentMilitaryTab nationData={this.state.nationData} nation={this.state.nation} />
           </Tab>
-          <Tab label="Budget Calculator & Shop">
+          <Tab label="Budget Calculator & Shop" onActive={this.handleChange} value={1}>
             <ShopTab shopItems={this.state.shopItems} nationData={this.state.nationData} nation={this.state.nation} />
           </Tab>
-          <Tab label="Military Comparator">
+          <Tab label="Military Comparator" value={2}>
             <MilitaryComparisonTab nationData={this.state.nationData} />
           </Tab>
         </Tabs>

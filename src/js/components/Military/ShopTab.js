@@ -25,6 +25,8 @@ import {
 import ShopCategory from './ShopCategory';
 import axios from 'axios';
 
+const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
+
 class ShopTab extends Component {
   constructor(props) {
     super(props);
@@ -53,6 +55,7 @@ class ShopTab extends Component {
     this.handleNext = this.handleNext.bind(this);
     this.handleBack = this.handleBack.bind(this);
     this.handleRowSelect = this.handleRowSelect.bind(this);
+    this.resetStepper = this.resetStepper.bind(this);
     this.handleRemoveSelected = this.handleRemoveSelected.bind(this);
   }
 
@@ -92,6 +95,7 @@ class ShopTab extends Component {
       loading: false,
       shopItems: items
     });
+    this.resetStepper();
   }
 
   handleRequestCloseSnackbar() {
@@ -135,7 +139,6 @@ class ShopTab extends Component {
   calculate() {
     let pop = parseInt(this.state.population, 10);
 
-    const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
     const apiEndpoint = baseUrl + '/api/calc/data?nation=' + this.props.nation + '&population=' + pop;
 
     let _this = this;
@@ -169,8 +172,6 @@ class ShopTab extends Component {
       items: this.state.basket,
       budget: this.state.budget
     };
-
-    const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
     const apiEndpoint = baseUrl + '/api/calc/budget';
 
     let _this = this;
@@ -178,7 +179,8 @@ class ShopTab extends Component {
       console.log(response.data);
       _this.setState({
         responseMsg: response.data,
-        openSnackbar: true
+        openSnackbar: true,
+        finished: true
       }, function () {
         this.handleNext();
       });
@@ -186,7 +188,8 @@ class ShopTab extends Component {
       console.log(error.response.data);
       _this.setState({
         responseMsg: error.response.data,
-        openSnackbar: true
+        openSnackbar: true,
+        finished: true
       }, function () {
         this.handleNext();
       });
@@ -282,6 +285,15 @@ class ShopTab extends Component {
     this.setState({ selectedRows: selectedRows });
   }
 
+  resetStepper() {
+    if (this.state.finished) {
+      this.setState({
+        stepIndex: 0,
+        finished: false
+      });
+    }
+  }
+
   handleRemoveSelected() {
     if (this.state.selectedRows === 'all') {
       this.setState({
@@ -314,26 +326,26 @@ class ShopTab extends Component {
     let remainingBudget = this.state.budget - totalSpend;
     if (this.state.loading) {
       return (
-          <Grid fluid>
-            <Paper style={{ marginTop: '15px', paddingTop: '5px', paddingBottom: '5px' }}>
-              <Row center="md">
-                <Col md>
-                  Loading data...
+        <Grid fluid>
+          <Paper style={{ marginTop: '15px', paddingTop: '5px', paddingBottom: '5px' }}>
+            <Row center="md">
+              <Col md>
+                Loading data...
               </Col>
-              </Row>
-              <Row center="md" style={{ paddingTop: '10px' }}>
-                <Col md>
-                  <RefreshIndicator
-                    size={60}
-                    left={10}
-                    top={0}
-                    status="loading"
-                    style={{ display: 'inline-block', position: 'relative' }}
-                  />
-                </Col>
-              </Row>
-            </Paper >
-          </Grid>
+            </Row>
+            <Row center="md" style={{ paddingTop: '10px' }}>
+              <Col md>
+                <RefreshIndicator
+                  size={60}
+                  left={10}
+                  top={0}
+                  status="loading"
+                  style={{ display: 'inline-block', position: 'relative' }}
+                />
+              </Col>
+            </Row>
+          </Paper >
+        </Grid>
       );
     }
     const actions = [
@@ -372,7 +384,7 @@ class ShopTab extends Component {
                 <TextField hintText="RP Population (please be realistic)"
                   onChange={this.handleUpdatePopulation}
                   validate={['required', 'isNumber']}
-                  errorText="Please enter an event title"
+                  errorText="Please enter a valid number"
                   style={{ width: '100%' }} />
               </Col>
             </Row>

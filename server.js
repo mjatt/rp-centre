@@ -9,6 +9,9 @@ const cookieParser = require('cookie-parser');
 const firebase = require('firebase');
 var parseString = require('xml2js').parseString;
 const helmet = require('helmet');
+const config = require('config');
+
+var APP_PORT = config.get('App.PORT');
 
 firebase.initializeApp({
   databaseURL: 'https://norrland-rp-centre.firebaseio.com/'
@@ -104,7 +107,7 @@ router.route('/event/comment').post(function (req, res) {
 });
 
 router.route('/calc/budget').post(function (req, res) {
-  firebase.database().ref('nations/' + req.body.nation).set({
+  firebase.database().ref('nations/' + req.body.nation).update({
     remainingBudget: req.body.remainingBudget,
     military: req.body.items,
     budget: req.body.budget
@@ -153,16 +156,21 @@ router.route('/calc/data').get(function (req, res) {
         if (inte < 0) {
           inte = 0;
         }
-        var scale = 50000.0;
+        var scale = 75000.0;
         var factor = pop / scale;
         var position = (Math.sqrt(8.0 * factor + 1.0) - 1.0) / 2.0;
         var physicalStrength = Math.sqrt((def * 2.0) * (eco / 100.0) * (position * scale));
         var integrityModifier = (inte + 20.0) / 120.0;
         var prelimBudget = 30.0 * physicalStrength * integrityModifier;
         var budget = Math.round(prelimBudget);
-        firebase.database().ref('nations/' + req.query.nation).update({
-          budget: budget
+
+        var baseRef = 'nations/' + req.query.nation;
+        firebase.database().ref(baseRef).update({
+          budget: budget,
+          population: pop
         });
+        firebase.database().ref(baseRef + '/military').remove();
+        firebase.database().ref(baseRef + '/remainingBudget').remove();
         res.send('Budget calculated successfully, your budget is ' + budget);
         console.log(new Date() + ': User, ' + req.query.nation + ', calculated their budget.');
       });
@@ -192,8 +200,8 @@ router.route('/verify').post(function (req, res) {
   request(verifyOptions, function (error, response, body) {
     if (!error) {
       let nation = req.body.nation.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
-      nation = nation.replaceAll('%20', '_');
-      nation = nation.replaceAll(' ', '_');
+      nation = replaceAll(nation, '%20', '_');
+      nation = replaceAll(nation, ' ', '_');
       if (parseInt(body, 10) === 1) {
         request(nationCheckOptions, function (nationCheckError, nationCheckResponse, nationCheckBody) {
           if (nationCheckError) console.error(error);
@@ -245,10 +253,11 @@ if (process.env.NODE_ENV === 'production') {
     ca: fs.readFileSync('/etc/letsencrypt/live/rpcentre.bancey.xyz/chain.pem')
   };
   https.createServer(options, app).listen(443);
-  console.log(`RP Centre is coming up in PRODUCTION mode on port ${process.env.APP_PORT || 3000} and 443`);
+  http.createServer(app).listen(APP_PORT || 3000);
+  console.log(`RP Centre is coming up in PRODUCTION mode on port ${APP_PORT || 3000} and 443`);
 } else {
-  http.createServer(app).listen(process.env.APP_PORT || 3000);
-  console.log(`RP Centre is coming up in DEVELOPMENT mode on port ${process.env.APP_PORT || 3000}`);
+  http.createServer(app).listen(APP_PORT || 3000);
+  console.log(`RP Centre is coming up in DEVELOPMENT mode on port ${APP_PORT || 3000}`);
 }
 
 function getFlagUrl(nation, callback) {
@@ -278,9 +287,6 @@ function checkIfUserExists(nation, callback) {
   });
 }
 
-// We are adding our method to the string definition, this isn't usually recommended.
-// eslint-disable-next-line no-extend-native
-String.prototype.replaceAll = function (search, replacement) {
-  var target = this;
+function replaceAll(target, search, replacement) {
   return target.replace(new RegExp(search, 'g'), replacement);
-};
+}

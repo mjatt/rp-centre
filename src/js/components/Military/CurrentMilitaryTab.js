@@ -33,8 +33,8 @@ class CurrentMilitaryTab extends Component {
 
   render() {
     console.log(this.state);
-    if (this.state.remainingBudget === null && this.state.military.length < 1) {
-      if (this.state.initialBudget === null) {
+    if ((this.state.remainingBudget === null || typeof this.state.remainingBudget === 'undefined') && (typeof this.state.military === 'undefined' || this.state.military.length < 1 )) {
+      if (this.state.initialBudget === null || typeof this.state.initialBudget === 'undefined') {
         return (
           <Grid fluid>
             <Row center="md">
@@ -54,7 +54,7 @@ class CurrentMilitaryTab extends Component {
           </Row>
           <Row center="md">
             <Col md>
-              Doesn't look like you've bought anythin yet...
+              Doesn't look like you've bought anything yet...
             </Col>
           </Row>
         </Grid>
