@@ -25,6 +25,8 @@ import {
 import ShopCategory from './ShopCategory';
 import axios from 'axios';
 
+const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
+
 class ShopTab extends Component {
   constructor(props) {
     super(props);
@@ -135,7 +137,6 @@ class ShopTab extends Component {
   calculate() {
     let pop = parseInt(this.state.population, 10);
 
-    const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
     const apiEndpoint = baseUrl + '/api/calc/data?nation=' + this.props.nation + '&population=' + pop;
 
     let _this = this;
@@ -169,8 +170,6 @@ class ShopTab extends Component {
       items: this.state.basket,
       budget: this.state.budget
     };
-
-    const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
     const apiEndpoint = baseUrl + '/api/calc/budget';
 
     let _this = this;

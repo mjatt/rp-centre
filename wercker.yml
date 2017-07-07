@@ -14,19 +14,12 @@ lint:
 build:
   steps:
     - npm-install
+    - script:
+        name: npm install
+        code: npm install --only=dev
 
     - mitelone/webpack:
         config-file: webpack.prod.js
-  after-steps:
-    - slack-notifier:
-        url: $DISCORD_URL
-        username: Build Bot
-preprod-build:
-  steps:
-    - npm-install
-
-    - mitelone/webpack:
-        config-file: webpack.preprod.js
   after-steps:
     - slack-notifier:
         url: $DISCORD_URL

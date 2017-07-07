@@ -9,6 +9,10 @@ const cookieParser = require('cookie-parser');
 const firebase = require('firebase');
 var parseString = require('xml2js').parseString;
 const helmet = require('helmet');
+const config = require('config');
+
+var APP_PORT = config.get('App.PORT');
+var URL = config.get('App.URL');
 
 firebase.initializeApp({
   databaseURL: 'https://norrland-rp-centre.firebaseio.com/'
@@ -192,8 +196,8 @@ router.route('/verify').post(function (req, res) {
   request(verifyOptions, function (error, response, body) {
     if (!error) {
       let nation = req.body.nation.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
-      nation = nation.replaceAll('%20', '_');
-      nation = nation.replaceAll(' ', '_');
+      nation = replaceAll(nation, '%20', '_');
+      nation = replaceAll(nation, ' ', '_');
       if (parseInt(body, 10) === 1) {
         request(nationCheckOptions, function (nationCheckError, nationCheckResponse, nationCheckBody) {
           if (nationCheckError) console.error(error);
@@ -245,10 +249,11 @@ if (process.env.NODE_ENV === 'production') {
     ca: fs.readFileSync('/etc/letsencrypt/live/rpcentre.bancey.xyz/chain.pem')
   };
   https.createServer(options, app).listen(443);
-  console.log(`RP Centre is coming up in PRODUCTION mode on port ${process.env.APP_PORT || 3000} and 443`);
+  http.createServer(app).listen(APP_PORT || 3000);
+  console.log(`RP Centre is coming up in PRODUCTION mode on port ${APP_PORT || 3000} and 443`);
 } else {
-  http.createServer(app).listen(process.env.APP_PORT || 3000);
-  console.log(`RP Centre is coming up in DEVELOPMENT mode on port ${process.env.APP_PORT || 3000}`);
+  http.createServer(app).listen(APP_PORT || 3000);
+  console.log(`RP Centre is coming up in DEVELOPMENT mode on port ${APP_PORT || 3000}`);
 }
 
 function getFlagUrl(nation, callback) {
@@ -278,9 +283,6 @@ function checkIfUserExists(nation, callback) {
   });
 }
 
-// We are adding our method to the string definition, this isn't usually recommended.
-// eslint-disable-next-line no-extend-native
-String.prototype.replaceAll = function (search, replacement) {
-  var target = this;
+function replaceAll(target, search, replacement) {
   return target.replace(new RegExp(search, 'g'), replacement);
-};
+}
