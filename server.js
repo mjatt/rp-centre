@@ -12,7 +12,6 @@ const helmet = require('helmet');
 const config = require('config');
 
 var APP_PORT = config.get('App.PORT');
-var URL = config.get('App.URL');
 
 firebase.initializeApp({
   databaseURL: 'https://norrland-rp-centre.firebaseio.com/'
