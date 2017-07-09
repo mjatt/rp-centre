@@ -8,7 +8,6 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from './ValidatedTextField';
 import axios from 'axios';
-import moment from 'moment';
 import Markdown from 'react-markdown';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import IconMenu from 'material-ui/IconMenu';
