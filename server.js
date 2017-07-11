@@ -21,6 +21,7 @@ firebase.initializeApp({
 const SITE_CODE = process.env.CODE || 'norrland-rp';
 
 const app = express();
+const redirectApp = express();
 
 if (process.env.NODE_ENV === 'production') {
   app.use(helmet());
@@ -58,6 +59,14 @@ app.use(cookieParser());
 
 // eslint-disable-next-line new-cap
 var router = express.Router();
+// eslint-disable-next-line new-cap
+var redirectRouter = express.Router();
+
+redirectRouter.route('*').get(function (req, res) {
+  res.redirect('https://rpcentre.bancey.xyz' + req.url);
+});
+
+redirectApp.use(redirectRouter);
 
 router.route('/event').post(function (req, res) {
   let flag;
@@ -256,7 +265,7 @@ if (process.env.NODE_ENV === 'production') {
     ca: fs.readFileSync('/etc/letsencrypt/live/rpcentre.bancey.xyz/chain.pem')
   };
   https.createServer(options, app).listen(443);
-  http.createServer(app).listen(APP_PORT || 3000);
+  http.createServer(redirectApp).listen(APP_PORT || 3000);
   console.log(`RP Centre is coming up in PRODUCTION mode on port ${APP_PORT || 3000} and 443`);
 } else {
   http.createServer(app).listen(APP_PORT || 3000);
