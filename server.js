@@ -21,7 +21,6 @@ firebase.initializeApp({
 const SITE_CODE = process.env.CODE || 'norrland-rp';
 
 const app = express();
-const redirectApp = express();
 
 if (process.env.NODE_ENV === 'production') {
   app.use(helmet());
@@ -59,14 +58,6 @@ app.use(cookieParser());
 
 // eslint-disable-next-line new-cap
 var router = express.Router();
-// eslint-disable-next-line new-cap
-var redirectRouter = express.Router();
-
-redirectRouter.route('*').get(function (req, res) {
-  res.redirect('https://rpcentre.bancey.xyz' + req.url);
-});
-
-redirectApp.use(redirectRouter);
 
 router.route('/event').post(function (req, res) {
   let flag;
@@ -259,6 +250,13 @@ app.use('/api', router);
 app.use(express.static(path.join(__dirname, '/dist')));
 
 if (process.env.NODE_ENV === 'production') {
+  const redirectApp = express();
+  redirectApp.use(function (req, res, next) {
+    if (!req.secure) {
+      return res.redirect(['https://', req.get('Host'), req.url].join(''));
+    }
+    next();
+  });
   let options = {
     key: fs.readFileSync('/etc/letsencrypt/live/rpcentre.bancey.xyz/privkey.pem'),
     cert: fs.readFileSync('/etc/letsencrypt/live/rpcentre.bancey.xyz/fullchain.pem'),
