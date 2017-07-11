@@ -8,7 +8,6 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from './ValidatedTextField';
 import axios from 'axios';
-import moment from 'moment';
 import Markdown from 'react-markdown';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
 import IconMenu from 'material-ui/IconMenu';
@@ -105,11 +104,9 @@ class Event extends Component {
     this.setState({
       invalid: true
     });
-    let rightNow = moment().format('DD/MM/YYYY HH:mm:ss');
     let data = {
       nation: this.props.nation,
       message: this.state.comment,
-      createdOn: rightNow,
       event: this.props.event.key
     };
     const apiEndpoint = baseUrl + '/api/event/comment';

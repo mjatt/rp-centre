@@ -6,6 +6,7 @@ import TextField from './ValidatedTextField';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
+import LinearProgress from 'material-ui/LinearProgress';
 
 const SITE_CODE = process.env.CODE || 'norrland-rp';
 
@@ -19,7 +20,8 @@ class Register extends Component {
       loading: true,
       invalid: true,
       open: false,
-      responseMsg: ''
+      responseMsg: '',
+      processing: false
     };
 
     this.handleUpdateNation = this.handleUpdateNation.bind(this);
@@ -78,30 +80,36 @@ class Register extends Component {
   }
 
   submit() {
-    let data = {
-      nation: this.state.nation,
-      code: this.state.code
-    };
-    console.log(process.env.WEBSITE_URL);
-    const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
-    const apiEndpoint = baseUrl + '/api/verify';
+    this.setState({
+      processing: true
+    }, function () {
+      let data = {
+        nation: this.state.nation,
+        code: this.state.code
+      };
+      console.log(process.env.WEBSITE_URL);
+      const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
+      const apiEndpoint = baseUrl + '/api/verify';
 
-    let _this = this;
-    axios.post(apiEndpoint, data).then(function (response) {
-      console.log(response.data);
-      _this.setState({
-        responseMsg: response.data,
-        open: true
-      }, function () {
-        setTimeout(function () {
-          window.location.href = baseUrl;
-        }, 3000);
-      });
-    }).catch(function (error) {
-      console.log(error.response.data);
-      _this.setState({
-        responseMsg: error.response.data,
-        open: true
+      let _this = this;
+      axios.post(apiEndpoint, data).then(function (response) {
+        console.log(response.data);
+        _this.setState({
+          responseMsg: response.data,
+          open: true,
+          processing: false
+        }, function () {
+          setTimeout(function () {
+            window.location.href = baseUrl;
+          }, 3000);
+        });
+      }).catch(function (error) {
+        console.log(error.response.data);
+        _this.setState({
+          responseMsg: error.response.data,
+          open: true,
+          processing: false
+        });
       });
     });
   }
@@ -129,6 +137,13 @@ class Register extends Component {
     }
     return (
       <div>
+        {
+          (this.state.processing) ? (
+            <LinearProgress mode="indeterminate" />
+          ) : (
+              null
+            )
+        }
         <Paper style={{ height: '70%', width: '50%', margin: '0 auto', marginTop: '25px', textAlign: 'center', padding: '20px' }}>
           <Snackbar
             open={this.state.open}

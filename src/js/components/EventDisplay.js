@@ -16,6 +16,7 @@ import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
 import FilterPicker from './FilterPicker';
 import Pagination from 'material-ui-pagination';
 import Paper from 'material-ui/Paper';
+import LinearProgress from 'material-ui/LinearProgress';
 
 class Events extends Component {
   constructor(props) {
@@ -270,26 +271,32 @@ class Events extends Component {
   }
 
   createEvent() {
-    let rightNow = moment().format('DD/MM/YYYY HH:mm:ss');
-    let data = {
-      title: this.state.eventTitle,
-      description: this.state.eventDescription,
-      channel: this.state.eventChannel,
-      createdBy: this.props.nation,
-      createdOn: rightNow
-    };
+    this.setState({
+      processing: true
+    }, function () {
+      let data = {
+        title: this.state.eventTitle,
+        description: this.state.eventDescription,
+        channel: this.state.eventChannel,
+        createdBy: this.props.nation
+      };
 
-    const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
-    const apiEndpoint = baseUrl + '/api/event';
+      const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
+      const apiEndpoint = baseUrl + '/api/event';
 
-    let _this = this;
-    axios.post(apiEndpoint, data).then(function (response) {
-      console.log(response);
-      _this.setState({
-        createEvent: false
+      let _this = this;
+      axios.post(apiEndpoint, data).then(function (response) {
+        console.log(response);
+        _this.setState({
+          createEvent: false,
+          processing: false
+        });
+      }).catch(function (error) {
+        console.log(error);
+        _this.setState({
+          processing: false
+        });
       });
-    }).catch(function (error) {
-      console.log(error);
     });
   }
 
@@ -360,6 +367,13 @@ class Events extends Component {
     ];
     return (
       <div>
+        {
+          (this.state.processing) ? (
+            <LinearProgress mode="indeterminate" />
+          ) : (
+              null
+            )
+        }
         <Dialog open={this.state.createEvent} title="Create an event..." actions={actions} modal>
           <Grid fluid>
             <Row center="md" style={{ paddingTop: '15px' }}>

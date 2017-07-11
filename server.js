@@ -10,6 +10,7 @@ const firebase = require('firebase');
 var parseString = require('xml2js').parseString;
 const helmet = require('helmet');
 const config = require('config');
+const moment = require('moment');
 
 var APP_PORT = config.get('App.PORT');
 
@@ -61,12 +62,13 @@ var router = express.Router();
 router.route('/event').post(function (req, res) {
   let flag;
   let rightNow = new Date().getTime();
+  let createdOn = moment().format('DD/MM/YYYY HH:mm:ss');
   firebase.database().ref('/nations/' + req.body.createdBy).once('value').then(function (snapshot) {
     flag = snapshot.val().flag;
     firebase.database().ref('/events/' + rightNow).set({
       channel: req.body.channel,
       createdBy: req.body.createdBy,
-      createdOn: req.body.createdOn,
+      createdOn: createdOn,
       description: req.body.description,
       title: req.body.title,
       flag: flag
@@ -97,8 +99,9 @@ router.route('/event').patch(function (req, res) {
 
 router.route('/event/comment').post(function (req, res) {
   let rightNow = new Date().getTime();
+  let createdOn = moment().format('DD/MM/YYYY HH:mm:ss');
   firebase.database().ref('/events/' + req.body.event + '/comments/' + rightNow).set({
-    createdOn: req.body.createdOn,
+    createdOn: createdOn,
     message: req.body.message,
     nation: req.body.nation
   });
@@ -247,13 +250,20 @@ app.use('/api', router);
 app.use(express.static(path.join(__dirname, '/dist')));
 
 if (process.env.NODE_ENV === 'production') {
+  const redirectApp = express();
+  redirectApp.use(function (req, res, next) {
+    if (!req.secure) {
+      return res.redirect(['https://', req.get('Host'), req.url].join(''));
+    }
+    next();
+  });
   let options = {
     key: fs.readFileSync('/etc/letsencrypt/live/rpcentre.bancey.xyz/privkey.pem'),
     cert: fs.readFileSync('/etc/letsencrypt/live/rpcentre.bancey.xyz/fullchain.pem'),
     ca: fs.readFileSync('/etc/letsencrypt/live/rpcentre.bancey.xyz/chain.pem')
   };
   https.createServer(options, app).listen(443);
-  http.createServer(app).listen(APP_PORT || 3000);
+  http.createServer(redirectApp).listen(APP_PORT || 3000);
   console.log(`RP Centre is coming up in PRODUCTION mode on port ${APP_PORT || 3000} and 443`);
 } else {
   http.createServer(app).listen(APP_PORT || 3000);
