@@ -71,11 +71,44 @@ router.route('/event').post(function (req, res) {
       createdOn: createdOn,
       description: req.body.description,
       title: req.body.title,
-      flag: flag
+      flag: flag,
+      approvalCount: 0,
+      disapprovalCount: 0
     });
     res.send('Event created successfully...');
   });
   console.log(new Date() + ': Event created.');
+});
+
+router.route('/event/approve').post(function (req, res) {
+  let rightNow = new Date();
+  firebase.database().ref('/events/' + req.body.eventKey).once('value').then(function (snapshot) {
+    let eventData = snapshot.val();
+    firebase.database().ref('/events/' + req.body.eventKey).update({
+      approvalCount: eventData.approvalCount + 1
+    });
+    firebase.database().ref('/events/' + req.body.eventKey + '/approvals/' + rightNow).set({
+      nation: req.body.nation
+    });
+    console.log(`${this.props.nation} approved of ${req.body.eventKey}...`);
+    res.send('Reaction saved successfully...');
+  });
+});
+
+router.route('/event/disapprove').post(function (req, res) {
+  console.log(req.body);
+  let rightNow = new Date();
+  firebase.database().ref('/events/' + req.body.eventKey).once('value').then(function (snapshot) {
+    let eventData = snapshot.val();
+    firebase.database().ref('/events/' + req.body.eventKey).update({
+      disapprovalCount: eventData.disapprovalCount + 1
+    });
+    firebase.database().ref('/events/' + req.body.eventKey + '/disapprovals/' + rightNow).set({
+      nation: req.body.nation
+    });
+    console.log(`${this.props.nation} disapproved of ${req.body.eventKey}...`);
+    res.send('Reaction saved successfully...');
+  });
 });
 
 router.route('/event').delete(function (req, res) {
@@ -267,6 +300,7 @@ if (process.env.NODE_ENV === 'production') {
   console.log(`RP Centre is coming up in PRODUCTION mode on port ${APP_PORT || 3000} and 443`);
 } else {
   http.createServer(app).listen(APP_PORT || 3000);
+  // updateEvents();
   console.log(`RP Centre is coming up in DEVELOPMENT mode on port ${APP_PORT || 3000}`);
 }
 
@@ -300,3 +334,18 @@ function checkIfUserExists(nation, callback) {
 function replaceAll(target, search, replacement) {
   return target.replace(new RegExp(search, 'g'), replacement);
 }
+
+/* function updateEvents() {
+  firebase.database().ref('/events').once('value').then(function (snapshot) {
+    let value = snapshot.val();
+    for (let eventKey in value) {
+      if (value.hasOwnProperty(eventKey)) {
+        console.log(value[eventKey]);
+        firebase.database().ref('/events/' + eventKey).update({
+          approvalCount: 0,
+          disapprovalCount: 0
+        });
+      }
+    }
+  });
+} */

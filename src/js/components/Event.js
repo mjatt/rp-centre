@@ -4,6 +4,8 @@ import { Card, CardHeader, CardText } from 'material-ui/Card';
 import Badge from 'material-ui/Badge';
 import IconButton from 'material-ui/IconButton';
 import CommentIcon from 'material-ui/svg-icons/communication/comment';
+import ThumbUpIcon from 'material-ui/svg-icons/action/thumb-up';
+import ThumbDownIcon from 'material-ui/svg-icons/action/thumb-down';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from './ValidatedTextField';
@@ -16,6 +18,10 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
 import Snackbar from 'material-ui/Snackbar';
+import Popover from 'material-ui/Popover';
+import { List, ListItem } from 'material-ui/List';
+import Subheader from 'material-ui/Subheader';
+import Divider from 'material-ui/Divider';
 
 const baseUrl = process.env.WEBSITE_URL || 'http://localhost:3000';
 
@@ -38,7 +44,17 @@ class Event extends Component {
       eventKey: '',
       updateEvent: false,
       snackbarOpen: false,
-      responseMsg: ''
+      responseMsg: '',
+      createdBy: '',
+      approvalCount: 0,
+      disapprovalCount: 0,
+      approvals: [],
+      disapprovals: [],
+      open: false,
+      anchorEl: null,
+      popoverHeader: '',
+      popoverContent: [],
+      popoverContentType: ''
     };
 
     this.expand = this.expand.bind(this);
@@ -55,6 +71,11 @@ class Event extends Component {
     this.updateEvent = this.updateEvent.bind(this);
     this.isUpdateFormValid = this.isUpdateFormValid.bind(this);
     this.handleSnackbarClose = this.handleSnackbarClose.bind(this);
+    this.approve = this.approve.bind(this);
+    this.disaprove = this.disaprove.bind(this);
+    this.checkNationReaction = this.checkNationReaction.bind(this);
+    this.showNationReactErrorMessage = this.showNationReactErrorMessage.bind(this);
+    this.onRequestClose = this.onRequestClose.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -70,8 +91,14 @@ class Event extends Component {
       flag: nextProps.event.flag,
       comments: nextProps.event.comments,
       eventChannel: nextProps.event.channel,
-      eventKey: nextProps.event.key
+      eventKey: nextProps.event.key,
+      createdBy: nextProps.event.createdBy,
+      approvalCount: nextProps.event.approvalCount,
+      disapprovalCount: nextProps.event.disapprovalCount,
+      approvals: nextProps.event.approvals,
+      disapprovals: nextProps.event.disapprovals
     });
+    console.log(nextProps.event);
   }
 
   expand() {
@@ -229,6 +256,124 @@ class Event extends Component {
     });
   }
 
+  approve(event) {
+    if (event.nativeEvent.shiftKey) {
+      let content = [];
+      let header = 'Users who approve of this post';
+      let contentType = 'approve';
+      for (let nation in this.state.approvals) {
+        if (this.state.approvals.hasOwnProperty(nation)) {
+          content.push(this.state.approvals[nation]);
+        }
+      }
+      let _this = this;
+      this.setState({
+        open: true,
+        anchorEl: event.currentTarget,
+        popoverContent: content,
+        popoverHeader: header,
+        popoverContentType: contentType
+      }, function () {
+        setTimeout(function () {
+          _this.onRequestClose();
+        }, 5000);
+      });
+    } else if (this.checkNationReaction('approval')) {
+      this.showNationReactErrorMessage();
+    } else {
+      const apiEndpoint = baseUrl + '/api/event/approve';
+      let data = {
+        nation: this.props.nation,
+        eventKey: this.state.eventKey
+      };
+
+      axios.post(apiEndpoint, data).then(function (response) {
+        console.log(response);
+      });
+    }
+  }
+
+  disaprove(event) {
+    console.log(event.nativeEvent);
+    if (event.nativeEvent.shiftKey) {
+      let content = [];
+      let header = 'Users who disapprove of this post';
+      let contentType = 'disapprove';
+      for (let nation in this.state.disapprovals) {
+        if (this.state.disapprovals.hasOwnProperty(nation)) {
+          content.push(this.state.disapprovals[nation]);
+        }
+      }
+      let _this = this;
+      this.setState({
+        open: true,
+        anchorEl: event.currentTarget,
+        popoverContent: content,
+        popoverHeader: header,
+        popoverContentType: contentType
+      }, function () {
+        setTimeout(function () {
+          _this.onRequestClose();
+        }, 5000);
+      });
+    } else if (this.checkNationReaction('disapproval')) {
+      this.showNationReactErrorMessage();
+    } else {
+      const apiEndpoint = baseUrl + '/api/event/disapprove';
+      let data = {
+        nation: this.props.nation,
+        eventKey: this.state.eventKey
+      };
+
+      axios.post(apiEndpoint, data).then(function (response) {
+        console.log(response);
+      });
+    }
+  }
+
+  checkNationReaction(type) {
+    switch (type) {
+    case 'approval':
+      for (let nation in this.state.approvals) {
+        if (this.state.approvals.hasOwnProperty(nation)) {
+          if (this.state.approvals[nation] === this.props.nation) {
+            return true;
+          }
+        }
+      }
+      break;
+    case 'disapproval':
+      for (let nation in this.state.disapprovals) {
+        if (this.state.disapprovals.hasOwnProperty(nation)) {
+          if (this.state.disapprovals[nation] === this.props.nation) {
+            return true;
+          }
+        }
+      }
+      break;
+    default:
+      console.error('This errrr, shouldn\'t happen... HELP ME');
+      break;
+    }
+    if (this.props.nation === this.state.createdBy) {
+      return true;
+    }
+    return false;
+  }
+
+  showNationReactErrorMessage() {
+    this.setState({
+      snackbarOpen: true,
+      responseMsg: 'You can\'t react to your own posts or react more than once...'
+    });
+  }
+
+  onRequestClose() {
+    this.setState({
+      open: false
+    });
+  }
+
   render() {
     const actions = [
       <FlatButton
@@ -245,6 +390,30 @@ class Event extends Component {
     ];
     return (
       <div>
+        <Popover
+          open={this.state.open}
+          anchorEl={this.state.anchorEl}
+          anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+          targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+          onRequestClose={this.onRequestClose}
+        >
+          <List style={{ maxHeight: 250 }}>
+            <Subheader style={{ paddingRight: 5}}>{this.state.popoverHeader}</Subheader>
+            <Divider />
+            {
+              this.state.popoverContent.map((nation, index) => {
+                if (this.state.popoverContentType === 'approval') {
+                  return (
+                    <ListItem key={index} primaryText={nation} rightIcon={<ThumbUpIcon />} />
+                  );
+                }
+                return (
+                  <ListItem key={index} primaryText={nation} rightIcon={<ThumbDownIcon />} />
+                );
+              })
+            }
+          </List>
+        </Popover>
         <Snackbar
           open={this.state.snackbarOpen}
           message={this.state.responseMsg}
@@ -325,6 +494,36 @@ class Event extends Component {
                 <CommentIcon />
               </IconButton>
             </Badge>
+            {
+              (this.props.nation) ? (
+                <Badge
+                  badgeContent={this.state.approvalCount}
+                  secondary
+                  badgeStyle={{ top: 12, right: 12 }}
+                >
+                  <IconButton tooltip="Approve" onTouchTap={this.approve}>
+                    <ThumbUpIcon />
+                  </IconButton>
+                </Badge>
+              ) : (
+                  null
+                )
+            }
+            {
+              (this.props.nation) ? (
+                <Badge
+                  badgeContent={this.state.disapprovalCount}
+                  secondary
+                  badgeStyle={{ top: 12, right: 12 }}
+                >
+                  <IconButton tooltip="Disapprove" onTouchTap={this.disaprove}>
+                    <ThumbDownIcon />
+                  </IconButton>
+                </Badge>
+              ) : (
+                  null
+                )
+            }
             <IconMenu
               iconButtonElement={<IconButton><SettingsIcon /></IconButton>}
               anchorOrigin={{ horizontal: 'left', vertical: 'top' }}

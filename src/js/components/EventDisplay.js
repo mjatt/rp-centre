@@ -87,7 +87,11 @@ class Events extends Component {
           description: nextProps.data[key].description,
           channel: nextProps.data[key].channel,
           comments: [],
-          key: key
+          key: key,
+          approvalCount: nextProps.data[key].approvalCount,
+          disapprovalCount: nextProps.data[key].disapprovalCount,
+          approvals: [],
+          disapprovals: []
         };
         if (nextProps.data[key].comments !== 'undefined') {
           let comments = [];
@@ -109,6 +113,26 @@ class Events extends Component {
             return 0;
           });
           event.comments = comments;
+        }
+        if (nextProps.data[key].approvals !== 'undefined') {
+          let approvals = [];
+          for (let approvalKey in nextProps.data[key].approvals) {
+            if (nextProps.data[key].approvals.hasOwnProperty(approvalKey)) {
+              let approval = nextProps.data[key].approvals[approvalKey].nation;
+              approvals.push(approval);
+            }
+          }
+          event.approvals = approvals;
+        }
+        if (nextProps.data[key].disapprovals !== 'undefined') {
+          let disapprovals = [];
+          for (let disapprovalKey in nextProps.data[key].disapprovals) {
+            if (nextProps.data[key].disapprovals.hasOwnProperty(disapprovalKey)) {
+              let disapproval = nextProps.data[key].disapprovals[disapprovalKey].nation;
+              disapprovals.push(disapproval);
+            }
+          }
+          event.disapprovals = disapprovals;
         }
         newData.push(event);
       }
