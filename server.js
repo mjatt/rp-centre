@@ -233,68 +233,64 @@ router.route('/calc/data').get(function (req, res) {
 });
 
 router.route('/verify').post(function (req, res) {
-  let nation = 'New Woking';
-  res.cookie('nation', nation);
-  res.send('Signed in successfully, you will be redirected in 3 seconds...');
-  console.log(new Date() + ': User, ' + nation + ', signed in successfully.');
-  // let verifyUrl = 'https://www.nationstates.net/cgi-bin/api.cgi?a=verify&nation=' + req.body.nation + '&checksum=' + req.body.code + '&token=' + SITE_CODE;
-  // let nationCheckUrl = 'https://www.nationstates.net/cgi-bin/api.cgi?nation=' + req.body.nation + '&q=region';
+  let verifyUrl = 'https://www.nationstates.net/cgi-bin/api.cgi?a=verify&nation=' + req.body.nation + '&checksum=' + req.body.code + '&token=' + SITE_CODE;
+  let nationCheckUrl = 'https://www.nationstates.net/cgi-bin/api.cgi?nation=' + req.body.nation + '&q=region';
 
-  // var verifyOptions = {
-  //   url: verifyUrl,
-  //   headers: {
-  //     'User-Agent': 'Norrland RP Centre'
-  //   }
-  // };
-  // var nationCheckOptions = {
-  //   url: nationCheckUrl,
-  //   headers: {
-  //     'User-Agent': 'Norrland RP Centre'
-  //   }
-  // };
-  // request(verifyOptions, function (error, response, body) {
-  //   if (!error) {
-  //     let nation = req.body.nation.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
-  //     nation = replaceAll(nation, '%20', '_');
-  //     nation = replaceAll(nation, ' ', '_');
-  //     if (parseInt(body, 10) === 1) {
-  //       request(nationCheckOptions, function (nationCheckError, nationCheckResponse, nationCheckBody) {
-  //         if (nationCheckError) console.error(error);
-  //         parseString(nationCheckBody, function (err, result) {
-  //           if (err) console.error(err);
-  //           if (result.NATION.REGION[0] !== 'Norrland') {
-  //             res.status(400).send('Error... You are not a member of Norrland...');
-  //             console.error(new Date() + ': User, ' + nation + ', attempted to login but it not a member of Norrland!');
-  //           } else {
-  //             checkIfUserExists(nation, function (checkFlagResult, nationData) {
-  //               if (!checkFlagResult) {
-  //                 console.log('Creating ' + nation + '\'s user data...');
-  //                 getFlagUrl(req.body.nation, function (flagUrl) {
-  //                   firebase.database().ref('nations/' + nation).set({
-  //                     flag: flagUrl,
-  //                     isAdmin: false
-  //                   });
-  //                 });
-  //               } else if (checkFlagResult && nationData.isAdmin) {
-  //                 console.log(new Date() + ': User, ' + nation + ', is an admin');
-  //                 res.cookie('isAdmin', true);
-  //               }
-  //               res.cookie('nation', nation);
-  //               res.send('Signed in successfully, you will be redirected in 3 seconds...');
-  //               console.log(new Date() + ': User, ' + nation + ', signed in successfully.');
-  //             });
-  //           }
-  //         });
-  //       });
-  //     } else {
-  //       res.status(400).send('Please make sure you got your verification code correct and try again...');
-  //       console.error(new Date() + ': User, ' + nation + ', failed to login.');
-  //     }
-  //   } else {
-  //     res.status(400).send('A unexpected error occured, please try again later...');
-  //     console.error('Ran into an error: ' + error);
-  //   }
-  // });
+  var verifyOptions = {
+    url: verifyUrl,
+    headers: {
+      'User-Agent': 'Norrland RP Centre'
+    }
+  };
+  var nationCheckOptions = {
+    url: nationCheckUrl,
+    headers: {
+      'User-Agent': 'Norrland RP Centre'
+    }
+  };
+  request(verifyOptions, function (error, response, body) {
+    if (!error) {
+      let nation = req.body.nation.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+      nation = replaceAll(nation, '%20', '_');
+      nation = replaceAll(nation, ' ', '_');
+      if (parseInt(body, 10) === 1) {
+        request(nationCheckOptions, function (nationCheckError, nationCheckResponse, nationCheckBody) {
+          if (nationCheckError) console.error(error);
+          parseString(nationCheckBody, function (err, result) {
+            if (err) console.error(err);
+            if (result.NATION.REGION[0] !== 'Norrland') {
+              res.status(400).send('Error... You are not a member of Norrland...');
+              console.error(new Date() + ': User, ' + nation + ', attempted to login but it not a member of Norrland!');
+            } else {
+              checkIfUserExists(nation, function (checkFlagResult, nationData) {
+                if (!checkFlagResult) {
+                  console.log('Creating ' + nation + '\'s user data...');
+                  getFlagUrl(req.body.nation, function (flagUrl) {
+                    firebase.database().ref('nations/' + nation).set({
+                      flag: flagUrl,
+                      isAdmin: false
+                    });
+                  });
+                } else if (checkFlagResult && nationData.isAdmin) {
+                  console.log(new Date() + ': User, ' + nation + ', is an admin');
+                  res.cookie('isAdmin', true);
+                }
+                res.cookie('nation', nation);
+                res.send('Signed in successfully, you will be redirected in 3 seconds...');
+                console.log(new Date() + ': User, ' + nation + ', signed in successfully.');
+              });
+            }
+          });
+        });
+      } else {
+        res.status(400).send('Please make sure you got your verification code correct and try again...');
+        console.error(new Date() + ': User, ' + nation + ', failed to login.');
+      }
+    } else {
+      res.status(400).send('A unexpected error occured, please try again later...');
+      console.error('Ran into an error: ' + error);
+    }
+  });
 });
 
 app.use('/api', router);
