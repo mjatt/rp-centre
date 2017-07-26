@@ -90,8 +90,10 @@ class Events extends Component {
           key: key,
           approvalCount: nextProps.data[key].approvalCount,
           disapprovalCount: nextProps.data[key].disapprovalCount,
+          supportCount: nextProps.data[key].supportCount,
           approvals: [],
-          disapprovals: []
+          disapprovals: [],
+          support: []
         };
         if (nextProps.data[key].comments !== 'undefined') {
           let comments = [];
@@ -133,6 +135,16 @@ class Events extends Component {
             }
           }
           event.disapprovals = disapprovals;
+        }
+        if (nextProps.data[key].support !== 'undefined') {
+          let support = [];
+          for (let supportKey in nextProps.data[key].support) {
+            if (nextProps.data[key].support.hasOwnProperty(supportKey)) {
+              let tempSupport = nextProps.data[key].support[supportKey].nation;
+              support.push(tempSupport);
+            }
+          }
+          event.support = support;
         }
         newData.push(event);
       }

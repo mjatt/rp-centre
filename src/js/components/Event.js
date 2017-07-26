@@ -6,6 +6,7 @@ import IconButton from 'material-ui/IconButton';
 import CommentIcon from 'material-ui/svg-icons/communication/comment';
 import ThumbUpIcon from 'material-ui/svg-icons/action/thumb-up';
 import ThumbDownIcon from 'material-ui/svg-icons/action/thumb-down';
+import SupportIcon from 'material-ui/svg-icons/action/favorite';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from './ValidatedTextField';
@@ -48,8 +49,10 @@ class Event extends Component {
       createdBy: '',
       approvalCount: 0,
       disapprovalCount: 0,
+      supportCount: 0,
       approvals: [],
       disapprovals: [],
+      support: [],
       open: false,
       anchorEl: null,
       popoverHeader: '',
@@ -76,6 +79,7 @@ class Event extends Component {
     this.checkNationReaction = this.checkNationReaction.bind(this);
     this.showNationReactErrorMessage = this.showNationReactErrorMessage.bind(this);
     this.onRequestClose = this.onRequestClose.bind(this);
+    this.support = this.support.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -95,8 +99,10 @@ class Event extends Component {
       createdBy: nextProps.event.createdBy,
       approvalCount: nextProps.event.approvalCount,
       disapprovalCount: nextProps.event.disapprovalCount,
+      supportCount: nextProps.event.supportCount,
       approvals: nextProps.event.approvals,
-      disapprovals: nextProps.event.disapprovals
+      disapprovals: nextProps.event.disapprovals,
+      support: nextProps.event.support
     });
     console.log(nextProps.event);
   }
@@ -331,6 +337,43 @@ class Event extends Component {
     }
   }
 
+  support(event) {
+    if (event.nativeEvent.shiftKey) {
+      let content = [];
+      let header = 'Users who support this post';
+      let contentType = 'support';
+      for (let nation in this.state.support) {
+        if (this.state.support.hasOwnProperty(nation)) {
+          content.push(this.state.support[nation]);
+        }
+      }
+      let _this = this;
+      this.setState({
+        open: true,
+        anchorEl: event.currentTarget,
+        popoverContent: content,
+        popoverHeader: header,
+        popoverContentType: contentType
+      }, function () {
+        setTimeout(function () {
+          _this.onRequestClose();
+        }, 5000);
+      });
+    } else if (this.checkNationReaction('support')) {
+      this.showNationReactErrorMessage();
+    } else {
+      const apiEndpoint = baseUrl + '/api/event/support';
+      let data = {
+        nation: this.props.nation,
+        eventKey: this.state.eventKey
+      };
+
+      axios.post(apiEndpoint, data).then(function (response) {
+        console.log(response);
+      });
+    }
+  }
+
   checkNationReaction(type) {
     switch (type) {
     case 'approval':
@@ -346,6 +389,15 @@ class Event extends Component {
       for (let nation in this.state.disapprovals) {
         if (this.state.disapprovals.hasOwnProperty(nation)) {
           if (this.state.disapprovals[nation] === this.props.nation) {
+            return true;
+          }
+        }
+      }
+      break;
+    case 'support':
+      for (let nation in this.state.support) {
+        if (this.state.support.hasOwnProperty(nation)) {
+          if (this.state.support[nation] === this.props.nation) {
             return true;
           }
         }
@@ -406,9 +458,13 @@ class Event extends Component {
                   return (
                     <ListItem key={index} primaryText={nation} rightIcon={<ThumbUpIcon />} />
                   );
+                } else if (this.state.popoverContent === 'disapprove') {
+                  return (
+                    <ListItem key={index} primaryText={nation} rightIcon={<ThumbDownIcon />} />
+                  );
                 }
                 return (
-                  <ListItem key={index} primaryText={nation} rightIcon={<ThumbDownIcon />} />
+                  <ListItem key={index} primaryText={nation} rightIcon={<SupportIcon />} />
                 );
               })
             }
@@ -523,6 +579,21 @@ class Event extends Component {
               ) : (
                   null
                 )
+            }
+            {
+              (this.props.nation) ? (
+                <Badge
+                  badgeContent={this.state.supportCount}
+                  secondary
+                  badgeStyle={{ top: 12, right: 12}}
+                >
+                  <IconButton tooltip="Support" onTouchTap={this.support}>
+                    <SupportIcon />
+                  </IconButton>
+                </Badge>
+              ) : (
+                null
+              )
             }
             <IconMenu
               iconButtonElement={<IconButton><SettingsIcon /></IconButton>}
